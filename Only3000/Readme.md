@@ -17,10 +17,12 @@ In this folder, I hope to build a toolkit to serve the related needs of DNA stor
 
 ## Acknowledgement
 
-Thanks to my three teammates for their help in this competition, including but not limited to: programming, coding theory guidance, etc.  
+Thanks to __China National GeneBank__ and __Micos Competition__ for providing me with the precious opportunity to communicate with professors and other players.  
 
-Thanks to __China National GeneBank__ and __Micos Competition__ for providing me with the opportunity to think about this question. And the dedication of the relevant staff.
+Thanks to my three teammates for their help in this competition, including but not limited to: programming, coding theory guidance, etc.   
 
-Thank you for the evaluation of the judges and the wonderful points of the contestants.
+Thanks to the staff of this competition for their contributions for this competition.  
+
+Thanks to the professors for their comments and the players for their wonderful presentations.  
 
 \(There may be others to thank......\)
