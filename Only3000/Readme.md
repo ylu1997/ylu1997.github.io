@@ -9,6 +9,6 @@ Of course, as for how far to optimize, I still have to discuss the significance 
 
 ## Aim of this work
 
-This is an implementation of a specific error-correcting code \(Substitution + Insertion + Deletion\). The error correction method used is to generate a code table in advance, with a large enough editing distance between each code pair, and then determine the correct one by one-to-one comparison. However, due to the competition period and requirements, we did not give a perfect implementation.  
+This is an implementation of a specific __error-correcting code__ \(Substitution + Insertion + Deletion\). The error correction method used is to generate a code table in advance, with a large enough editing distance between each code pair, and then determine the correct one by one-to-one comparison. However, due to the competition period and requirements, we did not give a perfect implementation.  
 
 This work may seem naive, but the results can be amazing. A few days before I was about to participate in the defense, I searched the code table through a refined Levenshtein function and found that a code table with strong performance could exceed the result of the first place. But unfortunately, there were no more running chance at this time. Later, I thought of more optimization methods. If they are all implemented, the performance will be very exciting.
