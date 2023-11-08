@@ -14,3 +14,13 @@ This is an implementation of a specific __error-correcting code__ \(Substitution
 This work may seem naive, but the results can be amazing. A few days before I was about to participate in the defense, I searched the code table through a refined Levenshtein function and found that a code table with strong performance could exceed the result of the first place. But unfortunately, there were no more running chance at this time. Later, I thought of more optimization methods. If they are all implemented, the performance will be very exciting.  
 
 In this folder, I hope to build a toolkit to serve the related needs of DNA storage.
+
+## Acknowledgement
+
+Thanks to my three teammates for their help in this competition, including but not limited to: programming, coding theory guidance, etc.  
+
+Thanks to __China National GeneBank__ and __Micos Competition__ for providing me with the opportunity to think about this question. And the dedication of the relevant staff.
+
+Thank you for the evaluation of the judges and the wonderful points of the contestants.
+
+\(There may be others to thank......\)
