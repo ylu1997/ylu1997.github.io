@@ -24,3 +24,7 @@ Thanks to the staff of this competition for their contributions for this competi
 Thanks to the professors for their comments and the players for their wonderful presentations.  
 
 \(There may be others to thank......\)
+
+## Disclaimer
+
+All the code in this folder is for reference only, if in the actual use of all the problems will not be responsible.
