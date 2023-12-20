@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note on Toric Varieties</title>
+</head>
+<body>
+
+    <h1>Note on Toric Varieties</h1>
+
+    <p>This page contains handwritten notes from the Toric Varieties meetings. The notes are provided in PDF format for each meeting:</p>
+
+    <ul>
+        <li><a href="t1.pdf" target="_blank">Meeting 1</a></li>
+        <li><a href="t2.pdf" target="_blank">Meeting 2</a></li>
+        <li><a href="t3.pdf" target="_blank">Meeting 3</a></li>
+        <li><a href="t4.pdf" target="_blank">Meeting 4</a></li>
+        <li><a href="t5.pdf" target="_blank">Meeting 5</a></li>
+        <li><a href="t6.pdf" target="_blank">Meeting 6</a></li>
+        <li><a href="t7.pdf" target="_blank">Meeting 7</a></li>
+    </ul>
+
+    <p>These notes are inspired by the work of David Cox.</p>
+
+</body>
+</html>
