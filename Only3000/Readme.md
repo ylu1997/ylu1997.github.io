@@ -1,7 +1,7 @@
 # Only3000
 
 ## Introduction of this folder
-The work under this folder is mainly for the [2023 Mammoth Cup:DNA storage track](https://micos.cngb.org/zh-hans/). __Only3000__ is the name of our team \(Because the minimum bonus for this competition is 3,000RMB, we are afraid that we will not win anything in the end. However, we did win 3,000 \(before tax\)\).  
+The work under this folder is mainly for the [2023 Mammoth Cup:DNA storage track](https://micos.cngb.org/zh-hans/)  [(English Version)](https://micos.cngb.org/en/). __Only3000__ is the name of our team \(Because the minimum bonus for this competition is 3,000RMB, we are afraid that we will not win anything in the end. However, we did win 3,000 \(before tax\)\).  
 
 In the __Original\_Work__ folder, I upload the code that my team submitted in the race. But many of these Settings are specific to this competition. In real DNA storage, it can be a bit more complicated. I will tidy it up and consider further optimization for it.   
 
@@ -14,6 +14,8 @@ This work may seem naive, but the results can be amazing. A few days before I wa
 In this folder, I hope to build a toolkit to serve the related needs of DNA storage.
 
 ## Result
+
+Officially result can be found at [WeChat](https://mp.weixin.qq.com/s/xq53KaUbMAaSAgBOdpPBeg)
 
 <img src="Original_Work/dnatrack_all.png" alt="result" width="1000" height="600">
 
