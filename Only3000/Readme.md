@@ -1,11 +1,18 @@
-# Only3000
+# 2023 "Mammoth Cup" International Contest on Omics Sciences
 
 ## Introduction of this folder
-The work under this folder is mainly for the [2023 Mammoth Cup:DNA storage track](https://micos.cngb.org/zh-hans/)  [(English Version)](https://micos.cngb.org/en/). __Only3000__ is the name of our team \(Because the minimum bonus for this competition is 3,000RMB, we are afraid that we will not win anything in the end. However, we did win 3,000 \(before tax\)\).  
+The work under this folder is mainly for the [2023 Mammoth Cup:DNA storage track](https://micos.cngb.org/zh-hans/)  [(English Version)](https://micos.cngb.org/en/). __Only3000__ is the name of our team \(Because the minimum bonus for this competition is 3,000RMB, we are afraid that we will not win anything in the end. However, we did win 3,000 \(before tax\)\). 
 
-In the __Original\_Work__ folder, I upload the code that my team submitted in the race. But many of these Settings are specific to this competition. In real DNA storage, it can be a bit more complicated. I will tidy it up and consider further optimization for it.   
+### Our Team
+[Chenghao Li](https://scholar.google.com/citations?user=fBmz2LsAAAAJ&hl=zh-CN), [Yi Lu](https://ylu1997.github.io/), Yun Ma, Xin Zhang
 
-## Aim of this work
+
+<!-- In the __Original\_Work__ folder, I upload the code that my team submitted in the race. But many of these Settings are specific to this competition. In real DNA storage, it can be a bit more complicated. I will tidy it up and consider further optimization for it.    -->
+
+## Technical document
+
+Technical documentation can be found [here](https://github.com/ylu1997/ylu1997.github.io/blob/main/Only3000/dnapdf.pdf)
+## Code(TBC)
 
 This is an implementation of a specific __error-correcting code__ \(Substitution + Insertion + Deletion\) with restriction of runs and balance. The error correction method used is to generate a code table in advance, with a large enough editing distance between each code pair, and then determine the correct one by one-to-one comparison. However, due to the competition period and requirements, we did not give a perfect implementation.  
 
@@ -14,6 +21,8 @@ This work may seem naive, but the results can be amazing. A few days before I wa
 In this folder, I hope to build a toolkit to serve the related needs of DNA storage.
 
 ## Result
+
+After rigorous evaluation and selection through the preliminary and semi-final rounds, our team, along with 21 others, emerged from over **400** participating teams to enter the final showdown. Following intense competition, we achieved an impressive **7th** place in the DNA track!
 
 Officially result can be found at [WeChat](https://mp.weixin.qq.com/s/xq53KaUbMAaSAgBOdpPBeg)
 
