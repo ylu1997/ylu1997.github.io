@@ -13,6 +13,10 @@ This work may seem naive, but the results can be amazing. A few days before I wa
 
 In this folder, I hope to build a toolkit to serve the related needs of DNA storage.
 
+## Result
+
+<img src="Original_Work/dnatrack_all.png" alt="result" width="1000" height="600">
+
 ## Acknowledgement
 
 Thanks to __China National GeneBank__ and __Micos Competition__ for providing me with the precious opportunity to communicate with professors and other players.  
