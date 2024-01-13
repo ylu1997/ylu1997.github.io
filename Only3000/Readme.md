@@ -11,7 +11,9 @@ The work under this folder is mainly for the [2023 Mammoth Cup:DNA storage track
 
 ## Technical document
 
-Technical documentation can be found [here](https://github.com/ylu1997/ylu1997.github.io/blob/main/Only3000/dnapdf.pdf)
+Technical documentation can be found [here](https://ylu1997.github.io/Only3000/dnapdf.pdf)
+
+Principle of Refined Levenshtein Function can be found [here](https://ylu1997.github.io/Only3000/Refined_Levenshtein.pdf)
 ## Code(TBC)
 
 This is an implementation of a specific __error-correcting code__ \(Substitution + Insertion + Deletion\) with restriction of runs and balance. The error correction method used is to generate a code table in advance, with a large enough editing distance between each code pair, and then determine the correct one by one-to-one comparison. However, due to the competition period and requirements, we did not give a perfect implementation.  
