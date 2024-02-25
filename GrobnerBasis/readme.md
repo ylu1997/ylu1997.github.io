@@ -1,6 +1,6 @@
 # GrobnerBasis
 
-This repository contains the implementation of Grobner Basis algorithm in Python.
+[This repository](https://github.com/ylu1997/ylu1997.github.io/edit/main/GrobnerBasis/) contains the implementation of Grobner Basis algorithm in Python.
 
 ## Files
 
