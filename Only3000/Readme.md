@@ -22,6 +22,8 @@ This work may seem naive, but the results can be amazing. A few days before I wa
 
 In this folder, I hope to build a toolkit to serve the related needs of DNA storage.
 
+For a more comprehensive solution, please refer to [The Scheme of Codebook Generation](https://github.com/ylu1997/Code_Generation_For_DNA_Storage) for future work.
+
 ## Result
 
 After rigorous evaluation and selection through the preliminary and semi-final rounds, our team, along with 21 others, emerged from over **400** participating teams to enter the final showdown. Following intense competition, we achieved an impressive **7th** place in the DNA track!
