@@ -32,15 +32,41 @@ def Grobner_Basis(F: list):
 
     return G
 
+def valuation(poly: Polynomial, base_poly: Polynomial) -> (int, Polynomial):
+    result = 0
+    quotient, remainder = divmod(poly, base_poly)
+    while True:
+        if remainder != Polynomial.zero(poly.varlist):
+            break
+        result += 1
+        quotient, remainder = divmod(quotient, base_poly)
+    return result, remainder
+
+def high_rank_valuation(poly: Polynomial, polys:list[Polynomial]):
+    varlist_num = len(poly.varlist)
+    if len(polys) > varlist_num:
+        raise ValueError("The number of polynomials (%d) is too much than %d." % (varlist_num, len(polys)))
+    result = list(0 for i in range(varlist_num))
+    remainder = poly
+    result[0], remainder = valuation(remainder, polys[0])
+    for i in range(1, len(polys)):
+
+        val, remainder = valuation(remainder, divmod(polys[i], polys[i - 1])[1])
+        result[i] = val
+    return tuple(result)
+
 if __name__ == '__main__':
-    varlist = ('x','y', 'z')
+    # valuation(1,2,3,4)
+    pass
+    varlist = ('x_1', 'x_2', 'x_3')
+    x1 = Polynomial(Term(varlist, (1, 0, 0), 1))
+    x2 = Polynomial(Term(varlist, (0, 1, 0), 1))
+    x3 = Polynomial(Term(varlist, (0, 0, 1), 1))
 
-    q1 = Polynomial(Term(varlist, (2,0,0), 1)) + Polynomial(Term(varlist, (0,1,0),-1))
-    q2 = Polynomial(Term(varlist, (3, 0,0), 1)) + Polynomial(Term(varlist, (0,0, 1), -1))
-    print(q1)
-    print(q2)
-
-    G = Grobner_Basis([q1,q2])
-    print('xxxxx')
-    print(G)
-    print((G[1]%G[0]))
+    p = x1 * x1 * x2 * x3 + x2 * x3
+    print(p)
+    print(high_rank_valuation(p,[x1,x2,x3]))
+    # print(q1)
+    # print(q2)
+    # print(valuation(q1 * q2 * q2,q2))
+    # print(high_rank_valuation(q1,[q1, q2]))
