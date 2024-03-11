@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-
-
 def triangle_draw_with_buffer(img, n_buffer, points, depths, color):
     P = np.concatenate([points,depths.reshape(depths.shape[0], 1)],axis=1)
     p1, p2, p3 = P
@@ -314,7 +312,6 @@ class Camera:
              rotate_axis1:float=0,
              rotate_axis2:float=0,
              rotate_normal:float=0):
-
         self.center = Point.array_to_Point(self.center.p +
                                            (np.array([self.axis1.p, self.axis2.p, self.normal.p]).T * translation).sum(axis=1))
         rotate = np.array([[1, 0, 0],
@@ -329,7 +326,7 @@ class Camera:
         frame = np.array([self.axis1.p,
                           self.axis2.p,
                           self.normal.p]).T
-        new_frame = rotate @ frame
+        new_frame = frame @ rotate
         self.axis1.p, self.axis2.p = new_frame.T[:2]
         self.initialization()
 
@@ -463,10 +460,9 @@ class Scene:
                 r_x = -0.5 / np.pi
             elif key == 27:
                 break
-            self.camera.move(trans, rotate_axis1=r_x, rotate_axis2=r_y)
+            self.camera.move(trans, rotate_axis1=-r_x, rotate_axis2=r_y)
             self.camera.initialization()
             self.camera.view_scene(self.triangles)
-            print(self.camera.normal, self.camera.axis1, self.camera.axis2)
             cv2.imshow("Camera", self.camera.screen)
 
 
