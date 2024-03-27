@@ -28,8 +28,9 @@ def f():
     t1, v1 = sphere2angle(x, y, z)
     return (t1 - theta)**2+( v1 - varphi)**2
 
-x = np.zeros([0, 3])
-
-y=np.concatenate([x, np.array([1,2,3]).reshape(1,-1)],axis=0)
-
-print(y)
+x = np.random.random([10, 3])
+y = np.ones([3])
+z = x + y
+print(z)
+print(z.shape, np.mean(z,axis=1).shape)
+print(np.random.random(3).reshape(1,-1).shape)
