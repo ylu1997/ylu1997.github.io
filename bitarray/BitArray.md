@@ -23,4 +23,23 @@ The content of this document has been polished by GPT.
 - **arrayLength**: The total number of elements in the array.
 
 Relationships between properties:
-\[ cellNum \times cellSize = bitLength \leq arrayLength \]
+\[ cellNum * cellSize = bitLength <= arrayLength \]
+
+# Private Functions
+
+## getIndex
+
+This private function calculates the index of the integer containing the bit specified by the given position.
+
+```c
+/**
+ * Calculates the index of the integer containing the bit specified by the given position.
+ * 
+ * @param pos       The position of the bit.
+ * @param bitSize   The size of the base data type in bits.
+ * @return          The index of the integer containing the bit.
+ */
+static int getIndex(int pos, int bitSize)
+{
+    return pos / bitSize;
+}
