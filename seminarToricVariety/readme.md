@@ -15,3 +15,4 @@ This folder contains a collection of meeting notes and discussions pertaining to
 - [Note 7](/seminarToricVariety/t7.pdf)
 - [Note 8](/seminarToricVariety/t8.pdf)
 - [Note 9](/seminarToricVariety/t9.pdf)
+- [Note 10](/seminarToricVariety/t10.pdf)
