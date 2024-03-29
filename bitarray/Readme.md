@@ -5,6 +5,14 @@ It provides a compact representation for manipulating sequences of bits efficien
 This documentation provides an overview of the bit array data structure implemented in C. 
 The content of this document has been polished by GPT.
 
+
+# File
+
+- [BitArray.cpp](/bitarray/BitArray.cpp)
+- [BitArray.h](/bitarray/BitArray.h)
+- [BitArray.py](/bitarray/BitArray.py)
+
+
 # Properties
 
 - **base_type**: The data type used as the base structure for each element in the array.
