@@ -1,5 +1,5 @@
-from ComAlge.Field import Rational
-from ComAlge.utils_func import source_ring_check, type_check
+from Field import Rational
+from utils_func import source_ring_check, type_check
 
 def lex_ord(v1, v2):
     for i in range(len(v1)):
@@ -70,7 +70,7 @@ class Monomial:
                              self.base_ring)
 
     def __str__(self):
-        s = [self.base_ring.var_list[i] + " ^{" + str(self.multi_degree[i]) + '}'
+        s = [self.base_ring.var_list[i] + "^{" + str(self.multi_degree[i]) + '}'
              for i in range(len(self.multi_degree))]
         return ''.join(s)
 
@@ -122,6 +122,14 @@ class Monomial:
 
     def __repr__(self):
         return self.__str__()
+
+    def __call__(self, *args):
+        if len(args) != self.base_ring.deg_len:
+            raise ValueError("Bad input.")
+        ans = args[0] ** self.multi_degree[0]
+        for i, deg in enumerate(self.multi_degree[1: ]):
+            ans = ans * (args[i + 1] ** deg)
+        return ans
 
 class Term(Monomial):
     def __init__(self, coefficient, multi_degree, base_ring):
@@ -399,11 +407,16 @@ class Polynomial:
     def formal_derivative(self, variable_index=[]) -> list:
         ans = [Polynomial(self.base_ring,[poly])
                for poly in self.terms[0].formal_derivative(variable_index)]
-        print(self)
         for term in self.terms[1:]:
             der_term = term.formal_derivative(variable_index)
             for i in range(len(ans)):
                 ans[i] = ans[i] +  Polynomial(self.base_ring, [der_term[i]])
+        return ans
+
+    def __call__(self, *args):
+        ans =  self.terms[0](*args)
+        for item in self.terms[1: ]:
+            ans = ans + item(*args)
         return ans
 
 def G_criterion(i, j, polys, indices):
@@ -423,14 +436,18 @@ class PolyAlg:
         self.var_list = var_list
         self.ordering = ordering
 
+    @property
+    def deg_len(self):
+        return len(self.var_list)
+
     def get_monomial(self, multi_degree) -> Monomial:
-        if len(multi_degree) != len(self.var_list):
+        if len(multi_degree) != self.deg_len:
             raise ValueError(f"Expected tuple of size {len(self.var_list)}, got {len(multi_degree)}")
         return Monomial(multi_degree, self)
 
     def get_term(self, multi_degree, coefficient) -> Term:
-        if len(multi_degree) != len(self.var_list):
-            raise ValueError(f"Expected tuple of multidegree {len(self.var_list)}, got {len(multi_degree)}")
+        if len(multi_degree) != self.deg_len:
+            raise ValueError(f"Expected tuple of multidegree {self.deg_len}, got {len(multi_degree)}")
         type_check(coefficient, self.basic_field)
         return Term(coefficient, multi_degree, self)
 
@@ -441,6 +458,9 @@ class PolyAlg:
     def get_const(self, coefficient) -> Polynomial:
         t = self.get_term(tuple(0 for i in self.var_list), coefficient)
         return Polynomial(self, [t])
+
+    def get_zero(self) -> Polynomial:
+        return self.get_const(self.basic_field.zero())
 
     def __str__(self):
         s = ', '.join(self.var_list)
@@ -460,9 +480,10 @@ class PolyAlg:
         s = len(polynomials) - 1
         p0: Polynomial = polynomials[0]
         p0: Term = p0.terms[0]
-        num_deg = len(p0.multi_degree)
+        num_deg = p0.base_ring.deg_len
         base_ring = p0.base_ring
         while True:
+            print(len(indices))
             if indices == []:
                 break
             i, j = indices[-1]
@@ -478,8 +499,27 @@ class PolyAlg:
                     ans.append(S)
                     indices = indices + [(k, s) for k in range(s - 1)]
             indices.pop()
+
+        # minimization and reduction, reduced Groebner is unique.
+        i = 0
+        N = len(ans)
+        while True:
+            if i >= N:
+                break
+            item: Polynomial = ans.pop()
+            i += 1
+            if item.normal_form(ans) != Polynomial.from_term(Term.zero(num_deg, base_ring)):
+                for id_term, term in enumerate(item.terms):
+                    if Polynomial.from_term(term).normal_form(ans) == Polynomial.from_term(Term.zero(num_deg, base_ring)):
+                        item.terms.pop(id_term)
+                ans = [item] + ans
         return ans
 
+    def generators(self):
+        ans = []
+        for i in range(self.deg_len):
+            ans.append(self.get_poly(tuple(1 if j == i else 0 for j in range(self.deg_len)), Rational(1)))
+        return ans
 
 class Homomorphism:
     def __init__(self, source_alg, target_alg, map_law):
@@ -510,19 +550,19 @@ if __name__ == '__main__':
     # print(a1, r1)
     # print(a2, r2)
 
-    # r = PolyAlg(('x','y','z'), ordering=monomial_ordering('lex'))
-    # x = r.get_poly((1, 0, 0), Rational(1))
-    # y = r.get_poly((0, 1, 0), Rational(2))
-    # z = r.get_poly((0, 0, 1), Rational(1))
+    r = PolyAlg(('x','y','t_1', 't_2'), ordering=monomial_ordering('lex'))
+    x = r.get_poly((1, 0, 0, 0), Rational(1))
+    y = r.get_poly((0, 1, 0, 0), Rational(1))
+    t1 = r.get_poly((0, 0, 1, 0), Rational(1))
+    t2 = r.get_poly((0, 0, 0, 1), Rational(1))
     # print((x * y + y * z).formal_derivative([0,1,2]))
+    f1 = x ** 2 * y - t1
+    f2 = x * y - t2
+    ans = r.Groebner_Basis([f1,f2])
+    g = x ** 3 * y ** 2
+    print(ans)
+    print(g.normal_form(ans))
 
-    # f1 = x**2 + y ** 2 + z ** 2 - r.get_const(Rational(1))
-    # f2 = x * y * z - r.get_const(Rational(1))
-    # g_basis = r.Groebner_Basis([f1, f2])
-    # for item in g_basis:
-    #     print(item  )
-    # print(g_basis)
-
-    r = PolyAlg(('x'), Rational, ordering=monomial_ordering('lex'))
-    x = r.get_poly((1,), Rational(1))
-    print((x**2 + x).formal_derivative([0]))
+    # r = PolyAlg(('x'), Rational, ordering=monomial_ordering('lex'))
+    # x = r.get_poly((1,), Rational(1))
+    # print((x**2 + x).formal_derivative([0]))
