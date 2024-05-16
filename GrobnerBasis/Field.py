@@ -1,4 +1,4 @@
-from ComAlge.utils_func import type_check
+from utils_func import type_check
 
 
 def gcd(a, b):
