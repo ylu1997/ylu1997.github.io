@@ -1,14 +1,11 @@
-﻿
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include <iostream>
-#include <stdlib.h>
+#include <iostream> 
 #include <time.h>
 #include <stdlib.h>
 #include <math.h> 
 #include <random>
-#include <chrono>
-
+#include <chrono> 
 
 template<typename T>
 void fillArrayWithRandomData(T* arr, int arrayLength, const T* charTable, int charTableLength) {
@@ -39,7 +36,7 @@ private:
 
     template<typename ...Args>
     __host__ __device__
-    int __getOffset(int* ptr, int r, int n, Args ... args) {
+        int __getOffset(int* ptr, int r, int n, Args ... args) {
         return this->__getOffset(ptr + 1, (r + n) * (*(ptr + 1)), args...);
     }
 
@@ -55,20 +52,20 @@ protected:
     // L1, L2, ... 
     // c1, c2, ...
     template<typename ...Args>
-    int h_getOffsetIndex( Args ... args) {
+    int h_getOffsetIndex(Args ... args) {
         return this->__getOffset(this->h_shape, 0, args...);
     }
 
     template<typename ...Args>
     __device__
-    int d_getOffsetIndex(Args ... args) {
+        int d_getOffsetIndex(Args ... args) {
         return this->__getOffset(this->d_shape, 0, args...);
     }
 
     template<typename ...Args>
     T h_getItem(Args... args) {
         return this->h_getItemOffset(this->h_getOffsetIndex(args...));
-        
+
     }
 
     template<typename ...Args>
@@ -78,15 +75,14 @@ protected:
 
     template<typename ...Args>
     __device__
-    T d_getItem(Args... args) {
+        T d_getItem(Args... args) {
         return this->d_getItemOffset(this->d_getOffsetIndex(args...));
     }
 
     template<typename ...Args>
     __device__
-    void d_setItem(T item, Args... args) {
-        printf("* %d \n", this->d_getOffsetIndex(args...));
-        //this->d_setItemOffset(this->d_getOffsetIndex(args...), item);
+        void d_setItem(T item, Args... args) { 
+        this->d_setItemOffset(this->d_getOffsetIndex(args...), item);
     }
 
     // Initialize the shape of the array
@@ -97,6 +93,9 @@ protected:
             this->h_shape[i] = shape[i];  // Copy the shape data
         }
         this->calculateArrSize(); // Calculate the total size of the array
+        
+        this->allocateDeviceShapeArray();
+        this->copyShapeToDevice();
     }
 
 
@@ -108,7 +107,7 @@ protected:
     }
 
 public:
-    
+
 
     // cuArray constructor: does not modify external data
     cuArray() {};
@@ -133,9 +132,9 @@ public:
     virtual void setData(T* data) {
         this->h_arr = data;  // Assign the provided data pointer to the host array pointer
     }
-    
+
     // Get the item at a given offset (host side)
-    T h_getItemOffset(int offset) { 
+    T h_getItemOffset(int offset) {
         return this->h_arr[offset];
     }
 
@@ -150,7 +149,7 @@ public:
     }
 
     // Set the item at a given offset (device side)
-    __device__ void d_setItemOffset(int offset, T item) {
+    __device__ void d_setItemOffset(int offset, T item) { 
         this->d_arr[offset] = item;
     }
 
@@ -195,7 +194,7 @@ public:
         if (this->d_shape == nullptr) {
             cudaMalloc((void**)&this->d_shape, sizeof(int) * this->shapeSize);
         }
-    }
+    } 
 
     // Copy shape data to the device array
     void copyShapeToDevice() {
@@ -206,9 +205,10 @@ public:
     // Transfer data from host to device
     virtual void toDevice() {
         this->allocateDeviceArray();
-        this->copyDataToDevice();
-        this->allocateDeviceShapeArray();
-        this->copyShapeToDevice();
+        if(this->h_arr != nullptr)
+        {
+            this->copyDataToDevice();
+        }
     }
 
     // Transfer data from device to host
@@ -223,8 +223,8 @@ public:
 
 
 class SeqPair : public cuArray<char> {
-public: 
-    SeqPair(int batchnum, int seqlen) { 
+public:
+    SeqPair(int batchnum, int seqlen) {
         int shape[3] = { batchnum, 2, seqlen };
         this->initShape(shape, 3);
     }
@@ -239,6 +239,7 @@ public:
 
     __device__ char d_getItem(int batchId, int seqId, int charId) {
         return cuArray<char>::d_getItem(batchId, seqId, charId);
+        
     }
 
     __device__ void d_setItem(int batchId, int seqId, int charId, char item) {
@@ -248,10 +249,11 @@ public:
 };
 
 class DpMatrix : public cuArray<int> {
-public: 
+public:
     DpMatrix(int batchNum, int rowNum, int colNum) {
-        int shape[3] = {batchNum, rowNum, colNum};
+        int shape[3] = { batchNum, rowNum, colNum };
         this->initShape(shape, 3);
+
     }
 
     int h_getItem(int batchId, int rowId, int colId) {
@@ -263,72 +265,111 @@ public:
     }
 
     __device__ int d_getItem(int batchId, int rowId, int colId) {
+        
         return cuArray<int>::d_getItem(batchId, rowId, colId);
     }
 
     __device__ void d_setItem(int batchId, int rowId, int colId, int item) {
         cuArray<int>::d_setItem(item, batchId, rowId, colId);
     }
+     
+
+    __device__ void debug() {
+        printf("debug\n");
+        //cuArray<int>::d_getOffsetIndex(0, 1, 2);
+        printf("xx%d\n", this->d_getOffsetIndex(0,1,3));
+    }
 };
 
 class cuResult : public cuArray<int> {
 public:
     cuResult(int batchNum) {
-        int shape[2] = { batchNum, 1 };
-        this->initShape(shape, 2);
+        int shape[2] = { batchNum,  };
+        this->initShape(shape, 1);
     }
 
     int h_getItem(int batchId) {
-        return cuArray<int>::h_getItem(batchId, 0);
+        return cuArray<int>::h_getItem(batchId );
     }
 
     void h_setItem(int batchId, int item) {
-        cuArray<int>::h_setItem(item, batchId, 0);
+        cuArray<int>::h_setItem(item, batchId );
     }
 
     __device__ int d_getItem(int batchId) {
-        return cuArray<int>::d_getItem(batchId, 0);
+        return cuArray<int>::d_getItem(batchId);
     }
 
     __device__ void d_setItem(int batchId, int item) {
-        cuArray<int>::d_setItem(item, batchId, 0);
+        cuArray<int>::d_setItem(item, batchId);
     }
+     
 };
 
 __global__ void levenshtein(SeqPair sp, DpMatrix dpmat, cuResult res, int len) {
     int t_id = threadIdx.x + blockDim.x * blockIdx.x;
     int m;
-     
-    res.d_setItem(0, 99);
-    printf("%d %d\n", t_id, len); 
-    dpmat.d_setItem(t_id, 0, 0, 1);
-    //dpmat.d_setItem(0, 1, 0, 1);
-    /*for (int i = 0; i < len + 1; i++) {
+ 
+    for (int i = 0; i < len + 1; i++) {
         dpmat.d_setItem(t_id, i, 0, i);
     }
     for (int i = 0; i < len + 1; i++) {
         dpmat.d_setItem(t_id, 0, i, i);
-    }*/
-    
-    //for (int i = 1; i < len + 1; i++) {
-    //    for (int j = 1; j < len + 1; j++) {
-    //       /* if (sp.d_getItem(t_id, 0, i - 1) == sp.d_getItem(t_id, 1, j - 1)) {
-    //            dpmat.d_setItem(t_id, i, j, dpmat.d_getItem(t_id, i - 1, j - 1));
-    //        }
-    //        else {
-    //            m = min(dpmat.d_getItem(t_id, i, j - 1), min(dpmat.d_getItem(t_id, i - 1, j), dpmat.d_getItem(t_id, i - 1, j - 1))) + 1;
-    //            dpmat.d_setItem(t_id, i, j, m);
-    //        }*/
-    //    }
-    //}
-    //res.d_setItem(t_id, dpmat.d_getItem(t_id, len, len));
+    }
+
+    for (int i = 1; i < len + 1; i++) {
+        for (int j = 1; j < len + 1; j++) {
+           if (sp.d_getItem(t_id, 0, i - 1) == sp.d_getItem(t_id, 1, j - 1)) {
+                dpmat.d_setItem(t_id, i, j, dpmat.d_getItem(t_id, i - 1, j - 1));
+            }
+            else {
+                m = min(dpmat.d_getItem(t_id, i, j - 1), min(dpmat.d_getItem(t_id, i - 1, j), dpmat.d_getItem(t_id, i - 1, j - 1))) + 1;
+                dpmat.d_setItem(t_id, i, j, m);
+            }
+        }
+    }
+    res.d_setItem(t_id, dpmat.d_getItem(t_id, len, len));
 }
 
+int levenshteinDistance(const char* s1, const char* s2, int len) {
+    int** dp = (int**)malloc((len + 1) * sizeof(int*));
+    int cost;
+    for (int i = 0; i <= len; i++) {
+        dp[i] = (int*)malloc((len + 1) * sizeof(int));
+    }
 
+    for (int i = 0; i <= len; i++) {
+        dp[i][0] = i;
+        dp[0][i] = i;
+    }
+
+    for (int i = 1; i <= len; i++) {
+        for (int j = 1; j <= len; j++) { 
+            if (s1[i - 1] == s2[j - 1]) {
+                cost = 0;
+            }
+            else {
+                cost = 1;
+            }
+            dp[i][j] = min(dp[i - 1][j] + 1,  
+                min(dp[i][j - 1] + 1,
+                    dp[i - 1][j - 1] + cost)); // 替换
+        }
+    }
+
+    int result = dp[len][len];
+
+    for (int i = 0; i <= len; i++) {
+        free(dp[i]);
+    }
+    free(dp);
+
+    return result;
+}
 int main() {
-    int b_num = 3;
-    int seq_len = 4;
-    int blockNum = 1;
+    int b_num = 1024 * 4;
+    int seq_len = 32;
+    int blockNum = 128;
     int N = 2 * b_num * seq_len;
     char* strs = new char[N];
     char table[4] = { 'A','G','C','T' };
@@ -339,15 +380,26 @@ int main() {
     int* ans = new int[b_num];
     ans[0] = 2;
     sp.setData(strs);
-
-    dpmat.allocateDeviceArray();
-    res.allocateDeviceArray();
-    levenshtein << <1, b_num >> > (sp, dpmat, res, seq_len);
+    std::cout << "block num: " << blockNum << " block size: " << b_num / blockNum << std::endl;
+    clock_t start = clock();
+    sp.toDevice();
+    dpmat.toDevice();
+    res.toDevice();
+    levenshtein << <blockNum, b_num / blockNum >> > (sp, dpmat, res, seq_len);
     res.toHost(ans);
-
+    clock_t end = clock();
+    std::cout <<"gpu: " << end - start << std::endl;
+    int a;
+    start = clock();
     for (int i = 0; i < b_num; i++) {
-        std::cout << ans[i] << std::endl;
+        a = levenshteinDistance(strs + 2 * i * seq_len, strs + 2 * i * seq_len + seq_len, seq_len);
+        //std::cout << ans[i]<<" "<< a <<" "<<(a == ans[i]) << std::endl;
+        if (a != ans[i]) {
+            std::cout << "error" << std::endl;
+        }
     }
+    end = clock();
+    std::cout<<"cpu: " << end - start << std::endl;
     delete[] ans;
     delete[] strs;
     sp.freeData();
