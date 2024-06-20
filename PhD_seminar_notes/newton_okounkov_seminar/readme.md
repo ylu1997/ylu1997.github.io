@@ -1,4 +1,4 @@
-# Second-Year PhD Meeting Notes - Semester One
+# Second-Year PhD Meeting Notes - Semester Two
 
 ## Introduction
 
