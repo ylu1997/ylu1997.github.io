@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This folder contains a collection of meeting notes and discussions pertaining to various topics relevant to second-year doctoral students, with a focus on Newton-Okounkov theory.
+This folder contains a collection of meeting notes and discussions pertaining to various topics relevant to first-year doctoral students, with a focus on Newton-Okounkov theory.
 
 ## Meeting Notes
 
