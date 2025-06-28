@@ -1,0 +1,415 @@
+% \typeout{Academic Literature Management System (Enhanced Version with Tag Support) loaded successfully!}
+
+% ========================================================================
+% 学术文献管理系统定义文件 (literature-system.tex) - 增强版本
+% ========================================================================
+%
+% 【系统目标】
+% 本系统旨在为学术研究者提供一个完整的文献管理解决方案，通过LaTeX自动化处理
+% 文献的录入、分类、排序和展示，提高学术写作效率和文献综述质量。
+%
+% 【核心理念】
+% - 结构化存储：将文献信息以结构化方式存储，便于批量处理和自动化操作
+% - 智能排序：支持多字段组合排序，满足不同学术场景的展示需求
+% - 标签分类：通过标签系统实现文献的分类管理和快速检索
+% - 格式统一：提供多种预定义格式，确保文献展示的一致性和专业性
+% - 扩展性强：模块化设计，便于根据具体需求进行功能扩展
+%
+% 【使用场景】
+% 1. 学位论文文献综述章节
+% 2. 学术论文相关工作部分
+% 3. 研究报告参考文献管理
+% 4. 课程作业文献整理
+% 5. 研究项目文献数据库构建
+%
+% 【使用方法】
+% 在主LaTeX文档中添加：\input{literature-system.tex}
+%
+% 【系统架构】
+% 1. 数据存储层：基于datatool包的数据库系统
+% 2. 数据处理层：排序、筛选、统计功能
+% 3. 显示控制层：多种格式化显示模板
+% 4. 用户接口层：简化的命令接口
+%
+% 【技术依赖】
+% - datatool: 核心数据处理包
+% - longtable: 长表格支持（跨页显示）
+% - array: 表格格式增强
+% - xcolor: 颜色支持（标签高亮）
+% - xstring: 字符串处理（标签解析）
+%
+% ========================================================================
+
+% 必需的包（如果主文档没有加载的话）
+\RequirePackage{datatool}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{xcolor}
+
+% ========================================================================
+% 1. 数据库创建
+% ========================================================================
+
+% 创建文献数据库
+\DTLnewdb{literature}
+
+% ========================================================================
+% 2. 数据添加接口（支持标签）
+% ========================================================================
+
+% 添加文献数据的主要命令（支持标签参数）
+% 用法：\addliterature{标题}{作者}{年份}{洞察}{标签}
+\newcommand{\addliterature}[5]{%
+\DTLnewrow{literature}%
+\DTLnewdbentry{literature}{title}{#1}%
+\DTLnewdbentry{literature}{authors}{#2}%
+\DTLnewdbentry{literature}{year}{#3}%
+\DTLnewdbentry{literature}{insight}{#4}%
+\DTLnewdbentry{literature}{tag}{#5}%
+}
+
+% 兼容旧版本的四参数命令（自动设置空标签）
+\newcommand{\addliteratureold}[4]{%
+\addliterature{#1}{#2}{#3}{#4}{}%
+}
+
+% ========================================================================
+% 3. 排序功能
+% ========================================================================
+
+% 按年份排序（数值排序，从早到晚）
+\newcommand{\sortbyyear}{%
+\DTLsort{year}{literature}%
+}
+
+% 按标题排序（字母排序）
+\newcommand{\sortbytitle}{%
+\DTLsort{title}{literature}%
+}
+
+% 按作者排序（字母排序）
+\newcommand{\sortbyauthors}{%
+\DTLsort{authors}{literature}%
+}
+
+% 按标签排序（字母排序）
+\newcommand{\sortbytag}{%
+\DTLsort{tag}{literature}%
+}
+
+% 自定义排序命令
+\newcommand{\sortby}[1]{%
+\DTLsort{#1}{literature}%
+}
+
+% 复合排序（先按年份，再按标题）
+\newcommand{\sortbyyeartitle}{%
+\DTLsort{year,title}{literature}%
+}
+
+% 复合排序（先按标签，再按年份）
+\newcommand{\sortbytagyear}{%
+\DTLsort{tag,year}{literature}%
+}
+
+% ========================================================================
+% 4. 空字段处理函数
+% ========================================================================
+
+% 处理空insight字段的显示函数
+\makeatletter
+\newcommand{\displayinsight}[1]{%
+\def\@tempa{#1}%
+\ifx\@tempa\@empty
+\emptyset
+\else
+#1%
+\fi
+}
+
+% 处理空tag字段的显示函数
+\newcommand{\displaytag}[1]{%
+\def\@tempa{#1}%
+\ifx\@tempa\@empty
+\textit{无标签}
+\else
+\textcolor{blue}{\texttt{#1}}%
+\fi
+}
+\makeatother
+
+% ========================================================================
+% 5. 显示格式定义（支持标签显示）
+% ========================================================================
+
+% 文献编号计数器
+\newcounter{papercount}
+
+% 重置文献编号
+\newcommand{\resetpapercount}{%
+\setcounter{papercount}{0}%
+}
+
+% 单个文献条目显示命令（详细格式）
+\newcommand{\showpaperentry}[5]{%
+\stepcounter{papercount}%
+\textbf{Paper \arabic{papercount}} & \\
+\hline
+Title & #1 \\
+\hline
+Authors & #2 \\
+\hline
+Year & #3 \\
+\hline
+Tag & \displaytag{#5} \\
+\hline
+Insight & \displayinsight{#4} \\
+\hline\hline
+}
+
+% 简化版文献条目显示（只显示基本信息和标签）
+\newcommand{\showpaperbasic}[5]{%
+\stepcounter{papercount}%
+\textbf{\arabic{papercount}.} & \textbf{#1} (#3) [\displaytag{#5}] \\
+& \textit{#2} \\
+\hline
+}
+
+% 带insight的简化版显示（包含标签）
+\newcommand{\showpaperbasicwithinsight}[5]{%
+\stepcounter{papercount}%
+\textbf{\arabic{papercount}.} & \textbf{#1} (#3) [\displaytag{#5}] \\
+& \textit{#2} \\
+& \displayinsight{#4} \\
+\hline
+}
+
+% ========================================================================
+% 6. 显示环境定义
+% ========================================================================
+
+% 完整文献综述表格环境
+\newenvironment{literaturereview}
+{\begin{longtable}{|p{0.15\textwidth}|p{0.8\textwidth}|}
+\hline
+\textbf{Field} & \textbf{Content} \\
+\hline
+\endhead}
+{\end{longtable}}
+
+% 简化版文献列表环境
+\newenvironment{literaturelist}
+{\begin{longtable}{|p{0.05\textwidth}|p{0.9\textwidth}|}
+\hline
+\textbf{No.} & \textbf{Literature} \\
+\hline
+\endhead}
+{\end{longtable}}
+
+% ========================================================================
+% 7. 批量显示命令（支持标签）
+% ========================================================================
+
+% 显示完整文献综述
+\newcommand{\showfullreview}{%
+\resetpapercount%
+\begin{literaturereview}
+\DTLforeach{literature}{\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperentry{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturereview}
+}
+
+% 显示简化版文献列表
+\newcommand{\showbasiclist}{%
+\resetpapercount%
+\begin{literaturelist}
+\DTLforeach{literature}{\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperbasic{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturelist}
+}
+
+% 显示带insight的简化版文献列表
+\newcommand{\showbasiclistwithinsight}{%
+\resetpapercount%
+\begin{literaturelist}
+\DTLforeach{literature}{\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperbasicwithinsight{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturelist}
+}
+
+% ========================================================================
+% 8. 标签筛选显示功能
+% ========================================================================
+
+% 按指定标签显示完整文献综述
+\newcommand{\showfullreviewbytag}[1]{%
+\resetpapercount%
+\begin{literaturereview}
+\DTLforeach[\DTLisSubString{\thetag}{#1}]{literature} {\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperentry{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturereview}
+}
+
+% 按指定标签显示简化版文献列表
+\newcommand{\showbasiclistbytag}[1]{%
+\resetpapercount%
+\begin{literaturelist}
+\DTLforeach[\DTLisSubString{\thetag}{#1}]{literature} {\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperbasic{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturelist}
+}
+
+% 按指定标签显示带insight的简化版文献列表
+\newcommand{\showbasiclistwithinsightbytag}[1]{%
+\resetpapercount%
+\begin{literaturelist}
+\DTLforeach[\DTLisSubString{\thetag}{#1}]{literature} {\thetitle=title,\theauthors=authors,\theyear=year,\theinsight=insight,\thetag=tag}{%
+\showpaperbasicwithinsight{\thetitle}{\theauthors}{\theyear}{\theinsight}{\thetag}%
+}
+\end{literaturelist}
+}
+ 
+% 需要添加的包
+\RequirePackage{xstring}
+
+% 智能标签解析与显示系统
+\makeatletter
+\newcommand{\showavailabletags}{%
+  \textbf{Available Tags:}
+  \def\@alltagslist{}%
+  \DTLforeach{literature}{\thetag=tag}{%
+      \ifx\thetag\empty
+      \else
+          \@processtags{\thetag}%
+      \fi
+  }%
+  \@showtaglist%
+  \\
+}
+
+% 处理逗号分隔标签的函数
+\def\@processtags#1{%
+  \StrSubstitute{#1}{ }{}[\@cleanedtags]%
+  \@for\@singletag:=\@cleanedtags\do{%
+      \ifx\@singletag\empty
+      \else
+          \@addtolistifnotexist{\@singletag}%
+      \fi
+  }%
+}
+
+% 添加标签到列表函数
+\def\@addtolistifnotexist#1{%
+  \@tempswafalse
+  \ifx\@alltagslist\empty
+      \edef\@alltagslist{#1}%
+  \else
+      \@checktagexists{#1}%
+      \if@tempswa\else
+          \edef\@alltagslist{\@alltagslist,#1}%
+      \fi
+  \fi
+}
+
+% 检查标签是否存在函数
+\def\@checktagexists#1{%
+  \@tempswafalse
+  \@for\@existingtag:=\@alltagslist\do{%
+      \StrCompare{#1}{\@existingtag}[\@result]%
+      \ifnum\@result=0
+          \@tempswatrue
+      \fi
+  }%
+}
+
+% 显示标签列表函数
+\def\@showtaglist{%
+  \ifx\@alltagslist\empty
+      \textit{No tags found}
+  \else
+      \@for\@singletag:=\@alltagslist\do{%
+          \ifx\@singletag\empty\else
+              \displaytag{\@singletag}\space%
+          \fi
+      }%
+  \fi
+}
+\makeatother
+
+% ========================================================================
+% 9. 统计和查询功能（支持标签统计）
+% ========================================================================
+
+% 获取文献总数
+\newcommand{\getpapercount}{%
+\DTLrowcount{literature}%
+}
+
+% 获取指定标签的文献数量
+\newcommand{\getpapercountbytag}[1]{%
+\DTLcondall{literature}{\DTLiseq{\thetag}{#1}}{\thetag=tag}%
+}
+
+% 显示统计信息
+\newcommand{\showstats}{%
+\begin{itemize}
+\item Total papers: \getpapercount
+\item Database: literature
+\item Available fields: title, authors, year, insight, tag
+\item \showavailabletags
+\end{itemize}
+}
+
+% 按年份范围筛选显示（框架）
+\newcommand{\showyearrange}[2]{%
+\textbf{Papers from #1 to #2:}
+}
+
+% 按标签和年份范围组合筛选
+\newcommand{\showbytagyearrange}[3]{%
+\textbf{Papers with tag "#1" from #2 to #3:}
+}
+
+% ========================================================================
+% 10. 实用工具命令
+% ========================================================================
+
+% 清空数据库
+\newcommand{\clearliterature}{%
+\DTLcleardb{literature}%
+}
+
+% 保存数据库到文件（接口定义）
+\newcommand{\saveliterature}[1]{%
+\PackageWarning{literature-system}{Save function not implemented yet}%
+}
+
+% 从文件加载数据库
+\newcommand{\loadliterature}[1]{%
+\PackageWarning{literature-system}{Load function not implemented yet}%
+}
+
+% ========================================================================
+% 系统信息
+% ========================================================================
+
+\newcommand{\systeminfo}{%
+\begin{center}
+\fbox{\begin{minipage}{0.8\textwidth}
+\textbf{Literature Auto-Sort System v2.0 (With Tags)}\\
+\textit{Powered by datatool package}\\
+Features: Auto-sorting, Multi-format display, Statistics, Tag filtering, Empty insight as $\emptyset$\\
+File: literature-system.tex (Tag-enabled Version)
+\end{minipage}}
+\end{center}
+}
+
+% ========================================================================
+% 文件结束标记
+% ========================================================================
+\typeout{Literature Auto-Sort System (Tag-enabled Version) loaded successfully!}
