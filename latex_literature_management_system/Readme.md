@@ -1,12 +1,12 @@
-
-
 # Latex Literature Management System
 
 <!-- TOC -->
 
 - [Latex Literature Management System](#latex-literature-management-system)
     - [What It Does](#what-it-does)
+    - [Understanding the Insight Field](#understanding-the-insight-field)
     - [Installation](#installation)
+    - [Download](#download)
     - [Core Functions](#core-functions)
         - [Data Input](#data-input)
             - [\addliterature{title}{authors}{year}{insight}{tag}](#%5Caddliteraturetitleauthorsyearinsighttag)
@@ -39,6 +39,7 @@
     - [Key Features](#key-features)
 
 <!-- /TOC -->
+<!-- /TOC -->
 
 A LaTeX system for managing academic literature with automated sorting, tag-based filtering, and multiple display formats. Built on the `datatool` package for structured data storage and processing.
 
@@ -51,11 +52,44 @@ This system allows you to:
 - Display in various formats (detailed tables, compact lists)
 - Generate statistics and analytics
 
+## Understanding the Insight Field
+
+**The Insight field serves as your literature reading notes**, designed to capture the essential value and your personal understanding of each paper. It is recommended to record:
+
+- **Innovative Ideas**: Novel theories, concepts, or perspectives proposed in the literature
+- **Key Methods**: Important research methods, technical approaches, or experimental designs employed
+- **Main Conclusions**: Core findings and significant discoveries presented
+- **Future Directions**: Suggestions or inspirations for future research directions
+- **Personal Reflections**: Your own insights, questions, or application ideas after reading
+
+**Examples:**
+```latex
+% Recording innovative methods
+\addliterature{Attention Is All You Need}{Vaswani et al.}{2017}{Introduces Transformer architecture based entirely on attention mechanisms, eliminating recurrence and convolution for parallelizable training}{NLP,Attention}
+
+% Recording key conclusions
+\addliterature{BERT}{Devlin et al.}{2018}{Breakthrough in bidirectional encoding through masked language model pre-training, achieving state-of-the-art results across multiple NLP tasks}{NLP,BERT}
+
+% Recording methodological innovation and implications
+\addliterature{GPT-3}{Brown et al.}{2020}{Demonstrates few-shot learning capabilities of large-scale language models, 175B parameter model excels across diverse tasks, pointing toward artificial general intelligence}{NLP,GPT}
+```
+
+Through detailed insight recording, you can quickly review key paper points, facilitating future research and writing references.
+
 ## Installation
 
 ```latex
 \input{literature-system.tex}
 ```
+
+## Download
+
+📥 **Get the LaTeX system file:**
+
+- **Direct Download**: [literature-system.tex](./literature-system.tex)
+- **Raw File**: [literature-system.tex (raw)](./literature-system.tex?raw=true)
+
+Simply download the `literature-system.tex` file and place it in your LaTeX project directory, then include it using `\input{literature-system.tex}` in your document.
 
 ## Core Functions
 
@@ -226,49 +260,13 @@ Reset paper numbering counter.
 
 \begin{document}
 
-% Add literature
-\addliterature{Attention Is All You Need}{Vaswani et al.}{2017}{Transformer architecture}{NLP,Attention}
-\addliterature{BERT}{Devlin et al.}{2018}{Bidirectional encoding}{NLP,BERT}
-\addliterature{GPT-3}{Brown et al.}{2020}{Few-shot learning}{NLP,GPT}
+% Add literature with detailed insights
+\addliterature{Attention Is All You Need}{Vaswani et al.}{2017}{Introduces Transformer architecture based entirely on attention mechanisms, eliminating recurrence and convolution, enabling parallelizable training and laying foundation for large language models}{NLP,Attention}
+\addliterature{BERT}{Devlin et al.}{2018}{Breakthrough in bidirectional encoding through masked language model pre-training, achieving deep bidirectional representations and setting new records on 11 NLP tasks}{NLP,BERT}
+\addliterature{GPT-3}{Brown et al.}{2020}{Demonstrates few-shot learning capabilities of large-scale language models, 175B parameter model performs diverse tasks without fine-tuning, showcasing potential for artificial general intelligence}{NLP,GPT}
 
 % Sort and display
-\sortbyyear<!-- TOC -->
-
-- [Latex Literature Management System](#latex-literature-management-system)
-    - [What It Does](#what-it-does)
-    - [Installation](#installation)
-    - [Core Functions](#core-functions)
-        - [Data Input](#data-input)
-            - [\addliterature{title}{authors}{year}{insight}{tag}](#%5Caddliteraturetitleauthorsyearinsighttag)
-            - [\addliteratureold{title}{authors}{year}{insight}](#%5Caddliteratureoldtitleauthorsyearinsight)
-        - [Sorting Functions](#sorting-functions)
-            - [\sortbyyear](#%5Csortbyyear)
-            - [\sortbytitle](#%5Csortbytitle)
-            - [\sortbyauthors](#%5Csortbyauthors)
-            - [\sortbytag](#%5Csortbytag)
-            - [\sortbyyeartitle](#%5Csortbyyeartitle)
-            - [\sortbytagyear](#%5Csortbytagyear)
-            - [\sortby{field}](#%5Csortbyfield)
-        - [Display Functions](#display-functions)
-            - [\showfullreview](#%5Cshowfullreview)
-            - [\showbasiclist](#%5Cshowbasiclist)
-            - [\showbasiclistwithinsight](#%5Cshowbasiclistwithinsight)
-        - [Tag-Based Filtering](#tag-based-filtering)
-            - [\showfullreviewbytag{tag}](#%5Cshowfullreviewbytagtag)
-            - [\showbasiclistbytag{tag}](#%5Cshowbasiclistbytagtag)
-            - [\showbasiclistwithinsightbytag{tag}](#%5Cshowbasiclistwithinsightbytagtag)
-        - [Statistics and Information](#statistics-and-information)
-            - [\showstats](#%5Cshowstats)
-            - [\getpapercount](#%5Cgetpapercount)
-            - [\showavailabletags](#%5Cshowavailabletags)
-            - [\systeminfo](#%5Csysteminfo)
-        - [Database Management](#database-management)
-            - [\clearliterature](#%5Cclearliterature)
-            - [\resetpapercount](#%5Cresetpapercount)
-    - [Complete Example](#complete-example)
-    - [Key Features](#key-features)
-
-<!-- /TOC -->
+\sortbyyear
 \showstats
 \showfullreview
 
@@ -285,7 +283,8 @@ Reset paper numbering counter.
 - **Cross-page Tables**: Uses `longtable` for long literature lists
 - **Color-coded Tags**: Tags display in blue monospace font
 - **Flexible Sorting**: Multiple sorting criteria and combinations
+- **Comprehensive Insight Recording**: Detailed note-taking system for literature review
 
 ---
 
-*Version 2.0 - Enhanced with tag support*
+*Version 2.0 - Enhanced with tag support and insight documentation*
