@@ -1,0 +1,10 @@
+{
+    "代数几何，凸几何与组合": {
+        "k-jet ampleness and Newton-Okounkov body": "我的研究兴趣聚焦于Newton-Okounkov body的凸几何结构与线束higher-order jet positivity之间的定量对应理论。核心目标是建立从凸体几何性质到k-jet ampleness判定的有效准则。具体而言，虽然已知k-jet ample线束的Newton-Okounkov body体积存在明确下界，但关键问题是：什么样的凸几何threshold或几何条件能够反向保证k-jet ampleness？我致力于发展一套系统理论，通过Newton-Okounkov body的顶点配置、面结构、体积估计、边界几何等多层面凸几何信息，建立判定线束k-jet positivity的几何准则。这不仅包括存在性判准（何时为k-jet ample），更重要的是建立凸体几何量与jet separation强度之间的精确定量关系。研究将在一般代数簇上展开，旨在为higher-order positivity理论提供新的凸几何视角，同时发展相应的计算框架，使得通过Newton-Okounkov body的几何分析来有效检测和量化线束的高阶正性成为可能。"
+        
+    },
+    
+    "图论与组合": {
+        "Finite simple graph and Betti numbers": "我的研究兴趣集中在图论与交换代数的交叉领域，致力于将有限单图进行代数化构造，建立其与交换代数理想的对应关系。目前我主要关注单项式理想，特别是边理想(edge ideal)的研究，通过分次自由分解(graded free resolution)方法计算这些理想的Betti数。我的研究重点集中在三个核心方向：开发高效的Betti数计算算法、寻找一般图在特定位置的Betti数通项公式，以及构造极小分解的组合表示方法，其中一般图的Betti数通项公式的建立是当前的主要关注点。更重要的是，我关注一般有限单图的Betti数性质，特别是探索Betti数在多大程度上能够反映图的拓扑结构特征，这是我研究的核心问题。虽然我的主要焦点在一般有限单图上，但对于具有特殊性质的图类（如完全图、树、循环图等）也保持着浓厚的研究兴趣。我特别关注图的编辑操作（边的切割或连接）对相应理想Betti数的影响规律，以及如何从这些代数不变量中反向读取图的结构信息。"
+    }
+}
