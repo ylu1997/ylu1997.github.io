@@ -1,6 +1,6 @@
 {
     "代数几何，凸几何与组合": {
-        "k-jet ampleness and Newton-Okounkov body": "我的研究兴趣聚焦于Newton-Okounkov body的凸几何结构与线束higher-order jet positivity之间的定量对应理论。核心目标是建立从凸体几何性质到k-jet ampleness判定的有效准则。具体而言，虽然已知k-jet ample线束的Newton-Okounkov body体积存在明确下界，但关键问题是：什么样的凸几何threshold或几何条件能够反向保证k-jet ampleness？我致力于发展一套系统理论，通过Newton-Okounkov body的顶点配置、面结构、体积估计、边界几何等多层面凸几何信息，建立判定线束k-jet positivity的几何准则。这不仅包括存在性判准（何时为k-jet ample），更重要的是建立凸体几何量与jet separation强度之间的精确定量关系。研究将在一般代数簇上展开，旨在为higher-order positivity理论提供新的凸几何视角，同时发展相应的计算框架，使得通过Newton-Okounkov body的几何分析来有效检测和量化线束的高阶正性成为可能。"
+        "k-jet ampleness and Newton-Okounkov body": "我的研究兴趣聚焦于Newton-Okounkov body的凸几何结构与线束higher-order jet positivity之间的定量对应理论。核心目标是建立从凸体几何性质到k-jet ampleness判定的有效准则。关键问题是：什么样的凸几何threshold或几何条件能够反向保证k-jet ampleness？我致力于发展一套系统理论，通过Newton-Okounkov body的凸几何信息，建立判定丛k-jet positivity的几何准则。这不仅包括存在性判准（何时为k-jet ample），更重要的是建立凸体几何量与jet separation强度之间的精确定量关系。研究将优先在特征0代数闭域上光滑射影n维代数簇上展开，旨在为higher-order positivity理论提供新的凸几何视角，同时发展相应的计算框架，使得通过Newton-Okounkov body的几何分析来有效检测和量化线丛的高阶正性成为可能。"
         
     },
     

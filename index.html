@@ -1,34 +1,204 @@
 <!DOCTYPE html>
-<html>
-<head> 
-<title>LY's Personal Website</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yi Lu - Personal Academic Website</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<h1 align="center">Yi Lu</h1>
-	<h2>PhD student</h2>
-	Algebraic Geometry.  <br>
-	School of Mathematical Sciences, Capital Normal University (2021-2027(expected)).<br>
-	Beijing, China.<br><br>
-	Department of Mathematical Sciences, University of Liverpool (2024-2026(expected)).<br>
-	Liverpool, United Kingdom.<br><br>
-	<h2>Email:</h2><a href="mailto:abc_20080610@126.com">abc_20080610@126.com</a>
-	<h2> CV(curriculum vitae):</h2>
-	<a href="cv.pdf">my cv</a>.
-	<h2>Educational Experience:</h2>
-	<ul>
-	<li>Bachelor Degree in IOT(Internet of things) , Hebei University of Technology</li>
-	</ul>
-	<h2>Interesting Works</h2> 
-	<ul>
-	<li><a href="PhD_seminar_notes/">The notes during PhD 2023-</a></li>
-	<li><a href="latex_literature_management_system/">LaTeX Literature Management System</a></li>
-	<li><a href="cuArray/">cuArray.</a></li>
-	<li><a href="bitarray/">BitArray.</a></li>
-	<li><a href="3DSceneSimulator/">Simple 3D Scene Simulation.</a></li>
-	<li><a href="GrobnerBasis/">Python code of GrobnerBasis Algorithm.</a></li>
-	<li><a href="Only3000/">The Mammoth International Contest 2023: DNA_Storage</a></li>
-		<!-- Only3000/MammothCup2023.html -->
-	<li><a href="https://www.zhihu.com/people/lu-yi-50-92">Some maths notes in Chinese posted on Zhihu</a></li>
-	</ul>
+<div class="container">
+    <!-- Header Section -->
+    <header class="header">
+        <div class="profile-img">YL</div>
+        <h1>Yi Lu (陆艺)</h1>
+        <p class="subtitle">PhD Student in Algebraic Geometry</p>
+        <div class="current-position">
+            Capital Normal University & University of Liverpool
+        </div>
+        <p class="location-info">Beijing, China | Liverpool, United Kingdom</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('about')">About</button>
+        <button class="nav-tab" onclick="showTab('education')">Education</button>
+        <button class="nav-tab" onclick="showTab('publications')">Publications</button>
+        <button class="nav-tab" onclick="showTab('projects')">Projects</button>
+        <button class="nav-tab" onclick="showTab('contact')">Contact</button>
+    </div>
+
+    <!-- About Tab -->
+    <div id="about" class="tab-content active">
+        <div class="main-content">
+            <div class="card" id="current-position-card">
+                <h2>🎓 Current Position</h2>
+                <div class="experience-item">
+                    <h3>PhD in Mathematics</h3>
+                    <p><strong>Capital Normal University & University of Liverpool</strong></p>
+                    <p class="date">2023 - Present</p>
+                    <p>School of Mathematical Sciences</p>
+                    <p>Joint PhD Program</p>
+                    <p>Research Focus: Algebraic Geometry</p>
+                </div>
+            </div>
+            
+            <div class="card" id="supervision-card">
+                <h2>👨‍🏫 Supervision</h2>
+                <div class="supervisor-info">
+                    <div class="supervisor-item">
+                        <h4>Primary Supervisor</h4>
+                        <p><strong>Dr. Thomas Eckl</strong></p>
+                        <p>University of Liverpool</p>
+                    </div>
+                    <div class="supervisor-item">
+                        <h4>Co-supervisor</h4>
+                        <p><strong>Dr. Zhixian Zhu</strong></p>
+                        <p>Capital Normal University</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card full-width">
+            <h2>🔬 Research Interests</h2>
+            <div class="skills-grid">
+                <div class="skill-item">Positivity in AG</div>
+                <div class="skill-item">Newton-Okounkov body</div>
+                <div class="skill-item">Combinatorics</div>
+                <div class="skill-item">Toric Degeneration</div>
+                <div class="skill-item">Graph Theory</div>
+                <div class="skill-item">Computation in AG</div>
+                <div class="skill-item">AI</div>
+                <div class="skill-item">Deep Learning</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education Tab -->
+    <div id="education" class="tab-content">
+        <div class="main-content">
+            <div class="card full-width" id="education-card">
+                <h2>🎓 Education</h2>
+                <div class="education-item">
+                    <h3>PhD in Mathematics</h3>
+                    <p><strong>Capital Normal University & University of Liverpool</strong></p>
+                    <p class="date">2023 - Present</p>
+                    <p>School of Mathematical Sciences</p>
+                    <p>Joint PhD Program</p>
+                    <p>Research Focus: Algebraic Geometry</p>
+                </div>
+                <div class="education-item">
+                    <h3>Master of Science in Mathematics</h3>
+                    <p><strong>Capital Normal University</strong></p>
+                    <p class="date">2021 - 2023</p>
+                    <p>Pure Mathematics</p>
+                    <p>Beijing, China</p>
+                </div>
+                <div class="education-item">
+                    <h3>Bachelor of Science in Internet of Things Engineering</h3>
+                    <p><strong>Hebei University of Technology</strong></p>
+                    <p class="date">2016 - 2020</p>
+                    <p>Internet of Things Engineering (IoT)</p>
+                    <p>Tianjin, China</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publications Tab -->
+    <div id="publications" class="tab-content">
+        <div class="main-content">
+            <div class="card full-width" id="publications-card">
+                <h2>📄 Publications</h2>
+                <div class="publication-section">
+                    <h3>Journal Articles</h3>
+                    <div class="placeholder">[Published papers will be listed here]</div>
+                </div>
+                <div class="publication-section">
+                    <h3>📝 Preprints & Working Papers</h3>
+                    <div class="placeholder">[Preprints and working papers will be listed here]</div>
+                </div>
+                <div class="publication-section">
+                    <h3>📚 Notes</h3>
+                    <div class="placeholder">[Academic notes will be listed here]</div>
+                </div>
+                <div class="publication-section">
+                    <h3>🎤 Conference Presentations</h3>
+                    <div class="placeholder">[Conference presentations and talks will be listed here]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Tab -->
+    <div id="projects" class="tab-content">
+        <div class="main-content">
+            <div class="card full-width" id="projects-card">
+                <h2>💻 Projects</h2>
+                <div class="projects-grid">
+                    <div class="placeholder">[Projects will be listed here]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Tab -->
+    <div id="contact" class="tab-content">
+        <div class="main-content">
+            <div class="card full-width" id="contact-card">
+                <h2>📞 Contact Information</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div style="font-size: 1.5em; margin-bottom: 10px;">📧</div>
+                        <strong>Email Addresses</strong><br>
+                        <div class="emails-list">
+                            <div class="placeholder">[Email addresses will be listed here]</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div style="font-size: 1.5em; margin-bottom: 10px;">📍</div>
+                        <strong>Primary Address</strong><br>
+                        <div class="placeholder">[Primary address will be listed here]</div>
+                    </div>
+                    <div class="contact-item">
+                        <div style="font-size: 1.5em; margin-bottom: 10px;">🏛️</div>
+                        <strong>Visiting Address</strong><br>
+                        <div class="placeholder">[Visiting address will be listed here]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card academic-profiles">
+                <h2>📄 Academic Profiles</h2>
+                <div class="academic-profile-links">
+                    <div class="placeholder">[Academic profile links will be listed here]</div>
+                </div>
+            </div>
+            
+            <div class="card social-media">
+                <h2>🌐 Social Media</h2>
+                <div class="social-media-links">
+                    <div class="placeholder">[Social media links will be listed here]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading personal information...</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Last updated: <span id="last-modified">Loading...</span></p>
+        <p>© 2024 Yi Lu. All rights reserved.</p>
+    </footer>
+</div>
+
+<script src="embedded-data.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
