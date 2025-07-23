@@ -77,7 +77,7 @@ try {
   // 等待数据加载器准备就绪
   if (typeof personalData !== 'undefined') {
     await personalData.loadData();
-    updateAllPageContent();
+    await updateAllPageContent();
   } else {
     console.warn('Personal data loader not found, using static content');
   }
@@ -91,27 +91,27 @@ try {
 }
 
 // 更新所有页面内容
-function updateAllPageContent() {
+async function updateAllPageContent() {
 if (!personalData || !personalData.data) {
   console.warn('No personal data available');
   return;
 }
 
 try {
-  updateHeaderInfo();
-  updateAboutPage();
-  updateEducationPage();
-  updatePublicationsPage();
-  updateProjectsPage();
-  updateContactPage();
+  await updateHeaderInfo();
+  await updateAboutPage();
+  await updateEducationPage();
+  await updatePublicationsPage();
+  await updateProjectsPage();
+  await updateContactPage();
 } catch (error) {
   console.error('Error updating page content:', error);
 }
 }
 
 // 更新头部信息
-function updateHeaderInfo() {
-const personal = personalData.getPersonalInfo();
+async function updateHeaderInfo() {
+const personal = await personalData.getPersonalInfo();
 
 const h1 = document.querySelector('h1');
 const subtitle = document.querySelector('.subtitle');
@@ -127,15 +127,15 @@ if (profileImg) profileImg.textContent = personal.profile_initials || 'YL';
 }
 
 // 更新About页面
-function updateAboutPage() {
-updateCurrentPosition();
-updateSupervisionInfo();
-updateResearchInterests();
+async function updateAboutPage() {
+await updateCurrentPosition();
+await updateSupervisionInfo();
+await updateResearchInterests();
 }
 
 // 更新当前职位
-function updateCurrentPosition() {
-const currentEdu = personalData.getCurrentEducation();
+async function updateCurrentPosition() {
+const currentEdu = await personalData.getCurrentEducation();
 const card = document.getElementById('current-position-card');
 
 if (!card || !currentEdu.length) return;
@@ -155,8 +155,8 @@ card.innerHTML = `<h2>🎓 Current Position</h2>${content}`;
 }
 
 // 更新导师信息
-function updateSupervisionInfo() {
-const currentEdu = personalData.getCurrentEducation();
+async function updateSupervisionInfo() {
+const currentEdu = await personalData.getCurrentEducation();
 const card = document.getElementById('supervision-card');
 
 if (!card) return;
@@ -184,8 +184,8 @@ card.innerHTML = `
 }
 
 // 更新研究兴趣
-function updateResearchInterests() {
-const research = personalData.getResearchInfo();
+async function updateResearchInterests() {
+const research = await personalData.getResearchInfo();
 const skillsGrid = document.querySelector('.skills-grid');
 
 if (!skillsGrid || !research.interests) return;
@@ -209,8 +209,8 @@ skillsGrid.innerHTML = skillsHTML;
 }
 
 // 更新教育页面
-function updateEducationPage() {
-const education = personalData.getEducation();
+async function updateEducationPage() {
+const education = await personalData.getEducation();
 const card = document.getElementById('education-card');
 
 if (!card || !education.length) return;
@@ -231,9 +231,9 @@ const content = education.map(edu => `
 card.innerHTML = `<h2>🎓 Education</h2>${content}`;
 }
 
-// 修改updatePublicationsPage函数中的Notes & Presentations部分
-function updatePublicationsPage() {
-const publications = personalData.getPublications();
+// 更新出版物页面
+async function updatePublicationsPage() {
+const publications = await personalData.getPublications();
 const card = document.getElementById('publications-card');
 
 if (!card) return;
@@ -242,221 +242,210 @@ let content = '<h2>📄 Publications</h2>';
 
 // 期刊论文
 content += '<div class="publication-section"><h3>Journal Articles</h3>';
-if (publications.journal_articles && publications.journal_articles.some(p => p.title)) {
-publications.journal_articles.filter(p => p.title).forEach(paper => {
-  content += `
-    <div class="publication-item">
-      <p><strong>${paper.title}</strong></p>
-      <p>${paper.authors.join(', ')}</p>
-      <p><em>${paper.journal}</em>, ${paper.year}</p>
-      ${paper.doi ? `<p>DOI: ${paper.doi}</p>` : ''}
-    </div>
-  `;
-});
+if (publications.journal_articles && publications.journal_articles.some(p => p.title && p.title !== '-')) {
+  publications.journal_articles.filter(p => p.title && p.title !== '-').forEach(paper => {
+    content += `
+      <div class="publication-item">
+        <p><strong>${paper.title}</strong></p>
+        <p>${paper.authors.join(', ')}</p>
+        <p><em>${paper.journal}</em>, ${paper.year}</p>
+        ${paper.doi && paper.doi !== '-' ? `<p>DOI: ${paper.doi}</p>` : ''}
+      </div>
+    `;
+  });
 } else {
-content += '<div class="placeholder">[Published papers will be listed here]</div>';
+  content += '<div class="placeholder">[Published papers will be listed here]</div>';
 }
 content += '</div>';
 
 // 会议论文部分
 content += '<div class="publication-section"><h3>📄 Conference Papers</h3>';
-if (publications.conference_papers && publications.conference_papers.some(p => p.title)) {
-publications.conference_papers.filter(p => p.title).forEach(paper => {
-  content += `
-    <div class="publication-item">
-      <p><strong>${paper.title}</strong></p>
-      <p>${paper.authors.join(', ')}</p>
-      <p><em>${paper.conference}</em>, ${paper.location} (${paper.year})</p>
-      ${paper.pages ? `<p>Pages: ${paper.pages}</p>` : ''}
-      ${paper.publisher ? `<p>Publisher: ${paper.publisher}</p>` : ''}
-      ${paper.doi ? `<p>DOI: ${paper.doi}</p>` : ''}
-    </div>
-  `;
-});
+if (publications.conference_papers && publications.conference_papers.some(p => p.title && p.title !== '-')) {
+  publications.conference_papers.filter(p => p.title && p.title !== '-').forEach(paper => {
+    content += `
+      <div class="publication-item">
+        <p><strong>${paper.title}</strong></p>
+        <p>${paper.authors.join(', ')}</p>
+        <p><em>${paper.conference}</em>, ${paper.location} (${paper.year})</p>
+        ${paper.pages && paper.pages !== '-' ? `<p>Pages: ${paper.pages}</p>` : ''}
+        ${paper.publisher && paper.publisher !== '-' ? `<p>Publisher: ${paper.publisher}</p>` : ''}
+        ${paper.doi && paper.doi !== '-' ? `<p>DOI: ${paper.doi}</p>` : ''}
+      </div>
+    `;
+  });
 } else {
-content += '<div class="placeholder">[Conference papers will be listed here]</div>';
+  content += '<div class="placeholder">[Conference papers will be listed here]</div>';
 }
 content += '</div>';
 
 // 预印本
 content += '<div class="publication-section"><h3>📝 Preprints & Working Papers</h3>';
-if (publications.preprints && publications.preprints.some(p => p.title)) {
-publications.preprints.filter(p => p.title).forEach(paper => {
-  content += `
-    <div class="publication-item">
-      <p><strong>${paper.title}</strong></p>
-      <p>${paper.authors.join(', ')}</p>
-      <p>arXiv: ${paper.arxiv} (${paper.year})</p>
-    </div>
-  `;
-});
+if (publications.preprints && publications.preprints.some(p => p.title && p.title !== '-')) {
+  publications.preprints.filter(p => p.title && p.title !== '-').forEach(paper => {
+    content += `
+      <div class="publication-item">
+        <p><strong>${paper.title}</strong></p>
+        <p>${paper.authors.join(', ')}</p>
+        ${paper.arxiv ? `<p>arXiv: <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank">${paper.arxiv}</a></p>` : ''}
+        <p>Year: ${paper.year}</p>
+      </div>
+    `;
+  });
 } else {
-content += '<div class="placeholder">[Preprints and working papers will be listed here]</div>';
+  content += '<div class="placeholder">[Preprints will be listed here]</div>';
 }
 content += '</div>';
 
-// 合并的 Notes & Presentations 分栏
-content += '<div class="publication-section"><h3>📚 Notes & Presentations</h3>';
-if (publications.notes_and_presentations && publications.notes_and_presentations.length > 0) {
-publications.notes_and_presentations.forEach(item => {
-  content += `
-    <div class="publication-item">
-      <p><strong>${item.title}</strong></p>
-      <p>${item.content}</p>
-      <p><span class="item-type ${item.type.toLowerCase()}">${item.type}</span> • ${item.year}</p>
-      ${item.pdf_link ? `<a href="${item.pdf_link}" class="project-link" target="_blank">📄 View PDF →</a>` : ''}
-    </div>
-  `;
-});
+// Notes & Presentations
+content += '<div class="publication-section"><h3>📋 Notes & Presentations</h3>';
+if (publications.notes_and_presentations && publications.notes_and_presentations.length) {
+  publications.notes_and_presentations.forEach(item => {
+    content += `
+      <div class="publication-item">
+        <p><strong>${item.title}</strong></p>
+        <p>${item.content} (${item.type})</p>
+        <p>Year: ${item.year}</p>
+        ${item.pdf_link ? `<p><a href="${item.pdf_link}" target="_blank" class="project-link">📄 View PDF</a></p>` : ''}
+      </div>
+    `;
+  });
 } else {
-content += '<div class="placeholder">[Academic notes and presentations will be listed here]</div>';
+  content += '<div class="placeholder">[Notes and presentations will be listed here]</div>';
 }
 content += '</div>';
 
 card.innerHTML = content;
 }
 
-// 修改updateProjectsPage函数，支持自定义分栏
-function updateProjectsPage() {
-const projects = personalData.getProjects();
-const projectsGrid = document.querySelector('#projects-card .projects-grid');
+// 更新项目页面
+async function updateProjectsPage() {
+const projects = await personalData.getProjects();
+const card = document.getElementById('projects-card');
 
-if (!projectsGrid) return;
+if (!card) return;
 
-let content = '';
+let content = '<h2>💼 Projects</h2>';
 
-// 使用自定义分栏
-if (projects.sections && projects.sections.length > 0) {
+if (projects.sections && projects.sections.length) {
   projects.sections.forEach(section => {
-    // 为每个分栏添加标题
-    content += `<div class="project-section-title"><h3>${section.title}</h3></div>`;
+    content += `<div class="project-section"><h3>${section.title}</h3>`;
     
     section.items.forEach(project => {
       content += `
         <div class="project-item">
           <h4>${project.name}</h4>
           <p>${project.description}</p>
-          ${project.technologies ? `<p><strong>Technologies:</strong> ${project.technologies.join(', ')}</p>` : ''}
-          ${project.year ? `<p class="date">${project.year}</p>` : ''}
-          ${project.status ? `<p><strong>Status:</strong> ${project.status}</p>` : ''}
-          ${project.result ? `<p><strong>Result:</strong> ${project.result}</p>` : ''}
-          <a href="${project.link}" class="project-link" target="_blank">View Project →</a>
+          <div class="project-meta">
+            <span class="project-year">${project.year}</span>
+            <span class="project-status">${project.status}</span>
+          </div>
+          ${project.technologies ? `
+            <div class="tech-tags">
+              ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${project.features ? `
+            <ul class="project-features">
+              ${project.features.map(feature => `<li>${feature}</li>`).join('')}
+            </ul>
+          ` : ''}
+          ${project.result ? `<p class="project-result"><strong>Result:</strong> ${project.result}</p>` : ''}
+          ${project.team ? `<p><strong>Team:</strong> ${project.team.join(', ')}</p>` : ''}
+          <div class="project-links">
+            ${project.link ? `<a href="${project.link}" target="_blank" class="project-link">🔗 View Project</a>` : ''}
+            ${project.github ? `<a href="${project.github}" target="_blank" class="project-link">📂 GitHub</a>` : ''}
+            ${project.documentation ? `<a href="${project.documentation}" target="_blank" class="project-link">📚 Documentation</a>` : ''}
+          </div>
         </div>
       `;
     });
+    
+    content += '</div>';
   });
 } else {
-  content = '<div class="placeholder">[Projects will be listed here]</div>';
+  content += '<div class="placeholder">[Projects will be listed here]</div>';
 }
 
-projectsGrid.innerHTML = content;
+card.innerHTML = content;
 }
 
-// 修改updateContactPage函数，修复重复标题问题
-function updateContactPage() {
-const contact = personalData.getContactInfo();
-const contactInfo = document.querySelector('#contact-card .contact-info');
+// 更新联系页面
+async function updateContactPage() {
+const contact = await personalData.getContactInfo();
+const card = document.getElementById('contact-card');
 
-if (!contactInfo || !contact) return;
+if (!card) return;
 
-// 构建多个email的HTML
-let emailsHTML = '';
-if (contact.emails && contact.emails.length > 0) {
-  emailsHTML = `
-    <div class="contact-item">
-      <div style="font-size: 1.5em; margin-bottom: 10px;">📧</div>
-      <strong>Email Addresses</strong><br>
-      <div class="emails-list">
-  `;
-  
+let content = '<h2>📞 Contact Information</h2>';
+
+// 邮箱信息
+if (contact.emails && contact.emails.length) {
+  content += '<div class="contact-section"><h3>📧 Email Addresses</h3>';
   contact.emails.forEach(email => {
-    emailsHTML += `
-      <div class="email-item">
-        <span class="email-type">${email.type}:</span>
-        <a href="mailto:${email.address}">${email.address}</a>
-        ${email.description ? `<span class="email-desc">(${email.description})</span>` : ''}
+    content += `
+      <div class="contact-item">
+        <p><strong>${email.type}:</strong> <a href="mailto:${email.address}">${email.address}</a></p>
+        <p class="contact-description">${email.description}</p>
       </div>
     `;
   });
+  content += '</div>';
+}
+
+// 地址信息
+if (contact.addresses) {
+  content += '<div class="contact-section"><h3>🏢 Addresses</h3>';
   
-  emailsHTML += `
+  if (contact.addresses.primary) {
+    const addr = contact.addresses.primary;
+    content += `
+      <div class="contact-item">
+        <h4>Primary Address</h4>
+        <p><strong>${addr.institution}</strong></p>
+        <p>${addr.department}</p>
+        <p>${addr.address}</p>
+        <p>${addr.city}, ${addr.country} ${addr.postal_code}</p>
       </div>
-    </div>
-  `;
+    `;
+  }
+  
+  if (contact.addresses.visiting) {
+    const addr = contact.addresses.visiting;
+    content += `
+      <div class="contact-item">
+        <h4>Visiting Address</h4>
+        <p><strong>${addr.institution}</strong></p>
+        <p>${addr.department}</p>
+        <p>${addr.address}</p>
+        <p>${addr.city}, ${addr.country} ${addr.postal_code}</p>
+      </div>
+    `;
+  }
+  
+  content += '</div>';
 }
 
-const content = `
-  ${emailsHTML}
-  <div class="contact-item">
-    <div style="font-size: 1.5em; margin-bottom: 10px;">📍</div>
-    <strong>Primary Address</strong><br>
-    ${contact.addresses?.primary?.institution || ''}<br>
-    ${contact.addresses?.primary?.department || ''}<br>
-    ${contact.addresses?.primary?.address || ''}<br>
-    ${contact.addresses?.primary?.city || ''}, ${contact.addresses?.primary?.country || ''}<br>
-    ${contact.addresses?.primary?.postal_code || ''}
-  </div>
-  <div class="contact-item">
-    <div style="font-size: 1.5em; margin-bottom: 10px;">🏛️</div>
-    <strong>Visiting Address</strong><br>
-    ${contact.addresses?.visiting?.institution || ''}<br>
-    ${contact.addresses?.visiting?.department || ''}<br>
-    ${contact.addresses?.visiting?.address || ''}<br>
-    ${contact.addresses?.visiting?.city || ''}, ${contact.addresses?.visiting?.country || ''}<br>
-    ${contact.addresses?.visiting?.postal_code || ''}
-  </div>
-`;
-
-contactInfo.innerHTML = content;
-
-// 更新学术档案链接 - 不添加重复标题
-const academicProfiles = document.querySelector('.academic-profiles .academic-profile-links');
-if (academicProfiles && contact.academic_profiles) {
-  const profiles = contact.academic_profiles;
-  let linksContent = '';
-  
-  const profileNames = {
-    orcid: 'ORCID',
-    google_scholar: 'Google Scholar',
-    researchgate: 'ResearchGate',
-    arxiv: 'arXiv',
-    mathscinet: 'MathSciNet'
-  };
-
-  Object.keys(profiles).forEach(key => {
-    if (profiles[key] && profiles[key].trim() !== '' && profiles[key] !== '#') {
-      linksContent += `<p><a href="${profiles[key]}" class="project-link" target="_blank">${profileNames[key] || key}</a></p>`;
+// 社交媒体
+if (contact.social_media && Object.keys(contact.social_media).length) {
+  content += '<div class="contact-section"><h3>🌐 Online Profiles</h3>';
+  Object.entries(contact.social_media).forEach(([platform, url]) => {
+    if (url) {
+      content += `
+        <div class="contact-item">
+          <p><strong>${platform.charAt(0).toUpperCase() + platform.slice(1)}:</strong> 
+          <a href="${url}" target="_blank">${url}</a></p>
+        </div>
+      `;
     }
   });
-  
-  academicProfiles.innerHTML = linksContent || '<div class="placeholder">[Academic profile links will be listed here]</div>';
+  content += '</div>';
 }
 
-// 更新社交媒体链接 - 不添加重复标题
-const socialMedia = document.querySelector('.social-media .social-media-links');
-if (socialMedia && contact.social_media) {
-  const social = contact.social_media;
-  let socialContent = '';
-  
-  const socialNames = {
-    github: 'GitHub',
-    linkedin: 'LinkedIn', 
-    twitter: 'Twitter'
-  };
-
-  Object.keys(social).forEach(key => {
-    if (social[key] && social[key].trim() !== '' && social[key] !== '#') {
-      socialContent += `<p><a href="${social[key]}" class="project-link" target="_blank">${socialNames[key] || key}</a></p>`;
-    }
-  });
-  
-  socialMedia.innerHTML = socialContent || '<div class="placeholder">[Social media links will be listed here]</div>';
-}
+card.innerHTML = content;
 }
 
-// 加载静态内容的备用函数
+// 加载静态内容的后备函数
 function loadStaticContent() {
 console.log('Loading static content as fallback');
-hideLoadingIndicator();
+// 这里可以添加静态内容的加载逻辑
 }
-

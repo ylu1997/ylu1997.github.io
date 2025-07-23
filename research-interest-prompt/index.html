@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt of My Interest - Yi Lu</title>
+<link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+
+<!-- 使用上级目录的CSS -->
+<link rel="stylesheet" href="../styles.css">
+
+<!-- 页面特定样式 -->
+<style>
+    /* 覆盖背景色，保持原有的渐变效果 */
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* 覆盖容器样式，去掉白色背景 */
+    .container {
+        background: transparent;
+        box-shadow: none;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    /* 页面特有的样式 */
+    .back-link {
+        display: inline-block;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 25px;
+        transition: background 0.3s ease;
+    }
+
+    .back-link:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+    }
+
+    .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+    }
+
+    .content-sections {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+        color: #4a5568;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 10px;
+    }
+
+    .introduction {
+        font-size: 1.1em;
+        line-height: 1.8;
+    }
+
+    .introduction p {
+        margin-bottom: 15px;
+    }
+
+    .tree-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .tree {
+        font-family: 'Courier New', monospace;
+        line-height: 1.4;
+    }
+
+    .tree-node {
+        margin: 5px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tree-node:hover {
+        background: #f7fafc;
+        border-radius: 5px;
+        padding: 2px 5px;
+    }
+
+    .tree-toggle {
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        color: #667eea;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .tree-content {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .tree-title {
+        font-weight: bold;
+        color: #2d3748;
+    }
+
+    .tree-description {
+        color: #718096;
+        font-style: italic;
+        margin-left: 25px;
+        font-size: 0.9em;
+    }
+
+    .tree-children {
+        margin-left: 25px;
+        border-left: 2px solid #e2e8f0;
+        padding-left: 15px;
+        margin-top: 5px;
+    }
+
+    .tree-children.collapsed {
+        display: none;
+    }
+
+    .leaf-node {
+        color: #38a169;
+    }
+
+    .leaf-node .tree-toggle {
+        color: #38a169;
+    }
+
+    .controls {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin: 0 10px;
+        transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+        background: #5a67d8;
+    }
+
+    /* Prompt按钮样式 */
+    .prompt-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 0.8em;
+        margin-left: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .prompt-btn:hover {
+        background: #c0392b;
+        transform: translateY(-1px);
+    }
+
+    /* 弹窗样式 */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 15px;
+    }
+
+    .modal-title {
+        font-size: 1.5em;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .close:hover {
+        color: #667eea;
+    }
+
+    .prompt-text {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin-bottom: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .copy-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+        background: #17a2b8;
+    }
+
+    .loading {
+        text-align: center;
+        color: #718096;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 2em;
+        }
+        
+        .modal-content {
+            width: 95%;
+            margin: 10% auto;
+            padding: 20px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <a href="../index.html" class="back-link">← Back to Main Page</a>
+    
+    <header class="header">
+        <h1>🌳 Prompt of My Interest</h1>
+        <p>Exploring the intersection of mathematics, AI, and computational thinking</p>
+    </header>
+
+    <div class="content-sections">
+        <div class="section">
+            <h2>📖 Introduction</h2>
+            <div class="introduction">
+                <p>Welcome to my research interest exploration page. This interactive space showcases the prompts and ideas that drive my academic curiosity at the intersection of <strong>Algebraic Geometry</strong>, <strong>Artificial Intelligence</strong>, and <strong>Computational Mathematics</strong>.</p>
+                
+                <p>The tree structure below represents my organized thoughts, research directions, and the connections between different areas of interest. Each node can be expanded to reveal deeper insights and specific research questions.</p>
+                
+                <p>Items with a <span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">Prompt</span> button contain detailed prompts that can be copied and used with AI assistants for further exploration.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tree-container">
+        <h2>🌲 Interactive Research Tree</h2>
+        <div class="controls">
+            <button class="btn" onclick="expandAll()">Expand All</button>
+            <button class="btn" onclick="collapseAll()">Collapse All</button>
+            <button class="btn" onclick="loadPromptData()">Reload Data</button>
+        </div>
+        <div id="tree-content" class="tree">
+            <div class="loading">Loading prompt data...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Prompt弹窗 -->
+<div id="promptModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Prompt</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="prompt-text" id="promptText"></div>
+        <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+    </div>
+</div>
+
+<script>
+    let promptData = null;
+    let promptStorage = new Map(); // 存储prompt数据
+
+    // 示例数据结构
+    const sampleData = {
+        "title": "Research Interests Tree",
+        "description": "My academic research interests and prompts",
+        "children": [
+            {
+                "title": "Algebraic Geometry",
+                "description": "Core mathematical research area",
+                "prompt": "I'm studying algebraic geometry, particularly focusing on Newton-Okounkov bodies and positivity criteria. Can you help me understand the relationship between these geometric objects and the algebraic properties of line bundles? Please provide both theoretical insights and computational approaches.",
+                "children": [
+                    {
+                        "title": "Newton-Okounkov Bodies",
+                        "description": "Geometric objects encoding positivity",
+                        "prompt": `Newton–Okounkov体在代数几何中的应用，利用凸几何工具编码和解析代数几何信息，特别关注positivity性质的刻画，包括ample、very ample及jet ample等概念的凸几何描述，以及凸几何操作与代数几何操作之间的对应关系和翻译。
+
+评分标准：
+| 评分指标       | 权重  | 说明                                   |
+|---------------|-------|--------------------------------------|
+| 相关性        | 70%   | 文献内容与Newton–Okounkov体及其代数几何应用的匹配程度 |
+| 理论深度      | 20%   | 对positivity性质（ample、very ample、jet ample等）及其凸几何刻画的深入分析 |
+| 创新性        | 10%   | 凸几何与代数几何操作对应翻译方面的新颖贡献       |
+
+评分说明：
+1. 重点评估文献与Newton–Okounkov体及positivity刻画的相关性。
+2. 考察理论深度，特别是对positivity性质的分析。
+3. 评价创新性，包括新对应关系或方法。
+4. 若文献涉及算术几何或数论，视为不相关不予考虑；涉及复几何则权重较低，优先考虑代数几何相关内容。
+综合权重计算得分。`
+                    },
+                    {
+                        "title": "Jet Ampleness",
+                        "description": "Higher-order positivity criteria",
+                        "prompt": "I'm working on jet ampleness and higher-order positivity. Can you explain the connection between jet bundles, arc spaces, and ampleness criteria? How does this relate to the minimal model program?"
+                    },
+                    {
+                        "title": "Toric Varieties",
+                        "description": "Combinatorial algebraic geometry"
+                    }
+                ]
+            },
+            {
+                "title": "AI & Machine Learning",
+                "description": "Computational intelligence applications",
+                "prompt": "I'm interested in applying AI and machine learning to mathematical research. What are the current state-of-the-art approaches for using LLMs in mathematical reasoning, proof verification, and conjecture generation?",
+                "children": [
+                    {
+                        "title": "LLM in Mathematics",
+                        "description": "Language models for mathematical reasoning",
+                        "prompt": "How can large language models be effectively used for mathematical research? I'm particularly interested in applications to algebraic geometry, automated theorem proving, and mathematical writing assistance."
+                    },
+                    {
+                        "title": "Deep Learning",
+                        "description": "Neural networks and optimization"
+                    }
+                ]
+            },
+            {
+                "title": "Computational Mathematics",
+                "description": "Mathematical software and algorithms",
+                "children": [
+                    {
+                        "title": "Symbolic Computation",
+                        "description": "Computer algebra systems",
+                        "prompt": "I need to implement computational tools for algebraic geometry research. What are the best practices for using systems like Macaulay2, Singular, or SageMath for research in Newton-Okounkov bodies and positivity?"
+                    },
+                    {
+                        "title": "Numerical Methods",
+                        "description": "Approximation algorithms"
+                    }
+                ]
+            }
+        ]
+    };
+
+    // 加载JSON数据
+    async function loadPromptData() {
+        try {
+            const response = await fetch('./prompt-data.json');
+            if (response.ok) {
+                promptData = await response.json();
+                console.log('Prompt data loaded successfully');
+            } else {
+                console.warn('Could not load prompt-data.json, using sample data');
+                promptData = sampleData;
+            }
+        } catch (error) {
+            console.warn('Error loading prompt data:', error);
+            promptData = sampleData;
+        }
+        renderTree();
+    }
+
+    // 渲染树结构
+    function renderTree() {
+        const container = document.getElementById('tree-content');
+        if (!promptData) {
+            container.innerHTML = '<div class="loading">Failed to load data</div>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        promptStorage.clear(); // 清空存储
+        const treeHTML = createTreeNode(promptData, 0);
+        container.innerHTML = treeHTML;
+    }
+
+    // 生成唯一ID
+    let nodeIdCounter = 0;
+    function generateNodeId() {
+        return `node_${++nodeIdCounter}`;
+    }
+
+    // 创建树节点
+    function createTreeNode(node, level) {
+        const hasChildren = node.children && node.children.length > 0;
+        const isLeaf = !hasChildren;
+        const hasPrompt = node.prompt && node.prompt.trim() !== '';
+        const nodeId = generateNodeId();
+        
+        // 如果有prompt，存储到Map中
+        if (hasPrompt) {
+            promptStorage.set(nodeId, {
+                title: node.title,
+                prompt: node.prompt
+            });
+        }
+        
+        let html = `<div class="tree-node ${isLeaf ? 'leaf-node' : ''}" data-level="${level}">`;
+        
+        if (hasChildren) {
+            html += `<span class="tree-toggle" onclick="toggleNode(this)">▼</span>`;
+        } else {
+            html += `<span class="tree-toggle">●</span>`;
+        }
+        
+        html += `<span class="tree-content">`;
+        html += `<span class="tree-title">${node.title}</span>`;
+        
+        if (hasPrompt) {
+            html += `<button class="prompt-btn" data-node-id="${nodeId}" onclick="showPromptById('${nodeId}')">Prompt</button>`;
+        }
+        
+        if (node.description) {
+            html += `<div class="tree-description">${node.description}</div>`;
+        }
+        html += `</span>`;
+        html += `</div>`;
+        
+        if (hasChildren) {
+            html += `<div class="tree-children">`;
+            node.children.forEach(child => {
+                html += createTreeNode(child, level + 1);
+            });
+            html += `</div>`;
+        }
+        
+        return html;
+    }
+
+    // 通过ID显示Prompt
+    function showPromptById(nodeId) {
+        const data = promptStorage.get(nodeId);
+        if (data) {
+            showPrompt(data.title, data.prompt);
+        }
+    }
+
+    // 显示Prompt弹窗
+    function showPrompt(title, prompt) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('promptText').textContent = prompt;
+        document.getElementById('promptModal').style.display = 'block';
+    }
+
+    // 关闭弹窗
+    function closeModal() {
+        document.getElementById('promptModal').style.display = 'none';
+    }
+
+    // 复制Prompt
+    async function copyPrompt() {
+        const promptText = document.getElementById('promptText').textContent;
+        const copyBtn = document.querySelector('.copy-btn');
+        
+        try {
+            await navigator.clipboard.writeText(promptText);
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✅ Copied!';
+            copyBtn.classList.add('copied');
+            
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            // 备用方案：选中文本
+            const range = document.createRange();
+            range.selectNode(document.getElementById('promptText'));
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+        }
+    }
+
+    // 切换节点展开/折叠
+    function toggleNode(toggleElement) {
+        const node = toggleElement.parentElement;
+        const children = node.nextElementSibling;
+        
+        if (children && children.classList.contains('tree-children')) {
+            if (children.classList.contains('collapsed')) {
+                children.classList.remove('collapsed');
+                toggleElement.textContent = '▼';
+            } else {
+                children.classList.add('collapsed');
+                toggleElement.textContent = '▶';
+            }
+        }
+    }
+
+    // 展开所有节点
+    function expandAll() {
+        const allChildren = document.querySelectorAll('.tree-children');
+        const allToggles = document.querySelectorAll('.tree-toggle');
+        
+        allChildren.forEach(child => {
+            child.classList.remove('collapsed');
+        });
+        
+        allToggles.forEach(toggle => {
+            if (toggle.textContent === '▶') {
+                toggle.textContent = '▼';
+            }
+        });
+    }
+
+    // 折叠所有节点
+    function collapseAll() {
+        const allChildren = document.querySelectorAll('.tree-children');
+        const allToggles = document.querySelectorAll('.tree-toggle');
+        
+        allChildren.forEach(child => {
+            child.classList.add('collapsed');
+        });
+        
+        allToggles.forEach(toggle => {
+            if (toggle.textContent === '▼') {
+                toggle.textContent = '▶';
+            }
+        });
+    }
+
+    // 点击弹窗外部关闭
+    window.onclick = function(event) {
+        const modal = document.getElementById('promptModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPromptData();
+    });
+</script>
+</body>
+</html>

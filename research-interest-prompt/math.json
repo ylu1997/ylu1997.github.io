@@ -1,6 +1,7 @@
 {
     "代数几何，凸几何与组合": {
-        "k-jet ampleness and Newton-Okounkov body": "我的研究兴趣聚焦于Newton-Okounkov body的凸几何结构与线束higher-order jet positivity之间的定量对应理论。核心目标是建立从凸体几何性质到k-jet ampleness判定的有效准则。关键问题是：什么样的凸几何threshold或几何条件能够反向保证k-jet ampleness？我致力于发展一套系统理论，通过Newton-Okounkov body的凸几何信息，建立判定丛k-jet positivity的几何准则。这不仅包括存在性判准（何时为k-jet ample），更重要的是建立凸体几何量与jet separation强度之间的精确定量关系。研究将优先在特征0代数闭域上光滑射影n维代数簇上展开，旨在为higher-order positivity理论提供新的凸几何视角，同时发展相应的计算框架，使得通过Newton-Okounkov body的几何分析来有效检测和量化线丛的高阶正性成为可能。"
+        "k-jet ampleness and Newton-Okounkov body": "我的研究兴趣聚焦于Newton-Okounkov body的凸几何结构与线束higher-order jet positivity之间的定量对应理论。核心目标是建立从凸体几何性质到k-jet ampleness判定的有效准则。关键问题是：什么样的凸几何threshold或几何条件能够反向保证k-jet ampleness？我致力于发展一套系统理论，通过Newton-Okounkov body的凸几何信息，建立判定丛k-jet positivity的几何准则。这不仅包括存在性判准（何时为k-jet ample），更重要的是建立凸体几何量与jet separation强度之间的精确定量关系。研究将优先在特征0代数闭域上光滑射影n维代数簇上展开，旨在为higher-order positivity理论提供新的凸几何视角，同时发展相应的计算框架，使得通过Newton-Okounkov body的几何分析来有效检测和量化线丛的高阶正性成为可能。",
+        "k-jet ampleness criterion": "我的研究兴趣集中在零特征代数闭域上射影代数簇线丛的k-jet ample性质，特别关注其判定方法和理论界限。我的研究对象按一般性到特殊性排列，兴趣程度递减。我的核心关注点是k-jet ample性质的有效判定问题。已知ample线丛经过足够倍增必然成为k-jet ample，我致力于建立关于k的精确倍增界限。我同时从上同调维数和几何直观两个角度探索判定准则，并考虑将Seshadri常数等经典不变量推广到k-jet情形。在技术路径上，我采用多元化方法，包括jet schemes理论、multiplier ideal技术以及组合几何方法。我的目标是发展新的判定技术，挖掘现有方法未能揭示的几何判定可能性，为k-jet ample理论提供更加精确和深刻的理论工具。我专注于理论本身的发展，对具体应用的兴趣相对较低。"
         
     },
     

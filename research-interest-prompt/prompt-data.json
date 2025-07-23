@@ -1,0 +1,31 @@
+{
+"title": "Research Interests & Prompts Tree",
+"description": "Comprehensive mapping of my academic interests and research prompts",
+"children": [
+  {
+    "title": "🔢 Algebraic Geometry and Convex Geometry",
+    "description": "Core mathematical research focusing on geometric properties of algebraic varieties",
+    "children": [
+      {
+        "title": "Search Prompt for Newton–Okounkov Bodies and Positivity",
+        "description": "Prompt for retrieving papers on Newton–Okounkov bodies and positivity properties with relevance and depth criteria.",
+        "prompt": "Newton–Okounkov体在代数几何中的应用，利用凸几何工具编码和解析代数几何信息，特别关注positivity性质的刻画，包括ample、very ample及jet ample等概念的凸几何描述，以及凸几何操作与代数几何操作之间的对应关系和翻译。\n评分标准：\n| 评分指标       | 权重  | 说明                                   |\n|---------------|-------|--------------------------------------|\n| 相关性        | 70%   | 文献内容与Newton–Okounkov体及其代数几何应用的匹配程度 |\n| 理论深度      | 20%   | 对positivity性质（ample、very ample、jet ample等）及其凸几何刻画的深入分析 |\n| 创新性        | 10%   | 凸几何与代数几何操作对应翻译方面的新颖贡献       |\n\n评分说明：\n1. 重点评估文献与Newton–Okounkov体及positivity刻画的相关性。\n2. 考察理论深度，特别是对positivity性质的分析。\n3. 评价创新性，包括新对应关系或方法。\n4. 若文献涉及算术几何或数论，视为不相关不予考虑；涉及复几何则权重较低，优先考虑代数几何相关内容。\n综合权重计算得分。"
+      }
+    ]
+  },
+  {
+    "title": "🧩 Combinatorics, Graph Theory & Algorithms",
+    "description": "Prompts for research combining combinatorics, graph theory, and algorithmic methods",
+    "children": [
+
+    ]
+  },
+  {
+    "title": "🧠 AI & Machine Learning",
+    "description": "Artificial intelligence applications in mathematical research",
+    "children": [
+
+    ]
+  }
+]
+}
