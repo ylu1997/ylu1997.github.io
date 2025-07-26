@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Name - Yi Lu</title>
+<!-- 添加favicon - 在这里添加 -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIOiDjOaZr+WchuW9oiAtLT4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNSIgZmlsbD0iIzY2N2VlYSIgc3Ryb2tlPSIjNzY0YmEyIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIOS7o+eggeespuWPtyAtLT4KICA8cGF0aCBkPSJNOCAxMiBMNSAxNiBMOCAyMCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjQgMTIgTDI3IDE2IEwyNCAyMCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8IS0tIOS4remdtOeahOaWnOadoSAtLT4KICA8cGF0aCBkPSJNMTkgMTAgTDEzIDIyIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0g5bCP6KOF6aWw54K5IC0tPgogIDxjaXJjbGUgY3g9IjE2IiBjeT0iOCIgcj0iMS41IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIyNCIgcj0iMS41IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+Cjwvc3ZnPgo=">
+<!-- 备用favicon -->
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wBmfupAZn7q/2Z+6v9mfur/Zn7q/2Z+6kD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AZn7qQGZ+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7qQP///wD///8A////AP///wD///8AZn7qQGZ+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7qQP///wD///8AZn7q/2Z+6v9mfur/Zn7q/2Z+6v////8A////AP///wD///8A////AGZ+6v9mfur/Zn7q/2Z+6v9mfur/////AGZ+6v9mfur/Zn7q/////wD///8A////AP///wD///8A////AP///wD///8AZn7q/2Z+6v9mfur/Zn7q/////wBmfur/Zn7q/////wD///8A////AP///wD///8A////AP///wD///8A////AP///wBmfur/Zn7q/2Z+6v////8AZn7q/2Z+6v////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AGZ+6v9mfur/////AGZ+6v9mfur/////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AZn7q/////wBmfur/Zn7q/////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wBmfur/Zn7q/2Z+6v////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wBmfur/Zn7q/2Z+6v9mfur/Zn7q/////wD///8A////AP///wD///8A////AP///wD///8A////AGZ+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/////wD///8A////AP///wD///8AZn7qQGZ+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7qQP///wD///8A////AP///wBmfupAZn7q/2Z+6v9mfur/Zn7q/2Z+6v9mfur/Zn7q/2Z+6kD///8A////AP///wD///8A////AP///wD///8A////AGZ+6kBmfur/Zn7q/2Z+6v9mfur/Zn7qQP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==">
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+line-height: 1.6;
+color: #333;
+background: linear-gradient(135deg, #202c5e 0%, #9a88ac 100%);
+min-height: 100vh;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+background: white;
+margin-top: 20px;
+margin-bottom: 20px;
+border-radius: 15px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.header {
+text-align: center;
+padding: 30px 0;
+background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+border-radius: 15px;
+margin-bottom: 30px;
+color: white;
+}
+
+.header h1 {
+font-size: 2.2em;
+margin-bottom: 10px;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+font-size: 1.1em;
+opacity: 0.9;
+}
+
+.nav-tabs {
+display: flex;
+gap: 5px;
+margin-bottom: 30px;
+background: #f8f9fa;
+padding: 10px;
+border-radius: 10px;
+}
+
+.nav-tab {
+flex: 1;
+padding: 12px 20px;
+border: none;
+background: transparent;
+cursor: pointer;
+border-radius: 8px;
+transition: all 0.3s ease;
+font-weight: 500;
+}
+
+.nav-tab:hover {
+background: #e9ecef;
+transform: translateY(-2px);
+}
+
+.nav-tab.active {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.tab-content {
+display: none;
+}
+
+.tab-content.active {
+display: block;
+}
+
+.card {
+background: white;
+padding: 25px;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+border: 1px solid #e9ecef;
+}
+
+.card h2 {
+color: #2c3e50;
+margin-bottom: 20px;
+font-size: 1.5em;
+border-bottom: 2px solid #3498db;
+padding-bottom: 10px;
+}
+
+.code-block {
+background: #f8f9fa;
+border: 1px solid #e9ecef;
+border-radius: 8px;
+padding: 20px;
+margin-bottom: 20px;
+border-left: 4px solid #9b59b6;
+display: flex;
+gap: 20px;
+align-items: flex-start;
+}
+
+.code-content {
+flex: 1;
+}
+
+.code-thumbnail {
+flex-shrink: 0;
+width: 120px;
+height: 120px;
+border-radius: 8px;
+overflow: hidden;
+border: 2px solid #e9ecef;
+background: white;
+cursor: pointer;
+transition: all 0.3s ease;
+position: relative;
+}
+
+.code-thumbnail:hover {
+transform: scale(1.05);
+box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.code-thumbnail::after {
+content: '🔍';
+position: absolute;
+top: 5px;
+right: 5px;
+background: rgba(0,0,0,0.7);
+color: white;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 10px;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+
+.code-thumbnail:hover::after {
+opacity: 1;
+}
+
+.code-thumbnail img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+.code-thumbnail svg {
+width: 150%;
+height: 150%;
+}
+
+.code-block h3 {
+color: #2c3e50;
+margin-bottom: 15px;
+font-size: 1.2em;
+}
+
+.code-description {
+color: #555;
+margin-bottom: 15px;
+line-height: 1.6;
+}
+
+.download-link {
+display: inline-block;
+background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+color: white;
+padding: 10px 20px;
+border-radius: 25px;
+text-decoration: none;
+font-weight: 500;
+transition: all 0.3s ease;
+margin-top: 10px;
+}
+
+.download-link:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
+}
+
+.tool-block {
+background: #f8f9fa;
+border: 1px solid #e9ecef;
+border-radius: 8px;
+padding: 20px;
+margin-bottom: 20px;
+border-left: 4px solid #00b894;
+}
+
+.tool-block h3 {
+color: #2c3e50;
+margin-bottom: 15px;
+font-size: 1.2em;
+}
+
+.tool-description {
+color: #555;
+margin-bottom: 15px;
+line-height: 1.6;
+}
+
+.use-tool-btn {
+background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 25px;
+cursor: pointer;
+font-weight: 500;
+transition: all 0.3s ease;
+}
+
+.use-tool-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(232, 67, 147, 0.4);
+}
+
+.modal {
+display: none;
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+background-color: white;
+margin: 3% auto;
+padding: 0;
+border-radius: 15px;
+width: 95%;
+max-width: 1200px;
+max-height: 90vh;
+overflow: hidden;
+position: relative;
+}
+
+.modal-header {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 15px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.modal-header h3 {
+margin: 0;
+font-size: 1.3em;
+}
+
+.close {
+color: white;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+background: none;
+border: none;
+padding: 0;
+width: 30px;
+height: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+transition: background 0.3s ease;
+}
+
+.close:hover {
+background: rgba(255,255,255,0.2);
+}
+
+.modal-body {
+padding: 0;
+max-height: calc(90vh - 70px);
+overflow-y: auto;
+}
+
+/* Image zoom modal styles */
+.image-modal {
+display: none;
+position: fixed;
+z-index: 2000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.9);
+}
+
+.image-modal-content {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+max-width: 95%;
+max-height: 95%;
+background: white;
+border-radius: 8px;
+padding: 10px; 
+}
+
+.image-modal img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+display: block;
+}
+
+.image-modal svg {
+    width: 300%;
+    height: 300%;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.image-modal .close {
+position: absolute;
+top: -15px;
+right: -15px;
+color: #f1f1f1;
+font-size: 40px;
+font-weight: bold;
+transition: 0.3s;
+background: rgba(0,0,0,0.8);
+border: none;
+cursor: pointer;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.image-modal .close:hover,
+.image-modal .close:focus {
+background: rgba(0,0,0,1);
+}
+
+.back-link {
+display: inline-block;
+margin-bottom: 20px;
+color: #3498db;
+text-decoration: none;
+font-weight: 500;
+transition: color 0.3s ease;
+}
+
+.back-link:hover {
+color: #2980b9;
+}
+
+.placeholder {
+color: #7f8c8d;
+font-style: italic;
+text-align: center;
+padding: 40px;
+background: #f8f9fa;
+border-radius: 8px;
+border: 2px dashed #bdc3c7;
+}
+
+.loading {
+text-align: center;
+padding: 40px;
+color: #666;
+}
+
+.error {
+text-align: center;
+padding: 40px;
+color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+.container {
+margin: 10px;
+padding: 15px;
+}
+
+.modal-content {
+width: 95%;
+margin: 5% auto;
+}
+
+.code-block {
+flex-direction: column;
+}
+
+.code-thumbnail {
+width: 100px;
+height: 100px;
+align-self: center;
+}
+
+.image-modal .close {
+top: -10px;
+right: -10px;
+font-size: 30px;
+width: 40px;
+height: 40px;
+}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<a href="../index.html" class="back-link">← Back to Main Page</a>
+
+<header class="header">
+  <h1 id="project-title">Loading...</h1>
+  <p class="subtitle" id="project-subtitle">Loading...</p>
+</header>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('introduction')">Introduction</button>
+  <button class="nav-tab" onclick="showTab('code')">Code</button>
+  <button class="nav-tab" onclick="showTab('tool')">Online Tools</button>
+</div>
+
+<div id="introduction" class="tab-content active">
+  <div class="card">
+      <h2>📋 Project Overview</h2>
+      <div id="introduction-content" class="placeholder">
+          Loading...
+      </div>
+  </div>
+</div>
+
+<div id="code" class="tab-content">
+  <div class="card">
+      <h2>💻 Code Examples</h2>
+      <div id="code-content" class="placeholder">
+          Loading...
+      </div>
+  </div>
+</div>
+
+<div id="tool" class="tab-content">
+  <div class="card">
+      <h2>🔧 Online Tools</h2>
+      <div id="tool-content" class="placeholder">
+          Loading...
+      </div>
+  </div>
+</div>
+</div>
+
+<div id="toolModal" class="modal">
+<div class="modal-content">
+  <div class="modal-header">
+      <h3 id="modal-title">Tool</h3>
+      <button class="close">&times;</button>
+  </div>
+  <div class="modal-body">
+      <div id="modal-tool-content" class="loading">
+          Loading tool...
+      </div>
+  </div>
+</div>
+</div>
+
+<!-- Image zoom modal -->
+<div id="imageModal" class="image-modal">
+<button class="close">&times;</button>
+<div class="image-modal-content" id="image-modal-content">
+</div>
+</div>
+
+<script>
+let projectData = null;
+
+// Load data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+loadProjectData();
+setupModal();
+setupImageModal();
+});
+
+async function loadProjectData() {
+try {
+  const response = await fetch('./project-data.json');
+  projectData = await response.json();
+  renderPage();
+} catch (error) {
+  console.error('Failed to load project data:', error);
+  showError();
+}
+}
+
+function renderPage() {
+if (!projectData) return;
+
+// Render basic information
+document.getElementById('project-title').textContent = projectData.title;
+document.getElementById('project-subtitle').textContent = projectData.subtitle;
+document.getElementById('introduction-content').innerHTML = `<p>${projectData.introduction}</p>`;
+
+// Render code blocks
+const codeContent = document.getElementById('code-content');
+if (projectData.code_blocks && projectData.code_blocks.length > 0) {
+  codeContent.innerHTML = projectData.code_blocks.map(block => {
+      const thumbnailHtml = block.thumbnail ? 
+          `<div class="code-thumbnail" onclick="openImageModal('${block.thumbnail}', '${block.name}')">
+              <img src="${block.thumbnail}" alt="${block.name} thumbnail" onerror="this.parentElement.style.display='none'">
+           </div>` : '';
+      
+      return `
+          <div class="code-block">
+              <div class="code-content">
+                  <h3>${block.name}</h3>
+                  <div class="code-description">${block.description}</div>
+                  <a href="${block.download_link}" class="download-link" download>📥 Download Code</a>
+              </div>
+              ${thumbnailHtml}
+          </div>
+      `;
+  }).join('');
+} else {
+  codeContent.innerHTML = '<div class="placeholder">[No code examples available]</div>';
+}
+
+// Render tool blocks - load from project-data.json
+const toolContent = document.getElementById('tool-content');
+if (projectData.tools && projectData.tools.length > 0) {
+  toolContent.innerHTML = projectData.tools.map(tool => `
+      <div class="tool-block">
+          <h3>${tool.name}</h3>
+          <div class="tool-description">${tool.description}</div>
+          <button class="use-tool-btn" onclick="openTool('${tool.id}')">🚀 Use Tool</button>
+      </div>
+  `).join('');
+} else {
+  toolContent.innerHTML = '<div class="placeholder">[No online tools available]</div>';
+}
+}
+
+function showError() {
+document.getElementById('project-title').textContent = 'Error';
+document.getElementById('project-subtitle').textContent = 'Failed to load project data';
+document.getElementById('introduction-content').innerHTML = '<p>Unable to load project data. Please check the project-data.json file.</p>';
+}
+
+function showTab(tabName) {
+const tabContents = document.querySelectorAll('.tab-content');
+tabContents.forEach(tab => tab.classList.remove('active'));
+
+const navTabs = document.querySelectorAll('.nav-tab');
+navTabs.forEach(tab => tab.classList.remove('active'));
+
+const selectedTab = document.getElementById(tabName);
+if (selectedTab) selectedTab.classList.add('active');
+
+const activeNavTab = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+if (activeNavTab) activeNavTab.classList.add('active');
+}
+
+function setupModal() {
+const modal = document.getElementById('toolModal');
+const closeBtn = modal.querySelector('.close');
+
+closeBtn.onclick = function() {
+  modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+      modal.style.display = 'none';
+  }
+}
+}
+
+// Setup image zoom modal
+function setupImageModal() {
+const imageModal = document.getElementById('imageModal');
+const closeBtn = imageModal.querySelector('.close');
+
+closeBtn.onclick = function() {
+  imageModal.style.display = 'none';
+}
+
+imageModal.onclick = function(event) {
+  if (event.target == imageModal) {
+      imageModal.style.display = 'none';
+  }
+}
+}
+
+// Open image zoom modal
+async function openImageModal(imageSrc, altText) {
+const imageModal = document.getElementById('imageModal');
+const modalContent = document.getElementById('image-modal-content');
+
+try {
+  // Check file extension to determine if it's SVG
+  if (imageSrc.toLowerCase().endsWith('.svg')) {
+      // For SVG files, load content directly
+      const response = await fetch(imageSrc);
+      const svgContent = await response.text();
+      modalContent.innerHTML = svgContent;
+  } else {
+      // For other image formats, use img tag
+      modalContent.innerHTML = `<img src="${imageSrc}" alt="${altText} - Enlarged">`;
+  }
+  
+  imageModal.style.display = 'block';
+} catch (error) {
+  console.error('Failed to load image:', error);
+  modalContent.innerHTML = `<img src="${imageSrc}" alt="${altText} - Enlarged">`;
+  imageModal.style.display = 'block';
+}
+}
+
+async function openTool(toolId) {
+const modal = document.getElementById('toolModal');
+const modalContent = document.getElementById('modal-tool-content');
+const modalTitle = document.getElementById('modal-title');
+
+modalContent.innerHTML = '<div class="loading">Loading tool...</div>';
+modalTitle.textContent = 'Tool';
+modal.style.display = 'block';
+
+try {
+  // Find the corresponding tool from projectData
+  const tool = projectData.tools.find(t => t.id === toolId);
+  if (!tool) {
+      throw new Error('Tool not found');
+  }
+
+  // Load the tool's HTML file
+  const response = await fetch(tool.html_file);
+  if (!response.ok) {
+      throw new Error('Failed to load tool HTML');
+  }
+  
+  const toolHtml = await response.text();
+  modalTitle.textContent = tool.name;
+  modalContent.innerHTML = toolHtml;
+  
+  // If tool HTML contains script tags, they need to be re-executed
+  const scripts = modalContent.querySelectorAll('script');
+  scripts.forEach(script => {
+      const newScript = document.createElement('script');
+      if (script.src) {
+          newScript.src = script.src;
+      } else {
+          newScript.textContent = script.textContent;
+      }
+      document.head.appendChild(newScript);
+      document.head.removeChild(newScript);
+  });
+  
+} catch (error) {
+  console.error('Failed to load tool:', error);
+  modalContent.innerHTML = '<div class="error">Failed to load tool. Please try again later.</div>';
+}
+}
+</script>
+</body>
+</html>

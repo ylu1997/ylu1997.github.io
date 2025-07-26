@@ -1,0 +1,70 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="enhancedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8f5e8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c8e6c9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="schemaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fce4ec;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8bbd9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="800" height="500" fill="#fafafa"/>
+  
+  <!-- 标题 -->
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">
+    SchemaJsonGenAI 核心架构
+  </text>
+  
+  <!-- 省略的基础层 -->
+  <rect x="50" y="60" width="700" height="60" rx="8" fill="#f5f5f5" stroke="#ccc" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="400" y="85" text-anchor="middle" font-size="16" fill="#999">⋮</text>
+  <text x="400" y="105" text-anchor="middle" font-size="12" fill="#666">BaseGenAI → LoggedGenAI → QuotaControlledGenAI</text>
+  
+  <!-- EnhancedGenAI 增强层 -->
+  <rect x="50" y="140" width="700" height="120" rx="10" fill="url(#enhancedGrad)" stroke="#388e3c" stroke-width="2"/>
+  <text x="70" y="165" font-size="16" font-weight="bold" fill="#388e3c">EnhancedGenAI (智能增强层)</text>
+  <text x="70" y="185" font-size="12" fill="#333">• 错误分类(客户端4xx/服务器5xx/网络错误)</text>
+  <text x="70" y="200" font-size="12" fill="#333">• 指数退避重试机制(最多30秒)</text>
+  <text x="70" y="215" font-size="12" fill="#333">• 参数验证和自动修正</text>
+  <text x="70" y="230" font-size="12" fill="#333">• 模型回退策略</text>
+  <text x="70" y="245" font-size="12" fill="#333">• 详细错误解决方案提示</text>
+  
+  <!-- SchemaJsonGenAI 最终层 -->
+  <rect x="50" y="280" width="700" height="120" rx="10" fill="url(#schemaGrad)" stroke="#c2185b" stroke-width="3"/>
+  <text x="70" y="305" font-size="16" font-weight="bold" fill="#c2185b">SchemaJsonGenAI (JSON Schema约束层)</text>
+  <text x="70" y="325" font-size="12" fill="#333">• 自动应用JSON Schema到生成配置</text>
+  <text x="70" y="340" font-size="12" fill="#333">• 强制输出application/json格式</text>
+  <text x="70" y="355" font-size="12" fill="#333">• Schema更新和获取方法(set_schema/get_schema)</text>
+  <text x="70" y="370" font-size="12" fill="#333">• 基础JSON格式验证功能(validate_response)</text>
+  <text x="70" y="385" font-size="12" fill="#333">• 严格/宽松模式选择(strict_schema参数)</text>
+  
+  <!-- 继承关系箭头 -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+            refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+    </marker>
+  </defs>
+  
+  <!-- 箭头线条 -->
+  <line x1="400" y1="120" x2="400" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="400" y1="260" x2="400" y2="280" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 继承标签 -->
+  <text x="410" y="135" font-size="10" fill="#666">继承</text>
+  <text x="410" y="275" font-size="10" fill="#666">继承</text>
+  
+  <!-- 核心特性对比 -->
+  <rect x="50" y="420" width="330" height="60" rx="8" fill="#fff" stroke="#388e3c" stroke-width="2"/>
+  <text x="60" y="440" font-size="14" font-weight="bold" fill="#388e3c">EnhancedGenAI 核心</text>
+  <text x="60" y="455" font-size="11" fill="#333">✓ 智能错误处理和重试</text>
+  <text x="60" y="470" font-size="11" fill="#333">✓ 模型回退和参数验证</text>
+  
+  <rect x="420" y="420" width="330" height="60" rx="8" fill="#fff" stroke="#c2185b" stroke-width="2"/>
+  <text x="430" y="440" font-size="14" font-weight="bold" fill="#c2185b">SchemaJsonGenAI 核心</text>
+  <text x="430" y="455" font-size="11" fill="#333">✓ 继承所有增强功能</text>
+  <text x="430" y="470" font-size="11" fill="#333">✓ 强制JSON Schema输出约束</text>
+</svg>

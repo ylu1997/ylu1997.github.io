@@ -146,6 +146,24 @@
             "Batch processing capabilities"
           ],
           "link": "./latex_literature_management_system"
+        },
+        {
+          "name": "AI Tools for Science",
+          "description": "A comprehensive collection of AI-powered tools and code libraries designed to accelerate academic research workflows, featuring intelligent API clients, automated research assistants, and utility tools for data processing and analysis.",
+          "technologies": ["Python", "Google Gemini API", "JavaScript", "HTML5", "CSS3", "JSON"],
+          "year": "2024",
+          "status": "Active Development",
+          "features": [
+            "Gemini API client with quota management",
+            "Session logging and error handling",
+            "Academic text analyzer with readability metrics",
+            "Multi-model AI support",
+            "Research workflow automation",
+            "Citation statistics analysis",
+            "Exponential backoff retry mechanism",
+            "Multi-language text processing"
+          ],
+          "link": "./AITool4Math/index.html"
         }
       ]
     },
@@ -182,15 +200,14 @@
             "Cross-language compatibility",
             "Comprehensive bit array utilities"
           ],
-          "link": "./bitarray/",
-          "documentation": "./bitarray/Readme.md"
+          "link": "./bitarray/"
         },
         {
           "name": "cuArray - CUDA Multi-dimensional Array Manager",
           "description": "A templated C++ class for managing multi-dimensional arrays on both CPU and GPU using CUDA. Provides efficient data transfer, flexible indexing, and memory management for scientific computing and machine learning applications.",
           "technologies": ["C++", "CUDA", "GPU Computing", "Template Programming", "Memory Management"],
           "year": "2024",
-          "status": "Active Development",
+          "status": "Completed",
           "features": [
             "Multi-dimensional array handling",
             "Host and device data management", 
@@ -198,8 +215,7 @@
             "Automatic memory management",
             "CUDA kernel integration"
           ],
-          "link": "./cuArray/",
-          "github": "https://github.com/你的用户名/cuArray"
+          "link": "./cuArray/"
         }
       ]
     }

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BibTeX转换器</title>
+  <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background-color: #f5f5f5;
+          padding: 20px;
+          line-height: 1.6;
+      }
+
+      .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          overflow: hidden;
+      }
+
+      .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+      }
+
+      .header h1 {
+          font-size: 2.5em;
+          margin-bottom: 10px;
+      }
+
+      .header p {
+          font-size: 1.1em;
+          opacity: 0.9;
+      }
+
+      .main-content {
+          padding: 30px;
+      }
+
+      .input-section {
+          margin-bottom: 30px;
+      }
+
+      .input-section h2 {
+          color: #333;
+          margin-bottom: 15px;
+          font-size: 1.3em;
+      }
+
+      textarea {
+          width: 100%;
+          min-height: 200px;
+          padding: 15px;
+          border: 2px solid #e1e1e1;
+          border-radius: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          resize: vertical;
+          transition: border-color 0.3s;
+      }
+
+      textarea:focus {
+          outline: none;
+          border-color: #667eea;
+      }
+
+      .button-group {
+          margin: 20px 0;
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+      }
+
+      button {
+          padding: 12px 24px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 500;
+          transition: all 0.3s;
+      }
+
+      .btn-primary {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+      }
+
+      .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+          background: #6c757d;
+          color: white;
+      }
+
+      .btn-secondary:hover {
+          background: #5a6268;
+      }
+
+      .btn-success {
+          background: #28a745;
+          color: white;
+      }
+
+      .btn-success:hover {
+          background: #218838;
+      }
+
+      .btn-warning {
+          background: #ffc107;
+          color: #212529;
+      }
+
+      .btn-warning:hover {
+          background: #e0a800;
+      }
+
+      .output-section {
+          margin-top: 30px;
+      }
+
+      .result-header-main {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+      }
+
+      .result-header-main h2 {
+          color: #333;
+          margin: 0;
+      }
+
+      .copy-all-btn {
+          padding: 10px 20px;
+          font-size: 16px;
+          background: #17a2b8;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 500;
+      }
+
+      .copy-all-btn:hover {
+          background: #138496;
+          transform: translateY(-1px);
+      }
+
+      .all-results-container {
+          background: #f8f9fa;
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 20px;
+      }
+
+      .all-results-content {
+          background: white;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          padding: 15px;
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          word-break: break-all;
+          white-space: pre-wrap;
+          max-height: 300px;
+          overflow-y: auto;
+      }
+
+      .result-item {
+          background: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 15px;
+      }
+
+      .result-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+
+      .result-title {
+          color: #495057;
+          font-weight: 600;
+          font-size: 1.1em;
+      }
+
+      .copy-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+          background: #17a2b8;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      .copy-btn:hover {
+          background: #138496;
+      }
+
+      .result-content {
+          background: white;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          padding: 15px;
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          word-break: break-all;
+      }
+
+      .error-section {
+          background: #f8d7da;
+          border: 1px solid #f5c6cb;
+          border-radius: 8px;
+          padding: 15px;
+          margin-top: 15px;
+          color: #721c24;
+      }
+
+      .stats {
+          background: #d1ecf1;
+          border: 1px solid #bee5eb;
+          border-radius: 8px;
+          padding: 15px;
+          margin-bottom: 20px;
+          color: #0c5460;
+      }
+
+      .example {
+          background: #fff3cd;
+          border: 1px solid #ffeaa7;
+          border-radius: 8px;
+          padding: 15px;
+          margin-bottom: 20px;
+      }
+
+      .example h3 {
+          color: #856404;
+          margin-bottom: 10px;
+      }
+
+      .example pre {
+          background: white;
+          padding: 10px;
+          border-radius: 4px;
+          font-size: 12px;
+          overflow-x: auto;
+      }
+
+      .individual-results {
+          margin-top: 20px;
+      }
+
+      .individual-results h3 {
+          color: #495057;
+          margin-bottom: 15px;
+          font-size: 1.2em;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <div class="header">
+          <h1>BibTeX转换器</h1>
+          <p>将BibTeX格式转换为addliterature格式</p>
+      </div>
+
+      <div class="main-content">
+          <div class="example">
+              <h3>示例BibTeX格式：</h3>
+              <pre>@article{Kuronya2014LocalPO,
+title={Local positivity of linear series on surfaces},
+author={Alex Kuronya and Victor Lozovanu},
+journal={arXiv: Algebraic Geometry},
+year={2014},
+url={https://api.semanticscholar.org/CorpusID:119288694}
+}</pre>
+          </div>
+
+          <div class="input-section">
+              <h2>输入BibTeX文本</h2>
+              <textarea id="bibInput" placeholder="请粘贴您的BibTeX文本...支持单个或多个条目"></textarea>
+          </div>
+
+          <div class="button-group">
+              <button class="btn-primary" onclick="convertBib()">转换</button>
+              <button class="btn-secondary" onclick="clearAll()">清空</button>
+              <button class="btn-success" onclick="loadExample()">加载示例</button>
+          </div>
+
+          <div id="output" class="output-section" style="display: none;">
+              <div class="result-header-main">
+                  <h2>转换结果</h2>
+                  <button class="copy-all-btn" onclick="copyAllResults()">复制全部结果</button>
+              </div>
+              
+              <div id="stats"></div>
+              
+              <div class="all-results-container">
+                  <h3 style="margin-bottom: 15px; color: #495057;">合并结果（可直接复制使用）</h3>
+                  <div id="allResultsContent" class="all-results-content"></div>
+              </div>
+
+              <div class="individual-results">
+                  <h3>单个结果详情</h3>
+                  <div id="results"></div>
+              </div>
+              
+              <div id="errors"></div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      class BibConverter {
+          constructor() {}
+
+          convertBibToAddliterature(bibText) {
+              try {
+                  // 提取条目键
+                  const keyMatch = bibText.match(/@\w+\{([^,]+),/);
+                  if (!keyMatch) {
+                      throw new Error("未找到有效的BibTeX条目键");
+                  }
+                  const key = keyMatch[1].trim();
+
+                  // 提取title
+                  const titleMatch = bibText.match(/title\s*=\s*\{([^}]+)\}/);
+                  if (!titleMatch) {
+                      throw new Error("未找到title字段");
+                  }
+                  const title = titleMatch[1].trim();
+
+                  // 提取author
+                  const authorMatch = bibText.match(/author\s*=\s*\{([^}]+)\}/);
+                  if (!authorMatch) {
+                      throw new Error("未找到author字段");
+                  }
+                  const author = authorMatch[1].trim();
+
+                  // 提取year
+                  const yearMatch = bibText.match(/year\s*=\s*\{([^}]+)\}/);
+                  if (!yearMatch) {
+                      throw new Error("未找到year字段");
+                  }
+                  const year = yearMatch[1].trim();
+
+                  // 构建结果
+                  const result = `\\addliterature{${title}\\cite{${key}}}{${author}}{${year}}{}{[Tag2-Please fill in]}`;
+
+                  return result;
+
+              } catch (error) {
+                  throw new Error(`解析BibTeX时出错: ${error.message}`);
+              }
+          }
+
+          splitMultipleBibs(text) {
+              const entries = [];
+              const pattern = /@\w+\s*\{/g;
+              const matches = [...text.matchAll(pattern)];
+
+              if (matches.length === 0) {
+                  return [];
+              }
+
+              for (let i = 0; i < matches.length; i++) {
+                  const startPos = matches[i].index;
+                  let endPos;
+                  
+                  if (i < matches.length - 1) {
+                      endPos = matches[i + 1].index;
+                  } else {
+                      endPos = text.length;
+                  }
+
+                  let entryText = text.substring(startPos, endPos).trim();
+
+                  // 确保条目以}结尾
+                  if (entryText && !entryText.endsWith('}')) {
+                      const lastBrace = entryText.lastIndexOf('}');
+                      if (lastBrace !== -1) {
+                          entryText = entryText.substring(0, lastBrace + 1);
+                      }
+                  }
+
+                  if (entryText) {
+                      entries.push(entryText);
+                  }
+              }
+
+              return entries;
+          }
+
+          convertMultipleBibs(text) {
+              const entries = this.splitMultipleBibs(text);
+
+              if (entries.length === 0) {
+                  // 尝试作为单个条目处理
+                  try {
+                      const result = this.convertBibToAddliterature(text);
+                      return { success: [result], errors: [] };
+                  } catch (error) {
+                      return { success: [], errors: [`解析失败: ${error.message}`] };
+                  }
+              }
+
+              const successResults = [];
+              const errorMessages = [];
+
+              entries.forEach((entry, index) => {
+                  try {
+                      const result = this.convertBibToAddliterature(entry);
+                      successResults.push(result);
+                  } catch (error) {
+                      errorMessages.push(`第${index + 1}个条目转换失败: ${error.message}`);
+                  }
+              });
+
+              return { success: successResults, errors: errorMessages };
+          }
+
+          extractField(bibText, fieldName) {
+              const pattern = new RegExp(`${fieldName}\\s*=\\s*\\{([^}]+)\\}`, 'i');
+              const match = bibText.match(pattern);
+              return match ? match[1].trim() : "";
+          }
+
+          getEntryKey(bibText) {
+              const match = bibText.match(/@\w+\{([^,]+),/);
+              return match ? match[1].trim() : "";
+          }
+      }
+
+      const converter = new BibConverter();
+      let allResults = []; // 存储所有成功的结果
+
+      function convertBib() {
+          const input = document.getElementById('bibInput').value.trim();
+          const outputDiv = document.getElementById('output');
+          const statsDiv = document.getElementById('stats');
+          const resultsDiv = document.getElementById('results');
+          const errorsDiv = document.getElementById('errors');
+          const allResultsContent = document.getElementById('allResultsContent');
+
+          if (!input) {
+              alert('请输入BibTeX文本');
+              return;
+          }
+
+          const { success, errors } = converter.convertMultipleBibs(input);
+          allResults = success; // 保存结果供复制使用
+
+          // 显示统计信息
+          statsDiv.innerHTML = `
+              <div class="stats">
+                  <strong>转换统计：</strong>成功 ${success.length} 个条目，失败 ${errors.length} 个条目
+              </div>
+          `;
+
+          // 显示合并的所有结果
+          if (success.length > 0) {
+              const combinedResults = success.join('\n\n');
+              allResultsContent.textContent = combinedResults;
+          } else {
+              allResultsContent.textContent = '没有成功转换的结果';
+          }
+
+          // 显示单个结果详情
+          resultsDiv.innerHTML = '';
+          success.forEach((result, index) => {
+              const resultDiv = document.createElement('div');
+              resultDiv.className = 'result-item';
+              resultDiv.innerHTML = `
+                  <div class="result-header">
+                      <div class="result-title">结果 ${index + 1}</div>
+                      <button class="copy-btn" onclick="copyToClipboard(\`${result.replace(/`/g, '\\`')}\`)">复制单个</button>
+                  </div>
+                  <div class="result-content">${result}</div>
+              `;
+              resultsDiv.appendChild(resultDiv);
+          });
+
+          // 显示错误信息
+          if (errors.length > 0) {
+              errorsDiv.innerHTML = `
+                  <div class="error-section">
+                      <h3>错误信息：</h3>
+                      ${errors.map(error => `<div>• ${error}</div>`).join('')}
+                  </div>
+              `;
+          } else {
+              errorsDiv.innerHTML = '';
+          }
+
+          outputDiv.style.display = 'block';
+      }
+
+      function copyAllResults() {
+          if (allResults.length === 0) {
+              alert('没有可复制的结果');
+              return;
+          }
+
+          const combinedResults = allResults.join('\n\n');
+          
+          navigator.clipboard.writeText(combinedResults).then(() => {
+              // 临时显示复制成功提示
+              const btn = document.querySelector('.copy-all-btn');
+              const originalText = btn.textContent;
+              btn.textContent = `已复制 ${allResults.length} 个结果!`;
+              btn.style.background = '#28a745';
+              setTimeout(() => {
+                  btn.textContent = originalText;
+                  btn.style.background = '#17a2b8';
+              }, 2000);
+          }).catch(err => {
+              alert('复制失败，请手动复制合并结果区域的内容');
+          });
+      }
+
+      function clearAll() {
+          document.getElementById('bibInput').value = '';
+          document.getElementById('output').style.display = 'none';
+          allResults = [];
+      }
+
+      function loadExample() {
+          const example = `@article{Kuronya2014LocalPO,
+title={Local positivity of linear series on surfaces},
+author={Alex Kuronya and Victor Lozovanu},
+journal={arXiv: Algebraic Geometry},
+year={2014},
+url={https://api.semanticscholar.org/CorpusID:119288694}
+}
+
+@article{Smith2020TestArticle,
+title={Test Article Title},
+author={John Smith and Jane Doe},
+journal={Test Journal},
+year={2020}
+}`;
+          document.getElementById('bibInput').value = example;
+      }
+
+      function copyToClipboard(text) {
+          navigator.clipboard.writeText(text).then(() => {
+              // 临时显示复制成功提示
+              const btn = event.target;
+              const originalText = btn.textContent;
+              btn.textContent = '已复制!';
+              btn.style.background = '#28a745';
+              setTimeout(() => {
+                  btn.textContent = originalText;
+                  btn.style.background = '#17a2b8';
+              }, 1000);
+          }).catch(err => {
+              alert('复制失败，请手动复制');
+          });
+      }
+  </script>
+</body>
+</html>

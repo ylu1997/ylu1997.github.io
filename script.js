@@ -319,54 +319,104 @@ card.innerHTML = content;
 
 // 更新项目页面
 async function updateProjectsPage() {
-const projects = await personalData.getProjects();
-const card = document.getElementById('projects-card');
+  const projects = await personalData.getProjects();
+  const card = document.getElementById('projects-card');
 
-if (!card) return;
+  if (!card) return;
 
-let content = '<h2>💼 Projects</h2>';
+  let content = '<h2>💼 Projects</h2>';
 
-if (projects.sections && projects.sections.length) {
-  projects.sections.forEach(section => {
-    content += `<div class="project-section"><h3>${section.title}</h3>`;
-    
-    section.items.forEach(project => {
+  if (projects.sections && projects.sections.length) {
+    projects.sections.forEach((section, index) => {
+      const sectionId = `project-section-${index}`;
       content += `
-        <div class="project-item">
-          <h4>${project.name}</h4>
-          <p>${project.description}</p>
-          <div class="project-meta">
-            <span class="project-year">${project.year}</span>
-            <span class="project-status">${project.status}</span>
+        <div class="project-section">
+          <div class="project-section-header" onclick="toggleProjectSection('${sectionId}')">
+            <h3>${section.title}</h3>
+            <span class="collapse-icon" id="${sectionId}-icon">▼</span>
           </div>
-          ${project.technologies ? `
-            <div class="tech-tags">
-              ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+          <div class="project-section-content" id="${sectionId}">
+            <div class="project-items">
+      `;
+      
+      section.items.forEach(project => {
+        content += `
+          <div class="project-item">
+            <h4>${project.name}</h4>
+            <p>${project.description}</p>
+            <div class="project-meta">
+              <span class="project-year">${project.year}</span>
+              <span class="project-status">${project.status}</span>
             </div>
-          ` : ''}
-          ${project.features ? `
-            <ul class="project-features">
-              ${project.features.map(feature => `<li>${feature}</li>`).join('')}
-            </ul>
-          ` : ''}
-          ${project.result ? `<p class="project-result"><strong>Result:</strong> ${project.result}</p>` : ''}
-          ${project.team ? `<p><strong>Team:</strong> ${project.team.join(', ')}</p>` : ''}
-          <div class="project-links">
-            ${project.link ? `<a href="${project.link}" target="_blank" class="project-link">🔗 View Project</a>` : ''}
-            ${project.github ? `<a href="${project.github}" target="_blank" class="project-link">📂 GitHub</a>` : ''}
-            ${project.documentation ? `<a href="${project.documentation}" target="_blank" class="project-link">📚 Documentation</a>` : ''}
+            ${project.technologies ? `
+              <div class="tech-tags">
+                ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+              </div>
+            ` : ''}
+            ${project.features ? `
+              <ul class="project-features">
+                ${project.features.map(feature => `<li>${feature}</li>`).join('')}
+              </ul>
+            ` : ''}
+            ${project.result ? `<p class="project-result"><strong>Result:</strong> ${project.result}</p>` : ''}
+            ${project.team ? `<p><strong>Team:</strong> ${project.team.join(', ')}</p>` : ''}
+            <div class="project-links">
+              ${project.link ? `<a href="${project.link}" target="_blank" class="project-link">🔗 View Project</a>` : ''}
+              ${project.github ? `<a href="${project.github}" target="_blank" class="project-link">📂 GitHub</a>` : ''}
+              ${project.documentation ? `<a href="${project.documentation}" target="_blank" class="project-link">📚 Documentation</a>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      content += `
+            </div>
           </div>
         </div>
       `;
     });
-    
-    content += '</div>';
-  });
-} else {
-  content += '<div class="placeholder">[Projects will be listed here]</div>';
+  } else {
+    content += '<div class="placeholder">[Projects will be listed here]</div>';
+  }
+
+  card.innerHTML = content;
 }
 
-card.innerHTML = content;
+// 添加折叠切换函数
+function toggleProjectSection(sectionId) {
+  const content = document.getElementById(sectionId);
+  const icon = document.getElementById(sectionId + '-icon');
+  
+  if (!content || !icon) return;
+  
+  if (content.classList.contains('collapsed')) {
+    content.classList.remove('collapsed');
+    icon.classList.remove('collapsed');
+    icon.textContent = '▼';
+  } else {
+    content.classList.add('collapsed');
+    icon.classList.add('collapsed');
+    icon.textContent = '▶';
+  }
+}
+
+// 添加全局展开/折叠所有项目的函数（可选）
+function toggleAllProjectSections(expand = null) {
+  const sections = document.querySelectorAll('.project-section-content');
+  const icons = document.querySelectorAll('.collapse-icon');
+  
+  sections.forEach((section, index) => {
+    const icon = icons[index];
+    if (expand === true || (expand === null && section.classList.contains('collapsed'))) {
+      section.classList.remove('collapsed');
+      icon.classList.remove('collapsed');
+      icon.textContent = '▼';
+    } else {
+      section.classList.add('collapsed');
+      icon.classList.add('collapsed');
+      icon.textContent = '▶';
+    }
+  });
 }
 
 // 更新联系页面
