@@ -650,49 +650,44 @@ try {
 }
 
 async function openTool(toolId) {
-const modal = document.getElementById('toolModal');
-const modalContent = document.getElementById('modal-tool-content');
-const modalTitle = document.getElementById('modal-title');
+    const modal = document.getElementById('toolModal');
+    const modalContent = document.getElementById('modal-tool-content');
+    const modalTitle = document.getElementById('modal-title');
 
-modalContent.innerHTML = '<div class="loading">Loading tool...</div>';
-modalTitle.textContent = 'Tool';
-modal.style.display = 'block';
+    modalContent.innerHTML = '<div class="loading">Loading tool...</div>';
+    modalTitle.textContent = 'Tool';
+    modal.style.display = 'block';
 
-try {
-  // Find the corresponding tool from projectData
-  const tool = projectData.tools.find(t => t.id === toolId);
-  if (!tool) {
-      throw new Error('Tool not found');
-  }
+    try {
+        const tool = projectData.tools.find(t => t.id === toolId);
+        if (!tool) {
+            throw new Error('Tool not found');
+        }
 
-  // Load the tool's HTML file
-  const response = await fetch(tool.html_file);
-  if (!response.ok) {
-      throw new Error('Failed to load tool HTML');
-  }
-  
-  const toolHtml = await response.text();
-  modalTitle.textContent = tool.name;
-  modalContent.innerHTML = toolHtml;
-  
-  // If tool HTML contains script tags, they need to be re-executed
-  const scripts = modalContent.querySelectorAll('script');
-  scripts.forEach(script => {
-      const newScript = document.createElement('script');
-      if (script.src) {
-          newScript.src = script.src;
-      } else {
-          newScript.textContent = script.textContent;
-      }
-      document.head.appendChild(newScript);
-      document.head.removeChild(newScript);
-  });
-  
-} catch (error) {
-  console.error('Failed to load tool:', error);
-  modalContent.innerHTML = '<div class="error">Failed to load tool. Please try again later.</div>';
+        const response = await fetch(tool.html_file);
+        if (!response.ok) {
+            throw new Error('Failed to load tool HTML');
+        }
+        
+        const toolHtml = await response.text();
+        modalTitle.textContent = tool.name;
+        
+        // 使用iframe来隔离工具
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '600px';
+        iframe.style.border = 'none';
+        iframe.srcdoc = toolHtml;
+        
+        modalContent.innerHTML = '';
+        modalContent.appendChild(iframe);
+        
+    } catch (error) {
+        console.error('Failed to load tool:', error);
+        modalContent.innerHTML = '<div class="error">Failed to load tool. Please try again later.</div>';
+    }
 }
-}
+
 </script>
 </body>
 </html>

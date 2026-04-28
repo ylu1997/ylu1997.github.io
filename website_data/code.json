@@ -1,0 +1,28 @@
+{
+  "_comment": {
+    "structure": "顶层 data 为节点数组，有 children 为分组，否则为叶子条目",
+    "node.category": "分组名",
+    "node.children": "子节点数组，可任意层级嵌套",
+    "item.name": "项目名",
+    "item.lang": "主要编程语言",
+    "item.year": "年份",
+    "item.desc": "一句话说明",
+    "item.tags": "标签数组",
+    "item.links": "链接数组，每项 { label, url }"
+  },
+  "data": [
+    {
+      "category": "Research Tools",
+      "children": [
+        {
+          "name": "Project Name",
+          "lang": "Python",
+          "year": 2025,
+          "desc": "What this repo does in one sentence.",
+          "tags": ["SageMath", "123"],
+          "links": [{ "label": "GitHub", "url": "#" }]
+        }
+      ]
+    }
+  ]
+}

@@ -1,742 +1,640 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON to LaTeX Proof Diagram Converter</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-        
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-        
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            min-height: 600px;
-        }
-        
-        .input-section, .output-section {
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .input-section {
-            border-right: 1px solid #e0e0e0;
-            background: #fafafa;
-        }
-        
-        .section-title {
-            font-size: 1.3em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 20px;
-            background: #3498db;
-            border-radius: 2px;
-        }
-        
-        .json-input {
-            flex: 1;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            transition: border-color 0.3s;
-            background: white;
-        }
-        
-        .json-input:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-        
-        .controls {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #7f8c8d;
-        }
-        
-        .btn-success {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: #229954;
-        }
-        
-        .latex-output {
-            flex: 1;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 13px;
-            line-height: 1.4;
-            background: #f8f9fa;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            color: #2c3e50;
-        }
-        
-        .status {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 500;
-            display: none;
-        }
-        
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .example-section {
-            background: #ecf0f1;
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-        
-        .example-btn {
-            background: #e74c3c;
-            color: white;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .example-btn:hover {
-            background: #c0392b;
-        }
-        
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(52, 152, 219, 0.9);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .output-section {
-            position: relative;
-        }
-        
-        .output-section:hover .copy-btn {
-            opacity: 1;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .input-section {
-                border-right: none;
-                border-bottom: 1px solid #e0e0e0;
-            }
-            
-            .controls {
-                justify-content: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON to LaTeX DAG Converter</title>
+  <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+          padding: 20px;
+      }
+      
+      .container {
+          max-width: 1400px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          overflow: hidden;
+      }
+      
+      .header {
+          background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+      }
+      
+      .header h1 {
+          font-size: 2.5em;
+          margin-bottom: 10px;
+          font-weight: 300;
+      }
+      
+      .header p {
+          font-size: 1.1em;
+          opacity: 0.9;
+      }
+      
+      .main-content {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0;
+          min-height: 600px;
+      }
+      
+      .input-section, .output-section {
+          padding: 30px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      .input-section {
+          border-right: 1px solid #e0e0e0;
+          background: #fafafa;
+      }
+      
+      .section-title {
+          font-size: 1.3em;
+          font-weight: 600;
+          margin-bottom: 15px;
+          color: #2c3e50;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+      
+      .section-title::before {
+          content: '';
+          width: 4px;
+          height: 20px;
+          background: #3498db;
+          border-radius: 2px;
+      }
+      
+      .json-input {
+          flex: 1;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 20px;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 14px;
+          line-height: 1.5;
+          resize: none;
+          outline: none;
+          transition: border-color 0.3s;
+          background: white;
+      }
+      
+      .json-input:focus {
+          border-color: #3498db;
+          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      }
+      
+      .controls {
+          margin-top: 20px;
+          display: flex;
+          gap: 15px;
+          flex-wrap: wrap;
+      }
+      
+      .btn {
+          padding: 12px 24px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .btn-primary {
+          background: #3498db;
+          color: white;
+      }
+      
+      .btn-primary:hover {
+          background: #2980b9;
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+      
+      .btn-secondary {
+          background: #95a5a6;
+          color: white;
+      }
+      
+      .btn-secondary:hover {
+          background: #7f8c8d;
+      }
+      
+      .btn-success {
+          background: #27ae60;
+          color: white;
+      }
+      
+      .btn-success:hover {
+          background: #229954;
+      }
+      
+      .latex-output {
+          flex: 1;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 20px;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 13px;
+          line-height: 1.4;
+          background: #f8f9fa;
+          overflow-y: auto;
+          white-space: pre-wrap;
+          color: #2c3e50;
+      }
+      
+      .status {
+          margin-top: 15px;
+          padding: 12px;
+          border-radius: 6px;
+          font-weight: 500;
+          display: none;
+      }
+      
+      .status.success {
+          background: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+      }
+      
+      .status.error {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+      }
+      
+      .copy-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: rgba(52, 152, 219, 0.9);
+          color: white;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          opacity: 0;
+          transition: opacity 0.3s;
+      }
+      
+      .output-section {
+          position: relative;
+      }
+      
+      .output-section:hover .copy-btn {
+          opacity: 1;
+      }
+      
+      @media (max-width: 768px) {
+          .main-content {
+              grid-template-columns: 1fr;
+          }
+          
+          .input-section {
+              border-right: none;
+              border-bottom: 1px solid #e0e0e0;
+          }
+          
+          .controls {
+              justify-content: center;
+          }
+      }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔄 JSON to LaTeX Converter</h1>
-            <p>将证明图表的JSON数据转换为LaTeX TikZ代码</p>
-        </div>
-        
-        <div class="main-content">
-            <div class="input-section">
-                <div class="section-title">📝 JSON输入</div>
-                <textarea id="jsonInput" class="json-input" placeholder="请在此处粘贴或输入JSON数据..."></textarea>
-                <div class="controls">
-                    <button class="btn btn-primary" onclick="convertToLatex()">
-                        🔄 转换为LaTeX
-                    </button>
-                    <button class="btn btn-secondary" onclick="clearInput()">
-                        🗑️ 清空输入
-                    </button>
-                    <button class="btn btn-secondary" onclick="formatJson()">
-                        ✨ 格式化JSON
-                    </button>
-                </div>
-                <div id="status" class="status"></div>
-            </div>
-            
-            <div class="output-section">
-                <div class="section-title">📄 LaTeX输出</div>
-                <button class="copy-btn" onclick="copyToClipboard()">📋 复制</button>
-                <div id="latexOutput" class="latex-output">转换后的LaTeX代码将在此处显示...</div>
-            </div>
-        </div>
-        
-        <div class="example-section">
-            <div class="section-title">💡 示例数据</div>
-            <p style="margin-bottom: 15px; color: #666;">点击下面的按钮加载示例JSON数据：</p>
-            <button class="btn example-btn" onclick="loadExample()">
-                📚 加载证明图表示例
-            </button>
-        </div>
-    </div>
+  <div class="container">
+      <div class="header">
+          <h1>🔄 JSON to LaTeX DAG Converter</h1>
+          <p>将有向无环图(DAG)的JSON数据转换为LaTeX TikZ代码</p>
+      </div>
+      
+      <div class="main-content">
+          <div class="input-section">
+              <div class="section-title">📝 JSON输入</div>
+              <textarea id="jsonInput" class="json-input" placeholder="请在此处粘贴或输入DAG的JSON数据..."></textarea>
+              <div class="controls">
+                  <button class="btn btn-primary" onclick="convertToLatex()">
+                      🔄 转换为LaTeX
+                  </button>
+                  <button class="btn btn-secondary" onclick="clearInput()">
+                      🗑️ 清空输入
+                  </button>
+                  <button class="btn btn-secondary" onclick="formatJson()">
+                      ✨ 格式化JSON
+                  </button>
+              </div>
+              <div id="status" class="status"></div>
+          </div>
+          
+          <div class="output-section">
+              <div class="section-title">📄 LaTeX输出</div>
+              <button class="copy-btn" onclick="copyToClipboard()">📋 复制</button>
+              <div id="latexOutput" class="latex-output">转换后的LaTeX代码将在此处显示...</div>
+          </div>
+      </div>
+  </div>
 
-    <script>
-        // JavaScript implementation of ProofDiagramConverter
-        class ProofDiagramConverter {
-            constructor() {
-                this.nodePositions = {};
-                this.layers = [];
-            }
+  <script>
+      // JavaScript implementation of DAGToLaTeX based on Python code
+      class DAGToLaTeX {
+          constructor() {
+              this.data = null;
+              this.positions = {};
+          }
 
-            parseJson(jsonData) {
-                if (typeof jsonData === 'string') {
-                    const data = JSON.parse(jsonData);
-                    return data.proof_diagram;
-                } else {
-                    return jsonData.proof_diagram;
-                }
-            }
+          parseJson(jsonData) {
+              if (typeof jsonData === 'string') {
+                  this.data = JSON.parse(jsonData);
+              } else {
+                  this.data = jsonData;
+              }
+              return this.data;
+          }
 
-            topologicalSort(nodes, edges) {
-                const graph = {};
-                const inDegree = {};
-                const nodeIds = new Set(nodes.map(node => node.id));
+          isDAG() {
+              const nodes = this.data.nodes;
+              const edges = this.data.edges;
 
-                // Initialize
-                nodeIds.forEach(id => {
-                    graph[id] = [];
-                    inDegree[id] = 0;
-                });
+              // Build adjacency list
+              const adjList = {};
+              nodes.forEach(node => {
+                  adjList[node.id] = [];
+              });
 
-                // Build graph for reasoning edges only
-                edges.forEach(edge => {
-                    if (edge.type === 'reasoning') {
-                        const source = edge.source;
-                        const target = edge.target;
-                        if (nodeIds.has(source) && nodeIds.has(target)) {
-                            graph[source].push(target);
-                            inDegree[target]++;
-                        }
-                    }
-                });
+              edges.forEach(edge => {
+                  if (adjList[edge.startNode]) {
+                      adjList[edge.startNode].push(edge.endNode);
+                  }
+              });
 
-                // Topological sort
-                const layers = [];
-                let queue = Array.from(nodeIds).filter(id => inDegree[id] === 0);
+              // Use DFS to detect cycles
+              // 0: unvisited, 1: visiting (in current path), 2: visited (completed)
+              const state = {};
+              nodes.forEach(node => {
+                  state[node.id] = 0;
+              });
 
-                while (queue.length > 0) {
-                    const currentLayer = [...queue];
-                    const nextQueue = [];
+              const hasCycle = (nodeId) => {
+                  if (state[nodeId] === 1) return true; // Back edge found - cycle detected
+                  if (state[nodeId] === 2) return false; // Already processed
 
-                    currentLayer.forEach(nodeId => {
-                        graph[nodeId].forEach(neighbor => {
-                            inDegree[neighbor]--;
-                            if (inDegree[neighbor] === 0) {
-                                nextQueue.push(neighbor);
-                            }
-                        });
-                    });
+                  state[nodeId] = 1; // Mark as visiting
 
-                    if (currentLayer.length > 0) {
-                        layers.push(currentLayer);
-                    }
-                    queue = nextQueue;
-                }
+                  for (const neighbor of (adjList[nodeId] || [])) {
+                      if (hasCycle(neighbor)) return true;
+                  }
 
-                return layers;
-            }
+                  state[nodeId] = 2; // Mark as completed
+                  return false;
+              };
 
-            calculateLayout(nodes, edges) {
-                const nodeDict = {};
-                nodes.forEach(node => {
-                    nodeDict[node.id] = node;
-                });
+              // Check all nodes for cycles
+              for (const node of nodes) {
+                  if (state[node.id] === 0) {
+                      if (hasCycle(node.id)) return false;
+                  }
+              }
 
-                const mainNodes = nodes.filter(node => node.type !== 'annotation');
-                const annotationNodes = nodes.filter(node => node.type === 'annotation');
+              return true;
+          }
 
-                const layers = this.topologicalSort(mainNodes, edges);
-                const positions = {};
-                const layerHeight = 3.0;
+          findCycle() {
+              const nodes = this.data.nodes;
+              const edges = this.data.edges;
 
-                // Position main nodes
-                layers.forEach((layer, layerIdx) => {
-                    const y = -layerIdx * layerHeight;
-                    const typeOrder = { 'condition': 0, 'step': 1, 'conclusion': 2 };
-                    
-                    const layerNodes = layer.sort((a, b) => {
-                        const typeA = typeOrder[nodeDict[a].type] || 4;
-                        const typeB = typeOrder[nodeDict[b].type] || 4;
-                        if (typeA !== typeB) return typeA - typeB;
-                        return nodeDict[a].label.localeCompare(nodeDict[b].label);
-                    });
+              // Build adjacency list
+              const adjList = {};
+              nodes.forEach(node => {
+                  adjList[node.id] = [];
+              });
 
-                    if (layerNodes.length === 1) {
-                        positions[layerNodes[0]] = [0, y];
-                    } else {
-                        const totalWidth = (layerNodes.length - 1) * 4.0;
-                        const startX = -totalWidth / 2;
-                        layerNodes.forEach((nodeId, i) => {
-                            const x = startX + i * 4.0;
-                            positions[nodeId] = [x, y];
-                        });
-                    }
-                });
+              edges.forEach(edge => {
+                  if (adjList[edge.startNode]) {
+                      adjList[edge.startNode].push(edge.endNode);
+                  }
+              });
 
-                // Position annotation nodes
-                this.placeAnnotationNodes(annotationNodes, positions, edges, nodeDict);
+              // Use DFS to find cycle
+              const state = {};
+              nodes.forEach(node => {
+                  state[node.id] = 0;
+              });
 
-                return positions;
-            }
+              const findCycleDFS = (nodeId, path) => {
+                  if (state[nodeId] === 1) {
+                      // Back edge found - extract cycle from path
+                      let cycleStart = path.length - 1;
+                      while (cycleStart >= 0 && path[cycleStart] !== nodeId) {
+                          cycleStart--;
+                      }
+                      return path.slice(cycleStart).concat([nodeId]);
+                  }
 
-            placeAnnotationNodes(annotationNodes, positions, edges, nodeDict) {
-                if (annotationNodes.length === 0) return;
+                  if (state[nodeId] === 2) return null;
 
-                let minX = 0, maxX = 0, minY = 0, maxY = 0;
-                if (Object.keys(positions).length > 0) {
-                    const xs = Object.values(positions).map(pos => pos[0]);
-                    const ys = Object.values(positions).map(pos => pos[1]);
-                    minX = Math.min(...xs);
-                    maxX = Math.max(...xs);
-                    minY = Math.min(...ys);
-                    maxY = Math.max(...ys);
-                }
+                  state[nodeId] = 1;
+                  path.push(nodeId);
 
-                const annotationConnections = {};
-                edges.forEach(edge => {
-                    if (edge.type === 'explanation') {
-                        const sourceId = edge.source;
-                        const targetId = edge.target;
-                        if (annotationNodes.some(node => node.id === targetId) && positions[sourceId]) {
-                            annotationConnections[targetId] = sourceId;
-                        }
-                    }
-                });
+                  for (const neighbor of (adjList[nodeId] || [])) {
+                      const cycle = findCycleDFS(neighbor, [...path]);
+                      if (cycle) return cycle;
+                  }
 
-                const annotationOffsetX = 5.0;
-                const annotationOffsetY = 1.5;
+                  path.pop();
+                  state[nodeId] = 2;
+                  return null;
+              };
 
-                annotationNodes.forEach((annotationNode, i) => {
-                    const nodeId = annotationNode.id;
-                    let annX, annY;
+              // Check all nodes for cycles
+              for (const node of nodes) {
+                  if (state[node.id] === 0) {
+                      const cycle = findCycleDFS(node.id, []);
+                      if (cycle) return cycle;
+                  }
+              }
 
-                    if (annotationConnections[nodeId]) {
-                        const mainNodeId = annotationConnections[nodeId];
-                        const [mainX, mainY] = positions[mainNodeId];
-                        annX = maxX + annotationOffsetX;
-                        annY = mainY - annotationOffsetY * (i % 3);
-                    } else {
-                        annX = maxX + annotationOffsetX;
-                        annY = minY - 2.0 - i * 1.5;
-                    }
+              return null;
+          }
 
-                    positions[nodeId] = [annX, annY];
-                });
-            }
+          calculateLayout() {
+              const nodes = this.data.nodes;
+              const edges = this.data.edges;
 
-            escapeLatexText(text) {
-                return text.replace(/&/g, '\\&')
-                           .replace(/%/g, '\\%')
-                           .replace(/#/g, '\\#');
-            }
+              // Build adjacency list (excluding feedback edges for layering)
+              const adjList = {};
+              const inDegree = {};
+              
+              nodes.forEach(node => {
+                  adjList[node.id] = [];
+                  inDegree[node.id] = 0;
+              });
 
-            generateContentList(nodes) {
-                const contentLines = [];
-                const typeNames = {
-                    'condition': 'Conditions',
-                    'step': 'Steps',
-                    'conclusion': 'Conclusions',
-                    'annotation': 'Annotations'
-                };
+              edges.forEach(edge => {
+                  if (edge.type !== 'feedback') { // Ignore feedback edges for topological sort
+                      adjList[edge.startNode].push(edge.endNode);
+                      inDegree[edge.endNode]++;
+                  }
+              });
 
-                contentLines.push('\\begin{itemize}');
+              // Topological sort for layering
+              const layers = [];
+              let queue = [];
+              
+              // Find nodes with in-degree 0
+              for (const [nodeId, degree] of Object.entries(inDegree)) {
+                  if (degree === 0) {
+                      queue.push(nodeId);
+                  }
+              }
 
-                ['condition', 'step', 'conclusion', 'annotation'].forEach(nodeType => {
-                    const typeNodes = nodes.filter(node => node.type === nodeType);
-                    if (typeNodes.length > 0) {
-                        contentLines.push(`  \\item \\textbf{${typeNames[nodeType]}:}`);
-                        contentLines.push('    \\begin{itemize}');
+              while (queue.length > 0) {
+                  const currentLayer = [...queue];
+                  layers.push(currentLayer);
+                  const nextQueue = [];
 
-                        typeNodes.sort((a, b) => a.label.localeCompare(b.label)).forEach(node => {
-                            const label = node.label;
-                            const content = this.escapeLatexText(node.content);
-                            contentLines.push(`      \\item \\textbf{${label}:} ${content}`);
-                        });
+                  currentLayer.forEach(nodeId => {
+                      adjList[nodeId].forEach(neighbor => {
+                          inDegree[neighbor]--;
+                          if (inDegree[neighbor] === 0) {
+                              nextQueue.push(neighbor);
+                          }
+                      });
+                  });
 
-                        contentLines.push('    \\end{itemize}');
-                    }
-                });
+                  queue = nextQueue;
+              }
 
-                contentLines.push('\\end{itemize}');
-                return contentLines;
-            }
+              // Assign positions - reduced spacing for smaller overall size
+              const layerHeight = 2.5; // Reduced from 3.5
+              const nodeSpacing = 3.5; // Reduced from 5.0
 
-            getTikzStyleName(nodeType) {
-                const styleMapping = {
-                    'condition': 'conditionstyle',
-                    'step': 'stepstyle',
-                    'conclusion': 'conclusionstyle',
-                    'annotation': 'annotationstyle'
-                };
-                return styleMapping[nodeType] || nodeType + 'style';
-            }
+              layers.forEach((layer, layerIdx) => {
+                  const y = -layerIdx * layerHeight;
+                  const layerWidth = (layer.length - 1) * nodeSpacing;
+                  const startX = -layerWidth / 2;
 
-            generateTikzStyles() {
-                return [
-                    '\\tikzset{',
-                    '  conditionstyle/.style={rectangle, draw, fill=blue!10, text width=2.5cm, text centered, minimum height=1cm},',
-                    '  stepstyle/.style={rectangle, draw, fill=purple!10, text width=2.5cm, text centered, minimum height=1cm},',
-                    '  conclusionstyle/.style={rectangle, draw, fill=green!10, text width=2.5cm, text centered, minimum height=1cm},',
-                    '  annotationstyle/.style={rectangle, draw, fill=orange!10, text width=2.8cm, text centered, minimum height=0.8cm, rounded corners=3pt},',
-                    '  reasoning/.style={->, thick},',
-                    '  explanation/.style={->, dashed, gray}',
-                    '}'
-                ];
-            }
+                  layer.forEach((nodeId, nodeIdx) => {
+                      const x = startX + nodeIdx * nodeSpacing;
+                      this.positions[nodeId] = [x, y];
+                  });
+              });
+          }
 
-            generateTikzDiagram(nodes, edges, positions) {
-                const tikzLines = [];
-                tikzLines.push('\\begin{center}');
-                tikzLines.push('\\begin{tikzpicture}[node distance=2cm]');
+          getTypeDescription(nodeType) {
+              const descriptions = {
+                  'input': 'Initial data or parameters that serve as starting points for the algorithm',
+                  'process': 'Computational steps that transform data or perform calculations',
+                  'output': 'Final results or analysis outcomes produced by the algorithm'
+              };
+              return descriptions[nodeType] || 'Algorithm component';
+          }
 
-                const nodeDict = {};
-                nodes.forEach(node => {
-                    nodeDict[node.id] = node;
-                });
+          generateLatex(jsonData) {
+              this.parseJson(jsonData);
 
-                // Add nodes
-                Object.entries(positions).forEach(([nodeId, [x, y]]) => {
-                    const node = nodeDict[nodeId];
-                    const nodeType = node.type;
-                    const styleName = this.getTikzStyleName(nodeType);
-                    const label = this.escapeLatexText(node.label);
-                    tikzLines.push(`  \\node[${styleName}] (${nodeId}) at (${x.toFixed(1)},${y.toFixed(1)}) {${label}};`);
-                });
+              // First check if the graph is a DAG
+              if (!this.isDAG()) {
+                  const cycle = this.findCycle();
+                  const cycleStr = cycle ? cycle.join(' -> ') : 'Unknown cycle';
+                  throw new Error(`Error: The input graph is not a Directed Acyclic Graph (DAG).\nCycle detected: ${cycleStr}\nPlease remove cycles from your graph before generating LaTeX.`);
+              }
 
-                tikzLines.push('');
+              this.calculateLayout();
 
-                // Add edges
-                edges.forEach(edge => {
-                    const source = edge.source;
-                    const target = edge.target;
-                    const edgeType = edge.type;
-                    const label = (edge.label || '').trim();
+              const latexContent = [];
 
-                    if (positions[source] && positions[target]) {
-                        if (label) {
-                            const labelEscaped = this.escapeLatexText(label);
-                            tikzLines.push(`  \\draw[${edgeType}] (${source}) -- (${target}) node[midway, above, sloped, font=\\small] {${labelEscaped}};`);
-                        } else {
-                            tikzLines.push(`  \\draw[${edgeType}] (${source}) -- (${target});`);
-                        }
-                    }
-                });
+              // Graph description in bold
+              if (this.data.graph && this.data.graph.description) {
+                  latexContent.push(`\\textbf{${this.data.graph.description}}`);
+                  latexContent.push('');
+              }
 
-                tikzLines.push('\\end{tikzpicture}');
-                tikzLines.push('\\end{center}');
+              // Group nodes by type
+              const nodesByType = {};
+              this.data.nodes.forEach(node => {
+                  const nodeType = node.type;
+                  if (!nodesByType[nodeType]) {
+                      nodesByType[nodeType] = [];
+                  }
+                  nodesByType[nodeType].push(node);
+              });
 
-                return tikzLines;
-            }
+              // Generate itemized list for each type
+              latexContent.push('\\begin{itemize}');
 
-            generateCompleteLatex(jsonData) {
-                const diagram = this.parseJson(jsonData);
-                const nodes = diagram.nodes;
-                const edges = diagram.edges;
-                const metadata = diagram.metadata || {};
+              Object.entries(nodesByType).forEach(([nodeType, nodes]) => {
+                  const typeDescription = this.getTypeDescription(nodeType);
+                  latexContent.push(`\\item \\textbf{${nodeType.charAt(0).toUpperCase() + nodeType.slice(1)} Components}: ${typeDescription}`);
+                  latexContent.push('\\begin{itemize}');
 
-                const positions = this.calculateLayout(nodes, edges);
+                  nodes.forEach(node => {
+                      latexContent.push(`\\item \\textbf{${node.label} \\label{${node.id}}}:`);
+                      latexContent.push(`      ${node.content}`);
+                  });
 
-                const latexCode = [];
+                  latexContent.push('\\end{itemize}');
+              });
 
-                // Title
-                if (metadata.title) {
-                    latexCode.push(`\\textbf{${metadata.title}}`);
-                }
-                if (metadata.description) {
-                    latexCode.push(`\\textit{${metadata.description}}`);
-                }
-                if (metadata.title || metadata.description) {
-                    latexCode.push('');
-                }
+              latexContent.push('\\end{itemize}');
+              latexContent.push('');
 
-                // Content list
-                latexCode.push(...this.generateContentList(nodes));
-                latexCode.push('');
+              // Diagram with figure environment and caption - scaled down
+              latexContent.push('\\begin{figure}[htbp]');
+              latexContent.push('\\centering');
+              latexContent.push('\\scalebox{0.8}{'); // Scale the entire tikzpicture to 80%
+              latexContent.push('\\begin{tikzpicture}[');
+              latexContent.push('    node distance = 1.5cm,'); // Reduced from 2cm
+              latexContent.push('    auto,');
+              latexContent.push('    thick,');
+              latexContent.push('    process/.style = {rectangle, draw=black, thick, font=\\sffamily\\small, text width=2.5cm, text centered, minimum height=1cm},');
+              // Changed font from \large to \small, reduced text width and height
+              latexContent.push(']');
+              latexContent.push('');
 
-                // TikZ styles and diagram
-                latexCode.push(...this.generateTikzStyles());
-                latexCode.push('');
-                latexCode.push(...this.generateTikzDiagram(nodes, edges, positions));
+              // Generate nodes
+              this.data.nodes.forEach(node => {
+                  const [x, y] = this.positions[node.id];
+                  latexContent.push(`\\node[process] (${node.id}) at (${x.toFixed(1)}, ${y.toFixed(1)}) {\\hyperref[${node.id}]{${node.label}}};`);
+              });
 
-                return latexCode.join('\n');
-            }
-        }
+              latexContent.push('');
 
-        // Global converter instance
-        const converter = new ProofDiagramConverter();
+              // Generate edges - all as straight lines
+              this.data.edges.forEach(edge => {
+                  // Check if edge has label content
+                  let edgeLabel = '';
+                  if (edge.label && edge.label.trim()) {
+                      edgeLabel = `node[midway, above, font=\\tiny] {${edge.label}}`;
+                  }
 
-        function convertToLatex() {
-            const jsonInput = document.getElementById('jsonInput').value.trim();
-            const latexOutput = document.getElementById('latexOutput');
-            const status = document.getElementById('status');
+                  // All edges as straight lines with arrows
+                  if (edgeLabel) {
+                      latexContent.push(`\\draw[->, thick] (${edge.startNode}) -- ${edgeLabel} (${edge.endNode});`);
+                  } else {
+                      latexContent.push(`\\draw[->, thick] (${edge.startNode}) -- (${edge.endNode});`);
+                  }
+              });
 
-            if (!jsonInput) {
-                showStatus('请输入JSON数据', 'error');
-                return;
-            }
+              // Close diagram with caption
+              latexContent.push('');
+              latexContent.push('\\end{tikzpicture}');
+              latexContent.push('}'); // Close scalebox
+              if (this.data.graph && this.data.graph.title) {
+                  latexContent.push(`\\caption{${this.data.graph.title}}`);
+              }
+              latexContent.push('\\end{figure}');
 
-            try {
-                const jsonData = JSON.parse(jsonInput);
-                const latexCode = converter.generateCompleteLatex(jsonData);
-                latexOutput.textContent = latexCode;
-                showStatus('转换成功！', 'success');
-            } catch (error) {
-                showStatus('转换失败：' + error.message, 'error');
-                latexOutput.textContent = '转换出错，请检查JSON格式是否正确。';
-            }
-        }
+              return latexContent.join('\n');
+          }
+      }
 
-        function clearInput() {
-            document.getElementById('jsonInput').value = '';
-            document.getElementById('latexOutput').textContent = '转换后的LaTeX代码将在此处显示...';
-            hideStatus();
-        }
+      // Global converter instance
+      const converter = new DAGToLaTeX();
 
-        function formatJson() {
-            const jsonInput = document.getElementById('jsonInput');
-            try {
-                const jsonData = JSON.parse(jsonInput.value);
-                jsonInput.value = JSON.stringify(jsonData, null, 2);
-                showStatus('JSON格式化成功！', 'success');
-            } catch (error) {
-                showStatus('JSON格式错误：' + error.message, 'error');
-            }
-        }
+      function convertToLatex() {
+          const jsonInput = document.getElementById('jsonInput').value.trim();
+          const latexOutput = document.getElementById('latexOutput');
 
-        function copyToClipboard() {
-            const latexOutput = document.getElementById('latexOutput');
-            const text = latexOutput.textContent;
-            
-            if (text && text !== '转换后的LaTeX代码将在此处显示...') {
-                navigator.clipboard.writeText(text).then(() => {
-                    showStatus('已复制到剪贴板！', 'success');
-                }).catch(() => {
-                    // Fallback for older browsers
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showStatus('已复制到剪贴板！', 'success');
-                });
-            }
-        }
+          if (!jsonInput) {
+              showStatus('请输入JSON数据', 'error');
+              return;
+          }
 
-        function showStatus(message, type) {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            status.className = `status ${type}`;
-            status.style.display = 'block';
-            
-            setTimeout(() => {
-                hideStatus();
-            }, 3000);
-        }
+          try {
+              const latexCode = converter.generateLatex(jsonInput);
+              latexOutput.textContent = latexCode;
+              showStatus('转换成功！', 'success');
+          } catch (error) {
+              if (error.message.includes('Cycle detected')) {
+                  showStatus('❌ ' + error.message, 'error');
+                  latexOutput.textContent = '检测到环路，无法生成LaTeX代码。请修正图结构后重试。';
+              } else {
+                  showStatus('转换失败：' + error.message, 'error');
+                  latexOutput.textContent = '转换出错，请检查JSON格式。';
+              }
+          }
+      }
 
-        function hideStatus() {
-            const status = document.getElementById('status');
-            status.style.display = 'none';
-        }
+      function clearInput() {
+          document.getElementById('jsonInput').value = '';
+          document.getElementById('latexOutput').textContent = '转换后的LaTeX代码将在此处显示...';
+          hideStatus();
+      }
 
-        function loadExample() {
-            const exampleJson = {
-                "proof_diagram": {
-                    "metadata": {
-                        "title": "Corollary 10.2.5: Proof of Very Ample Property",
-                        "description": "Proof by transforming the very ample problem into a nef problem, using Lemma 10.2.1 as a bridge"
-                    },
-                    "nodes": [
-                        {
-                            "id": "condition1",
-                            "type": "condition",
-                            "label": "condition1",
-                            "content": "Setting: Smooth projective variety $X$, nef and big line bundle $L$, effective $\\mathbb{Q}$-divisor $B$"
-                        },
-                        {
-                            "id": "condition2",
-                            "type": "condition",
-                            "label": "condition2",
-                            "content": "Theorem 10.2.4: There exists $M_0 = M_0(\\rho_L, \\rho_K, \\rho_B)$ such that $mL - B$ is nef for all $m \\geq M_0$"
-                        },
-                        {
-                            "id": "step1",
-                            "type": "step",
-                            "label": "step1",
-                            "content": "Apply Theorem 10.2.4 with $B$ replaced by $A + B$"
-                        },
-                        {
-                            "id": "step2",
-                            "type": "step",
-                            "label": "step2",
-                            "content": "Obtain constant $M_1 = M_1(\\rho_L, \\rho_K, \\rho_{(A+B)})$ such that $mL - B - A$ is nef for all $m \\geq M_1$"
-                        },
-                        {
-                            "id": "conclusion1",
-                            "type": "conclusion",
-                            "label": "conclusion1",
-                            "content": "There exists integer $M_1 = M_1(\\rho_L, \\rho_K, \\rho_B)$ such that $mL - B$ is very ample for all $m \\geq M_1$"
-                        },
-                        {
-                            "id": "annotation1",
-                            "type": "annotation",
-                            "label": "annotation1",
-                            "content": "Key technique: Decomposition as 'ample base + nef perturbation' transforms difficult very ample problem into easier nef problem"
-                        }
-                    ],
-                    "edges": [
-                        {
-                            "id": "edge1",
-                            "source": "condition2",
-                            "target": "step1",
-                            "type": "reasoning",
-                            "label": ""
-                        },
-                        {
-                            "id": "edge2",
-                            "source": "step1",
-                            "target": "step2",
-                            "type": "reasoning",
-                            "label": ""
-                        },
-                        {
-                            "id": "edge3",
-                            "source": "step2",
-                            "target": "conclusion1",
-                            "type": "reasoning",
-                            "label": ""
-                        },
-                        {
-                            "id": "edge4",
-                            "source": "step1",
-                            "target": "annotation1",
-                            "type": "explanation",
-                            "label": ""
-                        }
-                    ]
-                }
-            };
+      function formatJson() {
+          const jsonInput = document.getElementById('jsonInput');
+          try {
+              const jsonData = JSON.parse(jsonInput.value);
+              jsonInput.value = JSON.stringify(jsonData, null, 2);
+              showStatus('JSON格式化成功！', 'success');
+          } catch (error) {
+              showStatus('JSON格式错误：' + error.message, 'error');
+          }
+      }
 
-            document.getElementById('jsonInput').value = JSON.stringify(exampleJson, null, 2);
-            showStatus('示例数据已加载！', 'success');
-        }
+      function copyToClipboard() {
+          const latexOutput = document.getElementById('latexOutput');
+          const text = latexOutput.textContent;
+          
+          if (text && text !== '转换后的LaTeX代码将在此处显示...' && !text.includes('检测到环路')) {
+              navigator.clipboard.writeText(text).then(() => {
+                  showStatus('已复制到剪贴板！', 'success');
+              }).catch(() => {
+                  // Fallback for older browsers
+                  const textArea = document.createElement('textarea');
+                  textArea.value = text;
+                  document.body.appendChild(textArea);
+                  textArea.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(textArea);
+                  showStatus('已复制到剪贴板！', 'success');
+              });
+          }
+      }
 
-        // Auto-convert on Ctrl+Enter
-        document.getElementById('jsonInput').addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                convertToLatex();
-            }
-        });
-    </script>
+      function showStatus(message, type) {
+          const status = document.getElementById('status');
+          status.textContent = message;
+          status.className = `status ${type}`;
+          status.style.display = 'block';
+          
+          setTimeout(() => {
+              hideStatus();
+          }, 5000);
+      }
+
+      function hideStatus() {
+          const status = document.getElementById('status');
+          status.style.display = 'none';
+      }
+
+      // Auto-convert on Ctrl+Enter
+      document.getElementById('jsonInput').addEventListener('keydown', function(e) {
+          if (e.ctrlKey && e.key === 'Enter') {
+              convertToLatex();
+          }
+      });
+  </script>
 </body>
 </html>

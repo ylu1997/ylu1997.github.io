@@ -1,0 +1,35 @@
+{
+  "_comment": {
+    "structure": "顶层 data 为节点数组，有 children 为分组，否则为叶子条目",
+    "node.category": "分组名",
+    "node.children": "子节点数组，可任意层级嵌套",
+    "item.title": "文章标题",
+    "item.date": "日期，格式 YYYY-MM-DD",
+    "item.desc": "一句话描述",
+    "item.type": "文件类型：md 或 tex",
+    "type=md": "需提供 file 字段，指向 .md 文件路径",
+    "type=tex": "需提供 tex（.tex 路径）和 pdf（.pdf 路径）"
+  },
+  "data": [
+    {
+      "category": "Math Notes",
+      "children": [
+        {
+          "title": "Post Title",
+          "type": "md",
+          "file": "posts/example.md",
+          "date": "2025-04-01",
+          "desc": "Short description."
+        },
+        {
+          "title": "Another Post",
+          "type": "tex",
+          "tex": "posts/example.tex",
+          "pdf": "posts/example.pdf",
+          "date": "2025-02-15",
+          "desc": "Short description."
+        }
+      ]
+    }
+  ]
+}

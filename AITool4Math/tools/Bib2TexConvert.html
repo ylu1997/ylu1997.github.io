@@ -120,15 +120,6 @@
           background: #218838;
       }
 
-      .btn-warning {
-          background: #ffc107;
-          color: #212529;
-      }
-
-      .btn-warning:hover {
-          background: #e0a800;
-      }
-
       .output-section {
           margin-top: 30px;
       }
@@ -331,176 +322,115 @@ url={https://api.semanticscholar.org/CorpusID:119288694}
   </div>
 
   <script>
-      class BibConverter {
-          constructor() {}
+      // 全局变量存储结果
+      let allResults = [];
 
-          convertBibToAddliterature(bibText) {
-              try {
-                  // 提取条目键
-                  const keyMatch = bibText.match(/@\w+\{([^,]+),/);
-                  if (!keyMatch) {
-                      throw new Error("未找到有效的BibTeX条目键");
-                  }
-                  const key = keyMatch[1].trim();
-
-                  // 提取title
-                  const titleMatch = bibText.match(/title\s*=\s*\{([^}]+)\}/);
-                  if (!titleMatch) {
-                      throw new Error("未找到title字段");
-                  }
-                  const title = titleMatch[1].trim();
-
-                  // 提取author
-                  const authorMatch = bibText.match(/author\s*=\s*\{([^}]+)\}/);
-                  if (!authorMatch) {
-                      throw new Error("未找到author字段");
-                  }
-                  const author = authorMatch[1].trim();
-
-                  // 提取year
-                  const yearMatch = bibText.match(/year\s*=\s*\{([^}]+)\}/);
-                  if (!yearMatch) {
-                      throw new Error("未找到year字段");
-                  }
-                  const year = yearMatch[1].trim();
-
-                  // 构建结果
-                  const result = `\\addliterature{${title}\\cite{${key}}}{${author}}{${year}}{}{[Tag2-Please fill in]}`;
-
-                  return result;
-
-              } catch (error) {
-                  throw new Error(`解析BibTeX时出错: ${error.message}`);
-              }
-          }
-
-          splitMultipleBibs(text) {
-              const entries = [];
-              const pattern = /@\w+\s*\{/g;
-              const matches = [...text.matchAll(pattern)];
-
-              if (matches.length === 0) {
-                  return [];
-              }
-
-              for (let i = 0; i < matches.length; i++) {
-                  const startPos = matches[i].index;
-                  let endPos;
-                  
-                  if (i < matches.length - 1) {
-                      endPos = matches[i + 1].index;
-                  } else {
-                      endPos = text.length;
-                  }
-
-                  let entryText = text.substring(startPos, endPos).trim();
-
-                  // 确保条目以}结尾
-                  if (entryText && !entryText.endsWith('}')) {
-                      const lastBrace = entryText.lastIndexOf('}');
-                      if (lastBrace !== -1) {
-                          entryText = entryText.substring(0, lastBrace + 1);
-                      }
-                  }
-
-                  if (entryText) {
-                      entries.push(entryText);
-                  }
-              }
-
-              return entries;
-          }
-
-          convertMultipleBibs(text) {
-              const entries = this.splitMultipleBibs(text);
-
-              if (entries.length === 0) {
-                  // 尝试作为单个条目处理
-                  try {
-                      const result = this.convertBibToAddliterature(text);
-                      return { success: [result], errors: [] };
-                  } catch (error) {
-                      return { success: [], errors: [`解析失败: ${error.message}`] };
-                  }
-              }
-
-              const successResults = [];
-              const errorMessages = [];
-
-              entries.forEach((entry, index) => {
-                  try {
-                      const result = this.convertBibToAddliterature(entry);
-                      successResults.push(result);
-                  } catch (error) {
-                      errorMessages.push(`第${index + 1}个条目转换失败: ${error.message}`);
-                  }
-              });
-
-              return { success: successResults, errors: errorMessages };
-          }
-
-          extractField(bibText, fieldName) {
-              const pattern = new RegExp(`${fieldName}\\s*=\\s*\\{([^}]+)\\}`, 'i');
-              const match = bibText.match(pattern);
-              return match ? match[1].trim() : "";
-          }
-
-          getEntryKey(bibText) {
-              const match = bibText.match(/@\w+\{([^,]+),/);
-              return match ? match[1].trim() : "";
-          }
+      // 简单的字符串提取函数
+      function extractField(text, field) {
+          const regex = new RegExp(field + '\\s*=\\s*\\{([^}]+)\\}', 'i');
+          const match = text.match(regex);
+          return match ? match[1].trim() : '';
       }
 
-      const converter = new BibConverter();
-      let allResults = []; // 存储所有成功的结果
+      function extractKey(text) {
+          const match = text.match(/@\w+\{([^,]+),/);
+          return match ? match[1].trim() : '';
+      }
 
+      // 转换单个条目
+      function convertSingle(bibText) {
+          const key = extractKey(bibText);
+          const title = extractField(bibText, 'title');
+          const author = extractField(bibText, 'author');
+          const year = extractField(bibText, 'year');
+          
+          if (!key || !title || !author || !year) {
+              throw new Error('缺少必要字段 (key, title, author, year)');
+          }
+          
+          return `\\addliterature{${title}\\cite{${key}}}{${author}}{${year}}{}{[Tag2-Please fill in]}`;
+      }
+
+      // 分割多个条目
+      function splitEntries(text) {
+          const entries = [];
+          const parts = text.split(/@\w+\s*\{/);
+          
+          if (parts.length <= 1) return [text];
+          
+          for (let i = 1; i < parts.length; i++) {
+              const entry = '@article{' + parts[i];
+              // 找到完整的条目（到最后一个}）
+              const braces = entry.match(/\{/g) || [];
+              const closeBraces = entry.match(/\}/g) || [];
+              
+              if (braces.length === closeBraces.length) {
+                  entries.push(entry.trim());
+              }
+          }
+          
+          return entries.length > 0 ? entries : [text];
+      }
+
+      // 主转换函数
       function convertBib() {
           const input = document.getElementById('bibInput').value.trim();
+          if (!input) {
+              alert('请输入BibTeX文本');
+              return;
+          }
+
+          const entries = splitEntries(input);
+          const results = [];
+          const errors = [];
+
+          entries.forEach((entry, index) => {
+              try {
+                  const result = convertSingle(entry);
+                  results.push(result);
+              } catch (error) {
+                  errors.push(`第${index + 1}个条目: ${error.message}`);
+              }
+          });
+
+          allResults = results;
+          displayResults(results, errors);
+      }
+
+      // 显示结果
+      function displayResults(results, errors) {
           const outputDiv = document.getElementById('output');
           const statsDiv = document.getElementById('stats');
           const resultsDiv = document.getElementById('results');
           const errorsDiv = document.getElementById('errors');
           const allResultsContent = document.getElementById('allResultsContent');
 
-          if (!input) {
-              alert('请输入BibTeX文本');
-              return;
-          }
-
-          const { success, errors } = converter.convertMultipleBibs(input);
-          allResults = success; // 保存结果供复制使用
-
-          // 显示统计信息
+          // 统计信息
           statsDiv.innerHTML = `
               <div class="stats">
-                  <strong>转换统计：</strong>成功 ${success.length} 个条目，失败 ${errors.length} 个条目
+                  <strong>转换统计：</strong>成功 ${results.length} 个条目，失败 ${errors.length} 个条目
               </div>
           `;
 
-          // 显示合并的所有结果
-          if (success.length > 0) {
-              const combinedResults = success.join('\n\n');
-              allResultsContent.textContent = combinedResults;
-          } else {
-              allResultsContent.textContent = '没有成功转换的结果';
-          }
+          // 合并结果
+          allResultsContent.textContent = results.join('\n\n');
 
-          // 显示单个结果详情
+          // 单个结果
           resultsDiv.innerHTML = '';
-          success.forEach((result, index) => {
-              const resultDiv = document.createElement('div');
-              resultDiv.className = 'result-item';
-              resultDiv.innerHTML = `
+          results.forEach((result, index) => {
+              const div = document.createElement('div');
+              div.className = 'result-item';
+              div.innerHTML = `
                   <div class="result-header">
                       <div class="result-title">结果 ${index + 1}</div>
-                      <button class="copy-btn" onclick="copyToClipboard(\`${result.replace(/`/g, '\\`')}\`)">复制单个</button>
+                      <button class="copy-btn" onclick="copyText('${result.replace(/'/g, "\\'")}')">复制</button>
                   </div>
                   <div class="result-content">${result}</div>
               `;
-              resultsDiv.appendChild(resultDiv);
+              resultsDiv.appendChild(div);
           });
 
-          // 显示错误信息
+          // 错误信息
           if (errors.length > 0) {
               errorsDiv.innerHTML = `
                   <div class="error-section">
@@ -515,29 +445,31 @@ url={https://api.semanticscholar.org/CorpusID:119288694}
           outputDiv.style.display = 'block';
       }
 
+      // 复制功能
       function copyAllResults() {
           if (allResults.length === 0) {
               alert('没有可复制的结果');
               return;
           }
+          copyText(allResults.join('\n\n'));
+      }
 
-          const combinedResults = allResults.join('\n\n');
-          
-          navigator.clipboard.writeText(combinedResults).then(() => {
-              // 临时显示复制成功提示
-              const btn = document.querySelector('.copy-all-btn');
-              const originalText = btn.textContent;
-              btn.textContent = `已复制 ${allResults.length} 个结果!`;
+      function copyText(text) {
+          navigator.clipboard.writeText(text).then(() => {
+              const btn = event.target;
+              const original = btn.textContent;
+              btn.textContent = '已复制!';
               btn.style.background = '#28a745';
               setTimeout(() => {
-                  btn.textContent = originalText;
+                  btn.textContent = original;
                   btn.style.background = '#17a2b8';
-              }, 2000);
-          }).catch(err => {
-              alert('复制失败，请手动复制合并结果区域的内容');
+              }, 1000);
+          }).catch(() => {
+              alert('复制失败，请手动复制');
           });
       }
 
+      // 其他功能
       function clearAll() {
           document.getElementById('bibInput').value = '';
           document.getElementById('output').style.display = 'none';
@@ -545,7 +477,7 @@ url={https://api.semanticscholar.org/CorpusID:119288694}
       }
 
       function loadExample() {
-          const example = `@article{Kuronya2014LocalPO,
+          document.getElementById('bibInput').value = `@article{Kuronya2014LocalPO,
 title={Local positivity of linear series on surfaces},
 author={Alex Kuronya and Victor Lozovanu},
 journal={arXiv: Algebraic Geometry},
@@ -559,23 +491,6 @@ author={John Smith and Jane Doe},
 journal={Test Journal},
 year={2020}
 }`;
-          document.getElementById('bibInput').value = example;
-      }
-
-      function copyToClipboard(text) {
-          navigator.clipboard.writeText(text).then(() => {
-              // 临时显示复制成功提示
-              const btn = event.target;
-              const originalText = btn.textContent;
-              btn.textContent = '已复制!';
-              btn.style.background = '#28a745';
-              setTimeout(() => {
-                  btn.textContent = originalText;
-                  btn.style.background = '#17a2b8';
-              }, 1000);
-          }).catch(err => {
-              alert('复制失败，请手动复制');
-          });
       }
   </script>
 </body>
