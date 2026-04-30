@@ -128,8 +128,12 @@ h2 {
 .exp-arrow { font-size: .75rem; color: var(--muted); width: 1em; }
 .exp-item { padding: .4rem 0 .4rem .8rem; border-left: 2px solid var(--border); margin-bottom: .4rem; }
 .exp-item-title { font-weight: 500; }
+.exp-item-content { font-size: .92rem; color: var(--text); }
 .exp-item-sub   { font-size: .85rem; color: var(--muted); }
 .exp-item-desc  { font-size: .88rem; margin-top: .2rem; }
+.exp-item-key   { font-size: .75rem; color: var(--accent); }
+.exp-item-key::after { content: ': '; }
+
 
 /* ----- Tree ----- */
 .tree-group { margin-bottom: .6rem; }

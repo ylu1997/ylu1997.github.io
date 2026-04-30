@@ -14,21 +14,31 @@
     {
       "category": "Math Notes",
       "children": [
+      ]
+    },
+    {
+      "category": "UoL_PhD_APR",
+      "children": [
         {
-          "title": "Post Title",
-          "type": "md",
-          "file": "posts/example.md",
-          "date": "2025-04-01",
-          "desc": "Short description."
+          "title": "APR Frist Year",
+          "date": "2024",
+          "desc": "",
+          "type": "pdf",
+          "pdf": "website_file/blog/APR/APR_Uol.pdf"
         },
         {
-          "title": "Another Post",
-          "type": "tex",
-          "tex": "posts/example.tex",
-          "pdf": "posts/example.pdf",
-          "date": "2025-02-15",
-          "desc": "Short description."
+          "title": "APR Second Year",
+          "date": "2025",
+          "desc": "",
+          "type": "pdf",
+          "pdf": "website_file/blog/APR/APR_Uol2.pdf"
         }
+      ]
+    },
+    {
+      "category": "AI_Notes",
+      "children": [
+        
       ]
     }
   ]

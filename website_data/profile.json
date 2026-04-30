@@ -10,59 +10,90 @@
   "name": "Yi Lu",
   "position": "PhD Student · CNU & UoL Joint Programme · Mathematics",
   "bio": "<b>Background:</b> PhD student in Mathematics, CNU & UoL Joint Programme.<br><b>Research Interests:</b><br>&emsp;· Algebraic Geometry: Toric Varieties, Newton–Okounkov bodies, Jet Ampleness.<br>&emsp;· AI & Computing: PINNs, neural operators.<br><b>Personal Bests:</b><br>&emsp;· Powerlifting: Squat 230 kg · Bench 140 kg · Deadlift 270 kg.<br>&emsp;· Weightlifting: Snatch 90 kg · Clean &amp; Jerk 100 kg.",
-
   "cv_pdf": "website_files/cv.pdf",
   "links": [
-    { "label": "Email1",     "display": "2230501004@cnu.edu.cn",        "url": "mailto:2230501004@cnu.edu.cn" },
-    { "label": "Email2",     "display": "Yi.Lu@liverpool.ac.uk",        "url": "mailto:Yi.Lu@liverpool.ac.uk" },
-    { "label": "GitHub",    "display": "github.com/ylu1997",  "url": "https://github.com/ylu1997" }
+    {
+      "label": "Email1",
+      "display": "2230501004@cnu.edu.cn",
+      "url": "mailto:2230501004@cnu.edu.cn"
+    },
+    {
+      "label": "Email2",
+      "display": "Yi.Lu@liverpool.ac.uk",
+      "url": "mailto:Yi.Lu@liverpool.ac.uk"
+    },
+    {
+      "label": "GitHub",
+      "display": "github.com/ylu1997",
+      "url": "https://github.com/ylu1997"
+    }
   ],
   "experiences": [
     {
       "category": "Education",
       "items": [
         {
-          "title": "PhD(ing) in Mathematics · School of Mathematical Sciences, Capital Normal University & Department of Mathematical Sciences, University of Liverpool (Joint Programme)",
+          "degree": "PhD(ing) in Mathematics",
+          "institution": "Capital Normal University & University of Liverpool (Joint Programme)",
           "period": "2023 – 2027 (expected)",
           "desc": ""
         },
         {
-          "title": "Mathematics · School of Mathematical Sciences · Capital Normal University",
+          "degree": "Master in Mathematics",
+          "institution": "School of Mathematical Sciences · Capital Normal University",
           "period": "2021 – 2023",
-          "desc": " (Integrated Master's–PhD, no separate degree awarded)"
+          "desc": "(Integrated Master's–PhD, no separate degree awarded)"
         },
         {
-          "title": "BSc in Internet of Things Engineering · Hebei University of Technology",
+          "degree": "BSc in Internet of Things Engineering",
+          "institution": "Hebei University of Technology",
           "period": "2016 – 2020",
           "desc": ""
         }
       ]
     },
     {
-      "category": "Teaching",
+      "category": "Teaching & Work",
       "items": [
         {
-          "title": "Teaching Assistant · Game Theory · University of Liverpool",
+          "role": "Teaching Assistant",
+          "content": "Game Theory",
+          "institution": "University of Liverpool",
           "period": "2026",
           "desc": ""
         },
         {
-          "title": "Teaching Assistant · Algebraic Geometry · Capital Normal University",
+          "role": "Teaching Assistant",
+          "content": "Algebraic Geometry",
+          "institution": "Capital Normal University",
           "period": "2024",
           "desc": ""
         },
         {
-          "title": "Teaching Assistant · Algebraic Geometry · Capital Normal University",
+          "role": "Assistant",
+          "content": "2024 Graduation Defence",
+          "institution": "Capital Normal University",
+          "period": "2024",
+          "desc": ""
+        },
+        {
+          "role": "Teaching Assistant",
+          "content": "Algebraic Geometry",
+          "institution": "Capital Normal University",
           "period": "2023",
           "desc": ""
         },
         {
-          "title": "Assistant · 2023 Graduation Defence · Capital Normal University",
+          "role": "Assistant",
+          "content": "2023 Graduation Defence",
+          "institution": "Capital Normal University",
           "period": "2023",
           "desc": ""
         },
         {
-          "title": "Assistant · Winter Program for Advanced Class · Capital Normal University",
+          "role": "Assistant",
+          "content": "Winter Program for Advanced Class",
+          "institution": "Capital Normal University",
           "period": "2023",
           "desc": ""
         }
@@ -72,28 +103,70 @@
       "category": "Awards, Scholarships & Certificates",
       "items": [
         {
-          "title": "China Scholarship Council (CSC) Scholarship",
+          "name": "China Scholarship Council (CSC) Scholarship",
+          "issuer": "China Scholarship Council",
+          "result": "",
           "period": "2024 – 2026",
           "desc": ""
         },
         {
-          "title": "Fundamentals of Accelerated Computing with Modern CUDA C++ · NVIDIA",
+          "name": "Fundamentals of Accelerated Computing with Modern CUDA C++",
+          "issuer": "NVIDIA",
+          "result": "Certificate",
           "period": "April 2026",
           "desc": "Certification ID: SdMCLl3GTpWCBWfjCcMsuw"
+        },
+        {
+          "name": "The Mammoth International Contest On OMICS Sciences",
+          "issuer": "OMICS Sciences",
+          "result": "Honorable Mention",
+          "period": "2023",
+          "desc": "Rank: 7/190 · DNA Storage"
+        },
+        {
+          "name": "Scholarship for Graduate Students",
+          "issuer": "Capital Normal University",
+          "result": "First Class",
+          "period": "2023",
+          "desc": ""
+        },
+        {
+          "name": "Scholarship for Graduate Students",
+          "issuer": "Capital Normal University",
+          "result": "Second Class",
+          "period": "2022",
+          "desc": ""
+        },
+        {
+          "name": "Scholarship for Graduate Students",
+          "issuer": "Capital Normal University",
+          "result": "Second Class",
+          "period": "2021",
+          "desc": ""
         }
-
       ]
-    },
+    } ,
     {
       "category": "Academic Activities",
       "items": [
         {
-          "title": "Jet Separation and Newton-Okounkov Body · CNU Doctoral Student Forum · Capital Normal University",
+          "talk": "K-jet Ampleness and Newton-Okounkov Bodies",
+          "conference": "UoL APR Seminar",
+          "location": "University of Liverpool",
           "period": "2025",
           "desc": ""
         },
         {
-          "title": "Error-Correcting Code Generation and Implementation Scheme for DNA Storage · CNU Doctoral Student Forum · Capital Normal University",
+          "talk": "Jet Separation and Newton-Okounkov Body",
+          "conference": "CNU Doctoral Student Forum",
+          "location": "Capital Normal University",
+          "period": "2025",
+          "desc": ""
+        },
+        {
+          "talk": "Error-Correcting Code Generation and Implementation Scheme for DNA Storage",
+          "conference": "CNU Doctoral Student Forum",
+          "location": "Capital Normal University",
           "period": "2023",
           "desc": ""
         }

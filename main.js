@@ -10,7 +10,7 @@ async function activate(id) {
   tabs.forEach(a => a.classList.toggle('active', a.dataset.tab === id));
 
   if (!cache[id]) {
-    const res = await fetch(`website_pages/${id}.html`); // 路径前缀
+    const res = await fetch(`website_pages/${id}.html`);
     cache[id] = await res.text();
   }
   container.innerHTML = cache[id];
@@ -19,10 +19,12 @@ async function activate(id) {
   if (renderers[id]) await renderers[id]();
 }
 
+
 // ----- 数据渲染 -----
 
+
 async function fetchJSON(file) {
-  const res = await fetch(`website_data/${file}`); // 路径前缀
+  const res = await fetch(`website_data/${file}`, { cache: 'no-store' });   // 禁用 JSON 缓存
   return res.json();
 }
 
@@ -55,12 +57,48 @@ async function renderAbout() {
         <span class="exp-arrow">▶</span>${cat.category}
       </div>
       <div class="exp-items">
-        ${cat.items.map(item => `
-          <div class="exp-item">
-            <div class="exp-item-title">${item.title}</div>
-            ${item.period ? `<div class="exp-item-sub">${item.period}</div>` : ''}
-            ${item.desc   ? `<div class="exp-item-desc">${item.desc}</div>` : ''}
-          </div>`).join('')}
+        ${cat.category === 'Education'
+          ? cat.items.map(item => `
+            <div class="exp-item">
+              <div class="exp-item-title">${item.degree}</div>
+              ${item.institution ? `<div class="exp-item-sub"><span class="exp-item-key">Organisation</span> ${item.institution}</div>` : ''}
+              ${item.period      ? `<div class="exp-item-sub"><span class="exp-item-key">Period</span> ${item.period}</div>`      : ''}
+              ${item.desc        ? `<div class="exp-item-desc">${item.desc}</div>`        : ''}
+            </div>`).join('')
+          : cat.category === 'Teaching & Work'
+          ? cat.items.map(item => `
+            <div class="exp-item">
+              <div class="exp-item-title">${item.role}</div>
+              <div class="exp-item-content">${item.content}</div>
+              ${item.institution ? `<div class="exp-item-sub"><span class="exp-item-key">Organisation</span> ${item.institution}</div>` : ''}
+              ${item.period      ? `<div class="exp-item-sub"><span class="exp-item-key">Period</span> ${item.period}</div>`      : ''}
+              ${item.desc        ? `<div class="exp-item-desc">${item.desc}</div>`        : ''}
+            </div>`).join('')
+          : cat.category === 'Academic Activities'
+          ? cat.items.map(item => `
+            <div class="exp-item">
+              <div class="exp-item-title">${item.talk}</div>
+              ${item.conference ? `<div class="exp-item-sub"><span class="exp-item-key">Conference</span> ${item.conference}</div>` : ''}
+              ${item.location   ? `<div class="exp-item-sub"><span class="exp-item-key">Location</span> ${item.location}</div>`   : ''}
+              ${item.period     ? `<div class="exp-item-sub"><span class="exp-item-key">Period</span> ${item.period}</div>`     : ''}
+              ${item.desc       ? `<div class="exp-item-desc">${item.desc}</div>`      : ''}
+            </div>`).join('')
+          : cat.category === 'Awards, Scholarships & Certificates'
+          ? cat.items.map(item => `
+            <div class="exp-item">
+              <div class="exp-item-title">${item.name}</div>
+              ${item.result ? `<div class="exp-item-sub"><span class="exp-item-key">Result</span> ${item.result}</div>` : ''}
+              ${item.issuer ? `<div class="exp-item-sub"><span class="exp-item-key">Issuer</span> ${item.issuer}</div>` : ''}
+              ${item.period ? `<div class="exp-item-sub"><span class="exp-item-key">Period</span> ${item.period}</div>` : ''}
+              ${item.desc   ? `<div class="exp-item-desc">${item.desc}</div>`  : ''}
+            </div>`).join('')
+          : cat.items.map(item => `
+            <div class="exp-item">
+              <div class="exp-item-title">${item.title}</div>
+              ${item.period ? `<div class="exp-item-sub"><span class="exp-item-key">Period</span> ${item.period}</div>` : ''}
+              ${item.desc   ? `<div class="exp-item-desc">${item.desc}</div>` : ''}
+            </div>`).join('')
+        }
       </div>
     </div>`).join('');
 
@@ -178,17 +216,14 @@ function loadMarked() {
 
 // 根据条目类型生成操作链接
 function blogActionHTML(p) {
-  if (p.type === 'md') {
-    return `<a href="#" class="blog-open-md" data-file="${p.file}">Read</a>`;
-  }
-  if (p.type === 'tex') {
-    return `<a href="#" class="blog-open-tex" data-file="${p.tex}">View .tex</a>
-            <a href="${p.tex}" download>Download .tex</a>
-            <a href="${p.pdf}" target="_blank">View PDF</a>
-            <a href="${p.pdf}" download>Download PDF</a>`;
-  }
+  if (p.type === 'md')  return `<a href="#" class="blog-open-md" data-file="${p.file}">Read</a>`;
+  if (p.type === 'tex') return `<a href="#" class="blog-open-tex" data-file="${p.tex}">View .tex</a>
+                                <a href="${p.tex}" download>Download .tex</a>`;
+  if (p.type === 'pdf') return `<a href="${p.pdf}" target="_blank">View PDF</a>
+                                <a href="${p.pdf}" download>Download PDF</a>`;
   return '';
 }
+
 
 async function renderBlog() {
   const list = await fetchJSON('blog.json');
