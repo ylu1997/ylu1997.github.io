@@ -11,7 +11,7 @@
     "item.tags": "标签数组",
     "item.links": "链接数组，每项 { label, url }"
   },
-   "data": [
+  "data": [
     {
       "category": "Pure Mathematics",
       "children": [
@@ -20,10 +20,14 @@
           "children": [
             {
               "title": "Newton-Okounkov Bodies and Jet Separation: Canonical-Free and Multipoint Generalizations",
-              "authors": ["Yi Lu"],
-              "bold_authors": ["Yi Lu"],
+              "authors": [
+                "Yi Lu"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
               "venue": "Arxiv",
-              "year": 2026,
+              "year": "2026",
               "desc": "Three generalizations of the Küronya-Lozovanu jet separation criterion: canonical-free version, multipoint extension, and their combination. Proofs via Trusiani's framework and Nadel vanishing; explicit computations for a double cover of a product of elliptic curves.",
               "tags": [
                 "Newton-Okounkov bodies",
@@ -41,42 +45,74 @@
         }
       ]
     },
-     {
-       "category": "AI",
-       "children": [
-         {
-           "category": "Deep Learning",
+    {
+      "category": "AI",
+      "children": [
+        {
+          "category": "Deep Learning",
           "children": [
             {
               "title": "Implicit Neural Representation with Dead-Free Linear Unit for Remote Sensing Images",
-              "bold": true,
-              "authors": ["Yi Lu", "Chang Lu", "Dongsheng Han", "Donggeon Kim", "Mingming Zhang", "Rizwan Qureshi", "Caiyan Qin"],
-              "bold_authors": ["Yi Lu"],
+              "authors": [
+                "Yi Lu",
+                "Chang Lu",
+                "Dongsheng Han",
+                "Donggeon Kim",
+                "Mingming Zhang",
+                "Rizwan Qureshi",
+                "Caiyan Qin"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
               "venue": "Sensors",
-              "year": 2026,
+              "year": "2026",
               "desc": "This paper addresses the dead region problem of ReLU in MLP-based Implicit Neural Representations (INRs) for remote sensing images. The authors propose DeLU (Dead-Free Linear Unit), a novel activation function that eliminates inactive regions via a linearly transformed absolute value combined with adaptive linear scaling. Experiments on five remote sensing datasets (LandCover.ai, LoveDA, INRIA, UAVid, ISPRS Potsdam) demonstrate its effectiveness in enhancing INR expressiveness.",
-              "tags": ["implicit neural representation","remote sensing", "rectified linear unit"],
-              "links": [{ "label": "DOI", "url": "https://doi.org/10.3390/s26082370" }]
+              "tags": [
+                "implicit neural representation",
+                "remote sensing",
+                "rectified linear unit"
+              ],
+              "links": [
+                {
+                  "label": "DOI",
+                  "url": "https://doi.org/10.3390/s26082370"
+                }
+              ]
             },
             {
               "title": "Unrestricted Error-Type Codebook Generation for Error Correction Code in DNA Storage Inspired by NLP",
-              "bold": true,
-              "authors": ["Yi Lu", "Yun Ma", "Chenghao Li", "Xin Zhang", "Guangxiang Si"],
-              "bold_authors": ["Yi Lu"],
+              "authors": [
+                "Yi Lu",
+                "Yun Ma",
+                "Chenghao Li",
+                "Xin Zhang",
+                "Guangxiang Si"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
               "venue": "arXiv preprint",
-              "year": 2024,
+              "year": "2024",
               "desc": "Proposes a bottom-up codebook generation approach based on Edit Computational Graph (ECG) for unrestricted error-type correction in DNA storage, inspired by NLP techniques.",
-              "tags": ["DNA storage", "error correction", "codebook generation", "NLP"],
+              "tags": [
+                "DNA storage",
+                "error correction",
+                "codebook generation",
+                "NLP"
+              ],
               "links": [
-                { "label": "arXiv", "url": "https://arxiv.org/abs/2401.15915" }
+                {
+                  "label": "arXiv",
+                  "url": "https://arxiv.org/abs/2401.15915"
+                }
               ]
             }
           ]
         },
-                {
+        {
           "category": "AI4Science",
-          "children": [
-          ]
+          "children": []
         }
       ]
     }

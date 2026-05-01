@@ -216,12 +216,15 @@ function loadMarked() {
 
 // 根据条目类型生成操作链接
 function blogActionHTML(p) {
-  if (p.type === 'md')  return `<a href="#" class="blog-open-md" data-file="${p.file}">Read</a>`;
-  if (p.type === 'tex') return `<a href="#" class="blog-open-tex" data-file="${p.tex}">View .tex</a>
-                                <a href="${p.tex}" download>Download .tex</a>`;
-  if (p.type === 'pdf') return `<a href="${p.pdf}" target="_blank">View PDF</a>
-                                <a href="${p.pdf}" download>Download PDF</a>`;
-  return '';
+  const types = Array.isArray(p.type) ? p.type : [p.type];  // 兼容旧字符串格式
+  return types.map(t => {
+    if (t === 'md')  return `<a href="#" class="blog-open-md" data-file="${p.file}">Read</a>`;
+    if (t === 'tex') return `<a href="#" class="blog-open-tex" data-file="${p.tex}">View .tex</a>
+                             <a href="${p.tex}" download>Download .tex</a>`;
+    if (t === 'pdf') return `<a href="${p.pdf}" target="_blank">View PDF</a>
+                             <a href="${p.pdf}" download>Download PDF</a>`;
+    return '';
+  }).join('');
 }
 
 

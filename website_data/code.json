@@ -13,14 +13,30 @@
   "data": [
     {
       "category": "Research Tools",
+      "children": []
+    },
+    {
+      "category": "Research Project",
       "children": [
         {
-          "name": "Project Name",
-          "lang": "Python",
-          "year": 2025,
-          "desc": "What this repo does in one sentence.",
-          "tags": ["SageMath", "123"],
-          "links": [{ "label": "GitHub", "url": "#" }]
+          "name": "Code Book Generation For Error Correction (Insertion/Deletion/Substitution)",
+          "lang": [
+            "Python",
+            "C/CUDA"
+          ],
+          "year": "2024",
+          "desc": "",
+          "tags": [
+            "Error-Correction",
+            "Codebook-Generation",
+            "Substitution-Insertion-Deletion"
+          ],
+          "links": [
+            {
+              "label": "GitHub",
+              "url": "https://github.com/ylu1997/Code_Generation_For_DNA_Storage"
+            }
+          ]
         }
       ]
     }

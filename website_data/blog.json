@@ -13,8 +13,7 @@
   "data": [
     {
       "category": "Math Notes",
-      "children": [
-      ]
+      "children": []
     },
     {
       "category": "UoL_PhD_APR",
@@ -23,23 +22,25 @@
           "title": "APR Frist Year",
           "date": "2024",
           "desc": "",
-          "type": "pdf",
-          "pdf": "website_file/blog/APR/APR_Uol.pdf"
+          "type": [
+            "pdf"
+          ],
+          "pdf": "website_file/blog/UoL_PhD_APR/APR_Uol_1.pdf"
         },
         {
           "title": "APR Second Year",
           "date": "2025",
           "desc": "",
-          "type": "pdf",
-          "pdf": "website_file/blog/APR/APR_Uol2.pdf"
+          "type": [
+            "pdf"
+          ],
+          "pdf": "website_file/blog/UoL_PhD_APR/APR_UOL_2.pdf"
         }
       ]
     },
     {
       "category": "AI_Notes",
-      "children": [
-        
-      ]
+      "children": []
     }
   ]
 }
