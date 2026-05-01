@@ -195,12 +195,13 @@ async function renderCode() {
   renderTree(document.getElementById('code-list'), list.data, p => `
     <div class="card">
       <div class="card-title">${p.name}</div>
-      <div class="card-meta">${p.lang} · ${p.year}</div>
+      <div class="card-meta">${Array.isArray(p.lang) ? p.lang.join(', ') : (p.lang || '')} · ${p.year}</div>
       <div class="card-desc">${p.desc}</div>
       <div>${tagsHTML(p.tags)}</div>
       <div class="card-links">${cardLinksHTML(p.links)}</div>
     </div>`);
 }
+
 // ----- Blog -----
 
 // 动态加载 marked.js（Markdown 渲染）
