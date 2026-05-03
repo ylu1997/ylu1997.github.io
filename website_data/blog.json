@@ -40,7 +40,17 @@
     },
     {
       "category": "AI_Notes",
-      "children": []
+      "children": [
+        {
+          "title": "Reading Notes: A Mathematical Guide to Operator Learning",
+          "date": "",
+          "desc": "",
+          "type": [
+            "md"
+          ],
+          "file": "website_file/blog/AI_Notes/Math_to_Operator_learning.md"
+        }
+      ]
     }
   ]
 }

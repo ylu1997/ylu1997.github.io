@@ -205,6 +205,7 @@ async function renderCode() {
 // ----- Blog -----
 
 // 动态加载 marked.js（Markdown 渲染）
+// 动态加载 marked.js 和 MathJax
 function loadMarked() {
   return new Promise(resolve => {
     if (window.marked) return resolve();
@@ -215,15 +216,28 @@ function loadMarked() {
   });
 }
 
+function loadMathJax() {
+  return new Promise(resolve => {
+    if (window.MathJax) return resolve();
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      startup: { ready() { MathJax.startup.defaultReady(); resolve(); } }
+    };
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
+    document.head.appendChild(s);
+  });
+}
+
+
 // 根据条目类型生成操作链接
 function blogActionHTML(p) {
-  const types = Array.isArray(p.type) ? p.type : [p.type];  // 兼容旧字符串格式
+  const types = Array.isArray(p.type) ? p.type : [p.type];
   return types.map(t => {
     if (t === 'md')  return `<a href="#" class="blog-open-md" data-file="${p.file}">Read</a>`;
     if (t === 'tex') return `<a href="#" class="blog-open-tex" data-file="${p.tex}">View .tex</a>
                              <a href="${p.tex}" download>Download .tex</a>`;
-    if (t === 'pdf') return `<a href="${p.pdf}" target="_blank">View PDF</a>
-                             <a href="${p.pdf}" download>Download PDF</a>`;
+    if (t === 'pdf') return `<a href="#" class="blog-open-pdf" data-file="${p.pdf}" data-title="${p.title}">View PDF</a>`;
     return '';
   }).join('');
 }
@@ -240,20 +254,45 @@ async function renderBlog() {
     </div>`);
 
   // Markdown：替换 main-content 为渲染页
-  document.getElementById('blog-list').addEventListener('click', async e => {
-    const mdLink = e.target.closest('.blog-open-md');
-    if (!mdLink) return;
-    e.preventDefault();
-    await loadMarked();
-    const res  = await fetch(mdLink.dataset.file);
-    const text = await res.text();
-    container.innerHTML = `
-      <div class="post-page">
+  // Markdown：替换 main-content 为渲染页
+document.getElementById('blog-list').addEventListener('click', async e => {
+  const mdLink = e.target.closest('.blog-open-md');
+  if (!mdLink) return;
+  e.preventDefault();
+  await loadMarked();
+  await loadMathJax();
+  const res  = await fetch(mdLink.dataset.file, { cache: 'no-store' });
+  const text = await res.text();
+
+  // 文件名（用于下载）
+  const filename = mdLink.dataset.file.split('/').pop();
+
+  container.innerHTML = `
+    <div class="post-page">
+      <div class="post-subnav">
         <button class="post-back">← Back</button>
-        <div class="post-content">${window.marked.parse(text)}</div>
-      </div>`;
-    container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
+        <div class="post-subnav-actions">
+          <a class="post-action-btn" href="${mdLink.dataset.file}" download="${filename}">↓ Download</a>
+          <button class="post-action-btn" id="post-copy-btn">⎘ Copy</button>
+        </div>
+      </div>
+      <div class="post-content">${window.marked.parse(text)}</div>
+    </div>`;
+
+  container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
+
+  // 复制原始 markdown 文本
+  container.querySelector('#post-copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = container.querySelector('#post-copy-btn');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = '⎘ Copy', 2000);
+    });
   });
+
+  MathJax.typesetPromise([container.querySelector('.post-content')]);
+});
+
 
   // LaTeX：弹出源码覆盖层
   document.getElementById('blog-list').addEventListener('click', async e => {
@@ -263,7 +302,29 @@ async function renderBlog() {
     const res  = await fetch(texLink.dataset.file);
     const text = await res.text();
     openTexOverlay(text);
+  });  
+  // PDF：替换 main-content 为嵌入页
+  document.getElementById('blog-list').addEventListener('click', e => {
+    const pdfLink = e.target.closest('.blog-open-pdf');
+    if (!pdfLink) return;
+    e.preventDefault();
+    const file     = pdfLink.dataset.file;      // PDF 路径
+    const filename = file.split('/').pop();      // 下载文件名
+
+    container.innerHTML = `
+      <div class="post-page post-page--pdf">
+        <div class="post-subnav">
+          <button class="post-back">← Back</button>
+          <div class="post-subnav-actions">
+            <a class="post-action-btn" href="${file}" download="${filename}">↓ Download</a>
+          </div>
+        </div>
+        <iframe class="pdf-embed" src="${file}"></iframe>
+      </div>`;
+
+    container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
   });
+
 }
 // 转义 HTML 特殊字符
 function escapeHTML(str) {
@@ -283,6 +344,42 @@ function openTexOverlay(text) {
   document.body.appendChild(overlay);
 }
 
+// ----- QR Code -----
+
+// 动态加载 qrcode 库
+function loadQRLib() {
+  return new Promise(resolve => {
+    if (window.QRCode) return resolve();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js';
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
+}
+
+document.getElementById('qr-btn').addEventListener('click', async () => {
+  if (document.getElementById('qr-popup')) return; // 已打开则忽略
+  await loadQRLib();
+
+  const popup = document.createElement('div');
+  popup.id = 'qr-popup';
+  popup.innerHTML = `
+    <div id="qr-popup-inner">
+      <div id="qr-canvas"></div>
+      <div class="qr-url">${location.href}</div>
+      <button class="qr-close">✕</button>
+    </div>`;
+  document.body.appendChild(popup);
+
+  new QRCode(document.getElementById('qr-canvas'), {
+    text:   location.href,  // 当前页面 URL
+    width:  180,
+    height: 180,
+  });
+
+  popup.querySelector('.qr-close').addEventListener('click', () => popup.remove());
+  popup.addEventListener('click', e => { if (e.target === popup) popup.remove(); });
+});
 
 // ----- 初始化 -----
 

@@ -35,7 +35,9 @@ nav {
   justify-content: space-between;
   gap: 1rem;
 }
-nav .site-name { font-weight: 700; font-size: 1.1rem; }
+nav .site-name { 
+  font-weight: 750; 
+  font-size: 1.5rem; }
 nav ul { display: flex; gap: 1.5rem; list-style: none; }
 nav ul li a {
   color: var(--muted);
@@ -204,12 +206,15 @@ h2 {
   background: none; border: none;
   font-size: 1.2rem; cursor: pointer; color: var(--muted);
 }
+/* 替换原有 .post-content 规则块 */
 .post-content { line-height: 1.8; }
 .post-content h1,.post-content h2,.post-content h3 { margin: 1.2rem 0 .5rem; }
 .post-content p  { margin-bottom: .8rem; }
 .post-content code { background: var(--bg); padding: .1rem .3rem; border-radius: 3px; font-size: .9em; }
 .post-content pre { background: var(--bg); padding: 1rem; border-radius: var(--radius); overflow-x: auto; }
-.tex-preview { white-space: pre-wrap; font-size: .88rem; font-family: monospace; }
+.post-content ul,
+.post-content ol  { padding-left: 1.5rem; margin-bottom: .8rem; }
+.post-content li  { margin-bottom: .2rem; }
 
 /* ----- Post Page (md 渲染页) ----- */
 .post-page { max-width: 720px; }
@@ -220,3 +225,76 @@ h2 {
   padding: 0;
 }
 .post-back:hover { text-decoration: underline; }
+/* ----- PDF 嵌入页 ----- */
+.post-page--pdf { max-width: 100%; }
+.pdf-embed {
+  width: 100%;
+  height: 80vh;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ----- Post Subnav ----- */
+.post-subnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .45rem .8rem;
+  margin-bottom: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: sticky; top: 65px; z-index: 9;
+}
+.post-subnav-actions { display: flex; gap: .6rem; }
+.post-action-btn {
+  display: inline-block;
+  background: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .2rem .7rem;
+  font-size: .82rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.post-action-btn:hover { background: var(--accent); color: #fff; text-decoration: none; }
+/* ----- QR Popup ----- */
+.qr-btn {
+  background: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .25rem .7rem;
+  font-size: .82rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.qr-btn:hover { background: #eff6ff; }
+
+#qr-popup {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+#qr-popup-inner {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  display: flex; flex-direction: column; align-items: center; gap: .8rem;
+}
+.qr-url {
+  font-size: .75rem;
+  color: var(--muted);
+  word-break: break-all;
+  max-width: 200px;
+  text-align: center;
+}
+.qr-close {
+  position: absolute; top: .6rem; right: .8rem;
+  background: none; border: none;
+  font-size: 1rem; cursor: pointer; color: var(--muted);
+}
