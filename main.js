@@ -8,6 +8,7 @@ const cache     = {};                                            // HTML 片段�
 // 加载 HTML 片段后注入容器，再渲染对应数据
 async function activate(id) {
   tabs.forEach(a => a.classList.toggle('active', a.dataset.tab === id));
+  history.replaceState(null, '', '#' + id);
 
   if (!cache[id]) {
     const res = await fetch(`website_pages/${id}.html`);
@@ -18,6 +19,7 @@ async function activate(id) {
   const renderers = { about: renderAbout, papers: renderPapers, code: renderCode, blog: renderBlog };
   if (renderers[id]) await renderers[id]();
 }
+
 
 
 // ----- 数据渲染 -----
@@ -242,6 +244,56 @@ function blogActionHTML(p) {
   }).join('');
 }
 
+// 打开 md 文章页，并将文件路径写入 hash
+async function openMdPost(file) {
+  history.replaceState(null, '', '#blog/' + encodeURIComponent(file));
+  await loadMarked();
+  await loadMathJax();
+  const res      = await fetch(file, { cache: 'no-store' });
+  const text     = await res.text();
+  const filename = file.split('/').pop(); // 下载文件名
+
+  container.innerHTML = `
+    <div class="post-page">
+      <div class="post-subnav">
+        <button class="post-back">← Back</button>
+        <div class="post-subnav-actions">
+          <a class="post-action-btn" href="${file}" download="${filename}">↓ Download</a>
+          <button class="post-action-btn" id="post-copy-btn">⎘ Copy</button>
+        </div>
+      </div>
+      <div class="post-content">${window.marked.parse(text)}</div>
+    </div>`;
+
+  container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
+  container.querySelector('#post-copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = container.querySelector('#post-copy-btn');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = '⎘ Copy', 2000);
+    });
+  });
+  MathJax.typesetPromise([container.querySelector('.post-content')]);
+}
+
+// 打开 pdf 文章页，并将文件路径写入 hash
+function openPdfPost(file) {
+  history.replaceState(null, '', '#blog/' + encodeURIComponent(file));
+  const filename = file.split('/').pop(); // 下载文件名
+
+  container.innerHTML = `
+    <div class="post-page post-page--pdf">
+      <div class="post-subnav">
+        <button class="post-back">← Back</button>
+        <div class="post-subnav-actions">
+          <a class="post-action-btn" href="${file}" download="${filename}">↓ Download</a>
+        </div>
+      </div>
+      <iframe class="pdf-embed" src="${file}"></iframe>
+    </div>`;
+
+  container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
+}
 
 async function renderBlog() {
   const list = await fetchJSON('blog.json');
@@ -259,39 +311,9 @@ document.getElementById('blog-list').addEventListener('click', async e => {
   const mdLink = e.target.closest('.blog-open-md');
   if (!mdLink) return;
   e.preventDefault();
-  await loadMarked();
-  await loadMathJax();
-  const res  = await fetch(mdLink.dataset.file, { cache: 'no-store' });
-  const text = await res.text();
-
-  // 文件名（用于下载）
-  const filename = mdLink.dataset.file.split('/').pop();
-
-  container.innerHTML = `
-    <div class="post-page">
-      <div class="post-subnav">
-        <button class="post-back">← Back</button>
-        <div class="post-subnav-actions">
-          <a class="post-action-btn" href="${mdLink.dataset.file}" download="${filename}">↓ Download</a>
-          <button class="post-action-btn" id="post-copy-btn">⎘ Copy</button>
-        </div>
-      </div>
-      <div class="post-content">${window.marked.parse(text)}</div>
-    </div>`;
-
-  container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
-
-  // 复制原始 markdown 文本
-  container.querySelector('#post-copy-btn').addEventListener('click', () => {
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = container.querySelector('#post-copy-btn');
-      btn.textContent = '✓ Copied';
-      setTimeout(() => btn.textContent = '⎘ Copy', 2000);
-    });
-  });
-
-  MathJax.typesetPromise([container.querySelector('.post-content')]);
+  await openMdPost(mdLink.dataset.file);
 });
+
 
 
   // LaTeX：弹出源码覆盖层
@@ -304,26 +326,13 @@ document.getElementById('blog-list').addEventListener('click', async e => {
     openTexOverlay(text);
   });  
   // PDF：替换 main-content 为嵌入页
-  document.getElementById('blog-list').addEventListener('click', e => {
-    const pdfLink = e.target.closest('.blog-open-pdf');
-    if (!pdfLink) return;
-    e.preventDefault();
-    const file     = pdfLink.dataset.file;      // PDF 路径
-    const filename = file.split('/').pop();      // 下载文件名
+document.getElementById('blog-list').addEventListener('click', e => {
+  const pdfLink = e.target.closest('.blog-open-pdf');
+  if (!pdfLink) return;
+  e.preventDefault();
+  openPdfPost(pdfLink.dataset.file);
+});
 
-    container.innerHTML = `
-      <div class="post-page post-page--pdf">
-        <div class="post-subnav">
-          <button class="post-back">← Back</button>
-          <div class="post-subnav-actions">
-            <a class="post-action-btn" href="${file}" download="${filename}">↓ Download</a>
-          </div>
-        </div>
-        <iframe class="pdf-embed" src="${file}"></iframe>
-      </div>`;
-
-    container.querySelector('.post-back').addEventListener('click', () => activate('blog'));
-  });
 
 }
 // 转义 HTML 特殊字符
@@ -390,4 +399,22 @@ tabs.forEach(a => {
   });
 });
 
-activate('about');
+// 解析 hash：支持 #blog/path 直接打开文章
+const hash    = location.hash.slice(1);          // 去掉 #
+const slashIdx = hash.indexOf('/');
+if (slashIdx !== -1) {
+  const tab  = hash.slice(0, slashIdx);          // 'blog'
+  const file = decodeURIComponent(hash.slice(slashIdx + 1)); // 文件路径
+  if (tab === 'blog') {
+    // 先激活 blog tab（加载列表），再打开文章
+    activate('blog').then(() => {
+      const ext = file.split('.').pop();
+      if (ext === 'pdf') openPdfPost(file);
+      else               openMdPost(file);
+    });
+  } else {
+    activate(tab);
+  }
+} else {
+  activate(hash || 'about');
+}
