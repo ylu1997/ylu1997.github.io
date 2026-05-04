@@ -1,0 +1,49 @@
+% 学术简历 LaTeX 模板，由 cv_builder.py 读取并填充内容
+% (website_file/cv/cv_template.tex)
+% 此文件仅供参考样式，实际编译文件为 cv_builder.py 生成的 cv_output.tex
+
+\documentclass[11pt, a4paper]{article}
+
+% ----- 包 -----
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+% ----- 超链接样式 -----
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=black}
+
+% ----- 节标题样式 -----
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{4pt}
+
+% ----- 无页码 -----
+\pagestyle{empty}
+
+\begin{document}
+
+% === 姓名与联系方式 ===
+\begin{center}
+  {\LARGE\bfseries YOUR NAME}\\[4pt]
+  Position \quad|\quad
+  \href{mailto:email@example.com}{email@example.com} \quad|\quad
+  \href{https://github.com/}{github.com/yourname}
+\end{center}
+
+\section{Education}
+% ...
+
+\section{Publications}
+% ...
+
+\section{Experience}
+% ...
+
+\end{document}
