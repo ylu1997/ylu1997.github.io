@@ -207,7 +207,6 @@ async function renderCode() {
 // ----- Blog -----
 
 // 动态加载 marked.js（Markdown 渲染）
-// 动态加载 marked.js 和 MathJax
 function loadMarked() {
   return new Promise(resolve => {
     if (window.marked) return resolve();
@@ -216,6 +215,23 @@ function loadMarked() {
     s.onload = resolve;
     document.head.appendChild(s);
   });
+}
+// marked 解析前保护公式，防止 _ 被转义
+function protectedMarkedParse(src) {
+  const store = [];
+
+  const save = (m) => { store.push(m); return `\x02MATH${store.length - 1}\x03`; };
+
+  // 先保护块级 $$...$$
+  src = src.replace(/\$\$([\s\S]+?)\$\$/g, save);
+  // 再保护行内 $...$（不含换行的单个 $）
+  src = src.replace(/\$([^\$\r\n]+?)\$/g, save);
+
+  let html = window.marked.parse(src);
+
+  // marked 可能把占位符包在 <p>、<code> 里，用宽松匹配还原
+  html = html.replace(/\x02MATH(\d+)\x03/g, (_, i) => store[+i]);
+  return html;
 }
 
 function loadMathJax() {
@@ -262,7 +278,7 @@ async function openMdPost(file) {
           <button class="post-action-btn" id="post-copy-btn">⎘ Copy</button>
         </div>
       </div>
-      <div class="post-content">${window.marked.parse(text)}</div>
+      <div class="post-content">${protectedMarkedParse(text)}</div>
     </div>`;
 
   container.querySelector('.post-back').addEventListener('click', () => activate('blog'));

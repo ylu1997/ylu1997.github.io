@@ -83,7 +83,7 @@
       - SNO（谱神经算子）：直接在 Fourier/Chebyshev 系数空间用前馈网络做映射
       - CNO（卷积神经算子）：在物理空间参数化 $k\times k$ 网格上的卷积核 $\sum_{i,j} k_{ij} f(x - z_{ij})$，缓解 CNN 的混叠问题，适用于带限函数间的映射
   - GL / DGN：直接在物理空间学习 Green 核，不施加低秩或平移不变假设
-    - 适用场景：线性边值问题 $Lu = f$（$u|_{\partial\Omega}=0$），解算子可表示为 $A(f)(x) = \int_\Omega G(x,y)f(y)\,dy$
+    - 适用场景：线性边值问题 $Lu = f(u|_{\partial\Omega}=0)$，解算子可表示为 $A(f)(x) = \int_\Omega G(x,y)f(y)\,dy$
     - GL（线性算子）：将 $G(x,y)$ 参数化为有理神经网络（激活函数为两多项式之比，系数在训练中学习），损失为相对均方误差：$$\min_{\theta} \frac{1}{|\text{data}|} \sum_{(f,u)} \frac{1}{\|u\|^2_{L^2}} \int_\Omega \left( u(x) - \int_\Omega \mathcal{N}(x,y) f(y)\,dy \right)^2 dx$$
       - remark：$m$ 为空间离散化点数；两层积分均用数值求积（如梯形公式）实现，内层积分对每个 $x_i$ 展开为 $\hat{u}(x_i) \approx \sum_{j=1}^m w_j \mathcal{N}(x_i,x_j)f(x_j)$，共 $m$ 个 $x_i$，故总代价 $O(m^2)$；由于核 $\mathcal{N}(x,y)$ 不假设平移不变性（即不要求 $\mathcal{N}(x,y)=k(x-y)$），无法化为卷积，无法用 FFT 加速——这正是相比 FNO 的主要计算劣势
       - 有理网络动机：比 ReLU 网络逼近连续函数所需层数指数级更少，且可取任意大值——适合逼近可能无界/奇异的 Green 函数      
