@@ -42,13 +42,22 @@
       "category": "AI_Notes",
       "children": [
         {
-          "title": "Reading Notes: A Mathematical Guide to Operator Learning",
+          "title": "神经算子(Neural Operator Learning)理解",
+          "date": "",
+          "desc": "神经算子学习笔记",
+          "type": [
+            "md"
+          ],
+          "file": "website_file/blog/AI_Notes/Math_to_Operator_learning.md"
+        },
+        {
+          "title": "Kooperman算子理论学习笔记",
           "date": "",
           "desc": "",
           "type": [
             "md"
           ],
-          "file": "website_file/blog/AI_Notes/Math_to_Operator_learning.md"
+          "file": "website_file/blog/AI_Notes/Koopman_OpLearning_DL.md"
         }
       ]
     }
