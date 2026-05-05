@@ -13,7 +13,29 @@
   "data": [
     {
       "category": "Research Tools",
-      "children": []
+      "children": [
+        {
+          "name": "windows-assistant-toolkit",
+          "lang": [
+            "Python"
+          ],
+          "year": "2026",
+          "desc": "A Windows productivity assistant for managing prompts, code snippets, templates, workflows, and drawing assets — with one-click copy-paste support.",
+          "tags": [
+            "tkinter",
+            "websocket",
+            "prompt control",
+            "context management",
+            "desktop automation"
+          ],
+          "links": [
+            {
+              "label": "GitHub",
+              "url": "https://github.com/ylu1997/windows-assistant-toolkit"
+            }
+          ]
+        }
+      ]
     },
     {
       "category": "Research Project",
