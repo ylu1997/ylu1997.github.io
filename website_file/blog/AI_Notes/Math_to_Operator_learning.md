@@ -9,41 +9,66 @@
     - 如 SINDy：用稀疏促进算法从候选函数库中筛选出真正起作用的项
     - 也有符号回归方法（AI Feynman、遗传算法）直接从数据发现方程形式
   - 算子学习：本文重点，从数据中逼近未知算子
-## 算子学习的数学定义
-  - 设 $\Omega \subset \mathbb{R}^d$ 为 $d$ 维空间域，$\mathcal{U}$、$\mathcal{V}$ 分别为定义在 $\Omega$ 上的函数空间（如 $L^2(\Omega)$），$f \in \mathcal{U}$，$u \in \mathcal{V}$ 均为 $\Omega$ 上的函数
-  - 算子 $A: \mathcal{U} \to \mathcal{V}$（可能非线性）是函数空间之间的映射，满足 $A(f) = u$；神经算子正是对这一无穷维映射的参数化逼近
-  - 实践中对 $\Omega$ 上的传感器点 $x_1,\dots,x_m$ 采样，将连续函数离散化为观测向量，连续积分算子退化为有限维矩阵-向量乘积
-  - 目标：从离散化的训练数据对 $(f_1,u_1),\dots,(f_M,u_M)$ 中学到近似 $\hat{A}$，使得对未见的 $f'$ 也有 $\hat{A}(f') \approx A(f')$；其中每对 $(f_i, u_i)$ 为一组"问题-答案"，$f_i$ 是输入函数（如源项、初始条件），$u_i = A(f_i)$ 是对应的输出函数（如 PDE 的解），由数值求解器或实验观测给出
-  - 将 $\hat{A}$ 参数化为神经算子（参数 $\theta \in \mathbb{R}^N$），转化为优化问题：$$\min_{\theta \in \mathbb{R}^N} \sum_{(f,u)\in\text{data}} \mathcal{L}\bigl(\hat{A}(f;\theta),\, u\bigr)$$
-  - 典型例子：Poisson 方程的解算子 $A(f)(x) = \int_\Omega G(x,y)f(y)\,dy$，$G$ 为 Green 函数
-## 神经算子的结构（深度学习）
-  - 标准全连接神经网络：输入输出均为有限维向量，逐层做仿射变换加非线性激活 $\mathcal{N}(x) = \sigma(A_L(\cdots\sigma(A_1 x+b_1)\cdots)+b_L)$
-  - 神经算子将其推广：输入输出均为函数，输入 $f:\Omega\to\mathbb{R}^{d_1}$，输出 $u:\Omega\to\mathbb{R}^{d_L}$，从有限维映射推广到函数空间之间的映射
-  - 每一层由积分算子与非线性函数复合定义：$$u_{i+1}(x) = \sigma\!\left(\int_{\Omega_i} K^{(i)}(x,y)\,u_i(y)\,dy + b_i(x)\right), \quad x \in \Omega_{i+1}$$
-    - $K^{(i)}$ 为第 $i$ 层的核函数，$b_i$ 为偏置函数，均通过训练参数化
-    - 与标准网络的权重矩阵 $A_i$ 类比：矩阵乘法 $\to$ 积分算子，偏置向量 $\to$ 偏置函数
-    - $\Omega_i \subset \mathbb{R}^{d_i}$ 为第 $i$ 层对应的紧致空间域（各层域可不同，维度随层变化）
-  - 核心挑战：积分算子的计算代价高（朴素离散化为 $O(m^2)$），因此衍生出 DeepONet、FNO 等不同架构来降低计算复杂度
-  - 神经算子的完整架构（Kovachki et al. 2022）
-    - 整体结构分三步：提升（Lifting）→ 迭代核积分（Iterative Kernel Integration）→ 投影（Projection）
-      $$G_\theta := Q \circ \sigma_T(W_{T-1} + K_{T-1} + b_{T-1}) \circ \cdots \circ \sigma_1(W_0 + K_0 + b_0) \circ P$$
-    - 提升层 $P$：逐点映射 $a(x) \mapsto v_0(x)$，将输入函数升至高维隐空间（$d_{v_0} > d_a$）
-    - 每层隐层更新同时包含局部线性算子 $W_t$（逐点矩阵乘）和非局部积分核算子 $K_t$：
-      $$v_{t+1}(x) = \sigma_{t+1}\!\left(W_t v_t(x) + \int_{D_t} \kappa^{(t)}(x,y)\,v_t(y)\,d\nu_t(y) + b_t(x)\right)$$
-      - $W_t$ 类比 ResNet 的跳跃连接，起正则化作用
-      - $K_t$ 为非局部积分核，捕获长程依赖
-    - 投影层 $Q$：逐点映射 $v_T(x) \mapsto u(x)$，降回输出维度
-    - 总误差分解：$$\|\hat{G}_\theta(a|_{D_L}) - G^\dagger(a)\|_U \leq \underbrace{\|\hat{G}_\theta(a|_{D_L}) - G_\theta(a)\|_U}_{\text{离散化误差}} + \underbrace{\|G_\theta(a) - G^\dagger(a)\|_U}_{\text{逼近误差}}$$
-      - 离散化不变性定理保证离散化误差随网格细化趋于 0
-      - 通用逼近定理保证存在参数使逼近误差任意小
-## 算子学习的挑战
-  - 算子往往非线性、高维，数据稀少或含噪
-  - 但正问题（forward problem）通常是适定的
-## 算子学习的应用场景
-  - 加速求解：构建低成本代理模型，以精度换速度，适合需反复求解的工程场景
-  - 参数优化：学好的解算子提供从解到参数的可微路径，支持逆问题求解；离散化无关性使模型可自由迁移至不同网格或分辨率
-  - 基准测试：借助 PDE 理论（对称性、守恒律）开发和评估新架构
-  - 发现未知物理：在 PDE 未知或数据极少时，从数据中挖掘物理规律；可解释性差是当前主要瓶颈
+## 算子学习与神经算子理论描述
+
+### 数学定义
+- 设 $\Omega \subset \mathbb{R}^d$，$\mathcal{U}$、$\mathcal{V}$ 为定义在 $\Omega$ 上的函数空间（如 $L^2(\Omega)$），算子 $A: \mathcal{U} \to \mathcal{V}$（可能非线性）满足 $A(f) = u$
+- 学习目标：从训练数据对 $(f_1,u_1),\dots,(f_M,u_M)$（其中 $f_i \in \mathcal{U}$，$u_i \in \mathcal{V}$）中学到近似 $\hat{A}$，使对未见的 $f' \in \mathcal{U}$ 也有 $\hat{A}(f') \approx A(f')$；连续形式下定义为在输入函数分布 $\mu$ 上的期望损失：
+  $$\min_{\theta \in \mathbb{R}^N} \int_{\mathcal{U}} \mathcal{L}\bigl(\hat{A}(f;\theta),\, A(f)\bigr)\, d\mu(f)$$
+  其中 $\mathcal{L}: \mathcal{V} \times \mathcal{V} \to \mathbb{R}_{\geq 0}$ 为函数空间上的度量（如 $\|\cdot\|_{L^2(\Omega)}^2$）；以经验分布 $\mu = \frac{1}{M}\sum_{i=1}^M \delta_{f_i}$ 代替时退化为离散求和
+- 典型例子：Poisson 方程的解算子 $A(f)(x) = \int_\Omega G(x,y)f(y)\,dy$，$G$ 为 Green 函数
+- 离散化：计算机只能处理有限维数据；函数的离散化本质上依赖某种蕴含有限性的数学假设，主要有两种方式：
+  - **方式一（点采样）**：当 $f$ 满足特定连续性（如 $f \in L^2(\Omega)$ 或 Sobolev 空间 $H^s(\Omega)$）时，可在 $\Omega$ 上取传感器点 $D_m = \{x_1,\dots,x_m\} \subset \Omega$，将 $f$ 离散为观测向量 $f|_{D_m} = (f(x_1),\dots,f(x_m)) \in \mathbb{R}^m$；连续积分算子退化为有限维矩阵-向量乘积
+    - 每对训练数据在同一组传感器点上采样：$f_i|_{D_m}$，$u_i|_{D_m}$
+    - 传感器点数 $m$ 决定离散化精度；当 $m \to \infty$（网格细化）时，离散化趋近连续极限——这是"离散化不变性"的核心要求
+    - 借助紧嵌入定理、插值估计等工具可对离散化误差给出收敛性保证
+  - **方式二（代理模型参数化）**：用一套参数化代理模型逼近函数，以代理模型的参数向量作为网络输入；此时有限性来自模型的参数维度，而非物理空间的采样密度
+    - 例如有限元展开：$f(x) \approx \sum_{k=1}^K c_k \phi_k(x)$，以系数向量 $(c_1,\dots,c_K) \in \mathbb{R}^K$ 作为输入
+    - 例如隐式神经表示（INR）：用一个小型神经网络 $f_\phi(x) \approx f(x)$ 拟合单个函数实例，以网络权重 $\phi \in \mathbb{R}^K$ 作为该函数的有限维编码输入算子网络；此时函数空间的连续性假设转化为对 INR 网络结构和训练的正则化约束
+### 离散化
+算子学习涉及三个层面的离散化：**输入函数**、**输出函数**与**算子本身**。
+
+- 函数的离散化：连续函数的离散化本质上依赖某种蕴含有限性的数学假设，主要有两种方式：
+  - **方式一（点采样）**：当 $f$ 满足特定连续性（如 $f \in L^2(\Omega)$ 或 Sobolev 空间 $H^s(\Omega)$）时，可在 $\Omega$ 上取传感器点 $D_m = \{x_1,\dots,x_m\} \subset \Omega$，将 $f$ 离散为观测向量 $f|_{D_m} = (f(x_1),\dots,f(x_m)) \in \mathbb{R}^m$
+    - 每对训练数据在同一组传感器点上采样：$f_i|_{D_m}$，$u_i|_{D_m}$
+    - 传感器点数 $m$ 决定离散化精度；当 $m \to \infty$（网格细化）时，离散化趋近连续极限——这是"离散化不变性"的核心要求，严格定义为：一个参数化算子类 $G(\cdot,\theta)$ 称为离散化不变的，若存在一族离散化映射 $\hat{G}_L$，使得对任意紧集 $K \subset \mathcal{U}$、任意参数 $\theta$：
+      $$\lim_{L\to\infty} \sup_{a\in K} \|\hat{G}_L(D_L, a|_{D_L}, \theta) - G(a,\theta)\|_U = 0$$
+    - 借助紧嵌入定理、插值估计等工具可对离散化误差给出收敛性保证
+  - **方式二（代理模型参数化）**：用一套参数化代理模型逼近函数，以代理模型的参数向量作为网络输入；此时有限性来自模型的参数维度，而非物理空间的采样密度
+    - 例如有限元展开：$f(x) \approx \sum_{k=1}^K c_k \phi_k(x)$，以系数向量 $(c_1,\dots,c_K) \in \mathbb{R}^K$ 作为输入
+    - 例如隐式神经表示（INR）：用一个小型神经网络 $f_\phi(x) \approx f(x)$ 拟合单个函数实例，以网络权重 $\phi \in \mathbb{R}^K$ 作为该函数的有限维编码；此时函数空间的连续性假设转化为对 INR 网络结构和训练的正则化约束
+
+- 算子的离散化：连续算子 $A: \mathcal{U} \to \mathcal{V}$ 在有限维离散化后，退化为从离散输入到离散输出的有限维映射。设输入输出均在同一组网格点 $D_m = \{x_1,\dots,x_m\}$ 上采样，则：
+  - **经典离散化**：连续积分算子 $A(f)(x) = \int_\Omega K(x,y)f(y)\,dy$ 经数值求积（如梯形公式，权重 $w_j$）退化为矩阵-向量乘积：
+    $$A(f)(x_i) \approx \sum_{j=1}^m w_j K(x_i, x_j) f(x_j) = (\mathbf{K}\mathbf{f})_i, \quad \mathbf{K}_{ij} = w_j K(x_i,x_j)$$
+    即连续算子 $\leftrightarrow$ 矩阵 $\mathbf{K} \in \mathbb{R}^{m\times m}$，计算代价 $O(m^2)$
+  - **神经算子的离散化**：将参数化算子 $\hat{A}(\cdot;\theta)$ 本身也离散化为 $\hat{A}_m(\cdot;\theta)$，作用在离散输入 $f|_{D_m}$ 上输出离散向量 $u|_{D_m}$；不同架构对算子施加不同结构假设以降低复杂度：
+    - 低秩假设（DeepONet）：$\mathbf{K} \approx \mathbf{T}\mathbf{B}^\top$，$\mathbf{T},\mathbf{B} \in \mathbb{R}^{m\times p}$，复杂度 $O(mp)$
+    - 平移不变假设（FNO）：$\mathbf{K}$ 为循环矩阵，经 FFT 对角化，复杂度 $O(m\log m)$
+    - 局部截断假设（GNO）：$\mathbf{K}$ 为带状稀疏矩阵，复杂度 $O(m \cdot w)$，$w$ 为带宽
+    - 分层低秩假设（MGNO）：$\mathbf{K}$ 为 HODLR 结构，复杂度 $O(m\log m)$
+  - 总误差分解：
+    $$\|\hat{A}_m(f|_{D_m};\theta) - A(f)\|_{\mathcal{V}} \leq \underbrace{\|\hat{A}_m(f|_{D_m};\theta) - \hat{A}(f;\theta)\|_{\mathcal{V}}}_{\text{离散化误差}} + \underbrace{\|\hat{A}(f;\theta) - A(f)\|_{\mathcal{V}}}_{\text{逼近误差}}$$
+    - 离散化不变性保证离散化误差随 $m \to \infty$ 趋于 $0$
+    - 通用逼近定理保证存在参数 $\theta$ 使逼近误差任意小
+### 神经算子
+- 标准全连接网络输入输出为有限维向量：$\mathcal{N}(x) = \sigma(A_L(\cdots\sigma(A_1 x+b_1)\cdots)+b_L)$；神经算子将其推广至函数空间之间的映射，输入 $f:\Omega\to\mathbb{R}^{d_1}$，输出 $u:\Omega\to\mathbb{R}^{d_L}$
+- 每一层由积分算子与非线性激活复合定义：
+  $$u_{i+1}(x) = \sigma\!\left(\int_{\Omega_i} K^{(i)}(x,y)\,u_i(y)\,dy + b_i(x)\right), \quad x \in \Omega_{i+1}$$
+  - $K^{(i)}$ 为第 $i$ 层核函数，$b_i$ 为偏置函数，均通过训练参数化
+  - 与标准网络类比：权重矩阵 $A_i$（矩阵乘）$\to$ 积分算子，偏置向量 $\to$ 偏置函数
+  - $\Omega_i \subset \mathbb{R}^{d_i}$ 为第 $i$ 层对应的紧致空间域（各层可不同）
+- 核心挑战：积分算子朴素离散化计算代价为 $O(m^2)$，由此衍生出 DeepONet、FNO 等架构以降低复杂度
+- 完整架构（Kovachki et al. 2022）：提升（Lifting）→ 迭代核积分（Iterative Kernel Integration）→ 投影（Projection）
+  $$G_\theta := Q \circ \sigma_T(W_{T-1} + K_{T-1} + b_{T-1}) \circ \cdots \circ \sigma_1(W_0 + K_0 + b_0) \circ P$$
+  - 提升层 $P$：逐点映射 $a(x) \mapsto v_0(x)$，将输入函数升至高维隐空间（$d_{v_0} > d_a$）
+  - 每层隐层更新同时包含局部线性算子 $W_t$（逐点矩阵乘，类比 ResNet 跳跃连接）和非局部积分核算子 $K_t$（捕获长程依赖）：
+    $$v_{t+1}(x) = \sigma_{t+1}\!\left(W_t v_t(x) + \int_{D_t} \kappa^{(t)}(x,y)\,v_t(y)\,d\nu_t(y) + b_t(x)\right)$$
+  - 投影层 $Q$：逐点映射 $v_T(x) \mapsto u(x)$，降回输出维度
+  - 总误差分解：
+    $$\|\hat{G}_\theta(a|_{D_L}) - G^\dagger(a)\|_U \leq \underbrace{\|\hat{G}_\theta(a|_{D_L}) - G_\theta(a)\|_U}_{\text{离散化误差}} + \underbrace{\|G_\theta(a) - G^\dagger(a)\|_U}_{\text{逼近误差}}$$
+    - 离散化不变性定理保证离散化误差随网格细化趋于 0
+    - 通用逼近定理保证存在参数使逼近误差任意小
 ## 经典线性算子学习
   - 线性 PDE 的解算子离散化后退化为矩阵-向量乘积 $x \mapsto Ax$，$A \in \mathbb{R}^{N \times N}$ 由 Green 函数（卷积中的核函数）离散得到
   - PDE 的性质决定 $A$ 的结构：全局光滑 $\to$ 低秩；周期边界+常系数 $\to$ 循环矩阵；局部行为 $\to$ 带状；椭圆/抛物型 $\to$ 分层低秩
@@ -67,14 +92,8 @@
     - 对角块递归为 HODLR，非对角块均为秩-$k$；图着色使同色子矩阵并行恢复，总查询数 $< 10k\lceil\log_2 N\rceil$
     - 无穷维类比为椭圆/抛物型 PDE 的 Green 函数在分离子域上的低秩结构
     - MGNO 将核分解为 $G = K_1 + \cdots + K_L$，逐层捕获从短程到长程的交互；表达能力强但实现复杂
+  - 示意图：![经典算子学习](Math_to_Operator_learning_assets/classical_operator_learning.svg)
 ## 神经算子架构总览
-  - 离散化不变性（Discretization Invariance）的严格定义
-    - 一个参数化算子类 $G(\cdot,\theta)$ 称为离散化不变的，若存在一族离散化映射 $\hat{G}_L$，使得对任意紧集 $K \subset A$、任意参数 $\theta$：
-      $$\lim_{L\to\infty} \sup_{a\in K} \|\hat{G}_L(D_L, a|_{D_L}, \theta) - G(a,\theta)\|_U = 0$$
-    - 标准神经网络（MLP、CNN、ViT）不满足此性质：输入输出固定在训练网格，换分辨率需重新训练
-    - 插值+神经网络（NN+Interpolation）满足分辨率不变性，但不是算子的通用逼近器
-    - Transformer 满足分辨率不变性，但不收敛到连续算子（不满足第三条）；且 ViT 因使用 CNN 生成 token 而完全不满足
-    - 神经算子是已知唯一同时满足离散化不变性和通用逼近性的模型类
   - 各架构通过对核施加不同结构假设来降低计算复杂度，并具有通用逼近性（类比神经网络的万能逼近定理）及基于逼近论的定量误差界
   - DeepONet：假设算子低秩，用 branch/trunk 网络参数化核
     - 结构：branch net 将输入函数 $f$ 在传感器点 $\{x_i\}_{i=1}^m$ 处的值编码为系数向量 $\{b_k\}_{k=1}^p$；trunk net 学习输出域上的基函数 $\{t_k\}_{k=1}^p$；输出为秩-$p$ 展开：$$\mathcal{N}(f)(y) = \sum_{k=1}^p b_k(f(x_1),\dots,f(x_m))\, t_k(y)$$
@@ -205,7 +224,7 @@
       - 外推性：神经算子对更光滑（更大 $\ell$）的函数有一定外推能力，但对更振荡的函数外推误差增大
       - 零样本超分辨率：在低分辨率训练后，可直接在更高分辨率评估，误差基本不变（在Burgers方程和Darcy流上验证）
       - 关于神经算子离散化不变性的进一步讨论见 ReNO
-## 结论与未来挑战
+- 结论与未来挑战
   - 探针分布问题
     - 现有方法多用全局支撑、训练前固定分布的GP源项
     - 现实工程/生物系统中源项可能是局部化的，影响尚不明确
@@ -214,8 +233,15 @@
     - 缺乏类似 MNIST/ImageNet 的标准化基准数据集和开源工具
     - 未来方向：建立跨学科（流体、量子力学、流行病学等）标准PDE问题列表，涵盖线性/非线性、稳态/时变、光滑/粗糙等多种属性
   - 真实世界应用
+    - 算子往往非线性、高维，数据稀少或含噪，但正问题（forward problem）通常是适定的
+    - 主要应用方向：
+      - 加速求解：构建低成本代理模型，以精度换速度，适合需反复求解的工程场景
+      - 参数优化：学好的解算子提供从解到参数的可微路径，支持逆问题求解；离散化无关性使模型可自由迁移至不同网格或分辨率
+      - 基准测试：借助 PDE 理论（对称性、守恒律）开发和评估新架构
+      - 发现未知物理：在 PDE 未知或数据极少时，从数据中挖掘物理规律；可解释性差是当前主要瓶颈
     - 已有成功案例：天气预报（FourCastNet、GraphCast），精度和速度均优于传统数值天气预报
-    - 未来方向：扩展到更多科学领域，在真实数据（未知PDE）上训练以发现新物理规律
+    - 未来方向：扩展到更多科学领域，在真实数据（未知 PDE）上训练以发现新物理规律
+
   - 理论理解
     - 现有近似理论和样本复杂度分析已有进展，但收敛性和优化的理论仍不完善
     - 未来方向：将PINN的NTK收敛框架推广到神经算子，推导严格收敛率，设计更好的权重初始化方案

@@ -267,7 +267,7 @@ async function openMdPost(file) {
   await loadMathJax();
   const res      = await fetch(file, { cache: 'no-store' });
   const text     = await res.text();
-  const filename = file.split('/').pop(); // 下载文件名
+  const filename = file.split('/').pop();
 
   container.innerHTML = `
     <div class="post-page">
@@ -289,8 +289,20 @@ async function openMdPost(file) {
       setTimeout(() => btn.textContent = '⎘ Copy', 2000);
     });
   });
+
+  // ↓↓↓ 新增：修正图片路径 ↓↓↓
+  const baseDir = file.substring(0, file.lastIndexOf('/') + 1);
+  container.querySelectorAll('.post-content img').forEach(img => {
+    const src = img.getAttribute('src');
+    if (src && !src.startsWith('http') && !src.startsWith('/')) {
+      img.src = baseDir + src;
+    }
+  });
+  // ↑↑↑ 新增结束 ↑↑↑
+
   MathJax.typesetPromise([container.querySelector('.post-content')]);
 }
+
 
 // 打开 pdf 文章页，并将文件路径写入 hash
 function openPdfPost(file) {

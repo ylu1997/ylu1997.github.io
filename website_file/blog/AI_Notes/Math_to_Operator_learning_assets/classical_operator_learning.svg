@@ -1,0 +1,273 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="serif" font-size="13">
+  <rect width="900" height="620" fill="#fafafa"/>
+
+  <text x="450" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">经典线性算子学习：矩阵结构 → 神经算子架构</text>
+
+  <text x="90"  y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#444">矩阵结构</text>
+  <text x="310" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#444">恢复策略</text>
+  <text x="530" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#444">无穷维类比</text>
+  <text x="760" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#444">神经算子</text>
+  <line x1="20" y1="68" x2="880" y2="68" stroke="#ccc" stroke-width="1"/>
+
+  <!-- ════════ Row 1: 低秩 → DeepONet ════════ -->
+  <g transform="translate(30,85)">
+    <rect width="120" height="80" rx="4" fill="#e8f4fd" stroke="#90caf9" stroke-width="1.5"/>
+    <rect x="4"  y="4"  width="112" height="10" fill="#64b5f6" opacity="0.5"/>
+    <rect x="4"  y="16" width="112" height="10" fill="#42a5f5" opacity="0.4"/>
+    <rect x="4"  y="28" width="112" height="10" fill="#64b5f6" opacity="0.3"/>
+    <rect x="4"  y="40" width="112" height="10" fill="#42a5f5" opacity="0.4"/>
+    <rect x="4"  y="52" width="112" height="10" fill="#64b5f6" opacity="0.3"/>
+    <rect x="4"  y="64" width="112" height="10" fill="#42a5f5" opacity="0.4"/>
+    <text x="60" y="95"  text-anchor="middle" font-size="12" fill="#1565c0">低秩矩阵 (rank-k)</text>
+    <text x="60" y="108" text-anchor="middle" font-size="11" fill="#555">全局光滑 PDE</text>
+  </g>
+
+  <g transform="translate(200,85)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="20" text-anchor="middle" font-size="12" fill="#333">随机化 SVD</text>
+    <text x="100" y="36" text-anchor="middle" font-size="11" fill="#555">最少 2k 次查询</text>
+    <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd"/>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">列空间基 Q</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">↔ trunk net {tₖ}</text>
+  </g>
+
+  <g transform="translate(420,85)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" fill="#333">Green 函数全局光滑</text>
+    <text x="100" y="40" text-anchor="middle" font-size="11" fill="#555">A(f)(x) = ∫G(x,y)f(y)dy</text>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">可分离核</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">G(x,y) ≈ Σ φₖ(x)ψₖ(y)</text>
+  </g>
+
+  <g transform="translate(640,80)">
+    <rect width="220" height="90" rx="6" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+    <text x="110" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">DeepONet</text>
+    <line x1="10" y1="30" x2="210" y2="30" stroke="#a5d6a7"/>
+    <text x="110" y="46" text-anchor="middle" font-size="11" fill="#333">branch net: 编码 f|_{Dm}</text>
+    <text x="110" y="62" text-anchor="middle" font-size="11" fill="#333">trunk net: 基函数 {tₖ(x)}</text>
+    <text x="110" y="78" text-anchor="middle" font-size="11" fill="#333">输出: Σ bₖ · tₖ(x)</text>
+  </g>
+
+  <line x1="152" y1="125" x2="198" y2="125" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="402" y1="125" x2="418" y2="125" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="622" y1="125" x2="638" y2="125" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ════════ Row 2: 循环矩阵 → FNO ════════ -->
+  <!-- 循环矩阵：6×6格子，每条对角线同色，体现循环位移 -->
+  <g transform="translate(30,215)">
+    <rect width="120" height="80" rx="4" fill="#fff8e1" stroke="#ffca28" stroke-width="1.5"/>
+    <!-- 6×6 grid, cell size ~18×12, offset (4,4) -->
+    <!-- diagonal colors: 6 diagonals, cyclic shift pattern -->
+    <!-- color palette for 6 values -->
+    <!-- c0=#ef5350 c1=#ff9800 c2=#ffee58 c3=#66bb6a c4=#42a5f5 c5=#ab47bc -->
+    <!-- row0 -->
+    <rect x="4"  y="4"  width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <rect x="23" y="4"  width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <rect x="42" y="4"  width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <rect x="61" y="4"  width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <rect x="80" y="4"  width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <rect x="99" y="4"  width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <!-- row1: shift by 1 -->
+    <rect x="4"  y="17" width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <rect x="23" y="17" width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <rect x="42" y="17" width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <rect x="61" y="17" width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <rect x="80" y="17" width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <rect x="99" y="17" width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <!-- row2: shift by 2 -->
+    <rect x="4"  y="30" width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <rect x="23" y="30" width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <rect x="42" y="30" width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <rect x="61" y="30" width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <rect x="80" y="30" width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <rect x="99" y="30" width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <!-- row3 -->
+    <rect x="4"  y="43" width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <rect x="23" y="43" width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <rect x="42" y="43" width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <rect x="61" y="43" width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <rect x="80" y="43" width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <rect x="99" y="43" width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <!-- row4 -->
+    <rect x="4"  y="56" width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <rect x="23" y="56" width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <rect x="42" y="56" width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <rect x="61" y="56" width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <rect x="80" y="56" width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <rect x="99" y="56" width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <!-- row5 -->
+    <rect x="4"  y="69" width="18" height="12" fill="#ab47bc" opacity="0.8"/>
+    <rect x="23" y="69" width="18" height="12" fill="#42a5f5" opacity="0.8"/>
+    <rect x="42" y="69" width="18" height="12" fill="#66bb6a" opacity="0.8"/>
+    <rect x="61" y="69" width="18" height="12" fill="#ffee58" opacity="0.8"/>
+    <rect x="80" y="69" width="18" height="12" fill="#ff9800" opacity="0.8"/>
+    <rect x="99" y="69" width="18" height="12" fill="#ef5350" opacity="0.8"/>
+    <text x="60" y="95"  text-anchor="middle" font-size="12" fill="#e65100">循环矩阵</text>
+    <text x="60" y="108" text-anchor="middle" font-size="11" fill="#555">周期边界+常系数</text>
+  </g>
+
+  <g transform="translate(200,215)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="20" text-anchor="middle" font-size="12" fill="#333">FFT 对角化</text>
+    <text x="100" y="36" text-anchor="middle" font-size="11" fill="#555">仅需 1 次查询</text>
+    <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd"/>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">O(N log N) 复杂度</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">C_c g = C_g c</text>
+  </g>
+
+  <g transform="translate(420,215)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" fill="#333">平移不变核</text>
+    <text x="100" y="40" text-anchor="middle" font-size="11" fill="#555">G(x,y) = G(x−y)</text>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">卷积定理</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">Fourier 域乘法</text>
+  </g>
+
+  <g transform="translate(640,210)">
+    <rect width="220" height="90" rx="6" fill="#fff3e0" stroke="#ffa726" stroke-width="2"/>
+    <text x="110" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">FNO</text>
+    <line x1="10" y1="30" x2="210" y2="30" stroke="#ffcc80"/>
+    <text x="110" y="46" text-anchor="middle" font-size="11" fill="#333">Fourier 域可训练权重 R</text>
+    <text x="110" y="62" text-anchor="middle" font-size="11" fill="#333">FFT → 逐频率乘 R → IFFT</text>
+    <text x="110" y="78" text-anchor="middle" font-size="11" fill="#333">O(N log N) 推理</text>
+  </g>
+
+  <line x1="152" y1="255" x2="198" y2="255" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="402" y1="255" x2="418" y2="255" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="622" y1="255" x2="638" y2="255" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ════════ Row 3: 带状矩阵 → GNO ════════ -->
+  <!-- 带状矩阵：主对角及±1带高亮，其余灰色 -->
+  <g transform="translate(30,345)">
+    <rect width="120" height="80" rx="4" fill="#fce4ec" stroke="#f48fb1" stroke-width="1.5"/>
+    <!-- 6×6 grid, cell 18×12, offset(4,4) -->
+    <!-- off-band: light gray -->
+    <!-- row0 -->
+    <rect x="4"  y="4"  width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <rect x="23" y="4"  width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="42" y="4"  width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="61" y="4"  width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="80" y="4"  width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="99" y="4"  width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <!-- row1 -->
+    <rect x="4"  y="17" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="23" y="17" width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <rect x="42" y="17" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="61" y="17" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="80" y="17" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="99" y="17" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <!-- row2 -->
+    <rect x="4"  y="30" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="23" y="30" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="42" y="30" width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <rect x="61" y="30" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="80" y="30" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="99" y="30" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <!-- row3 -->
+    <rect x="4"  y="43" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="23" y="43" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="42" y="43" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="61" y="43" width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <rect x="80" y="43" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="99" y="43" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <!-- row4 -->
+    <rect x="4"  y="56" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="23" y="56" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="42" y="56" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="61" y="56" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="80" y="56" width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <rect x="99" y="56" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <!-- row5 -->
+    <rect x="4"  y="69" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="23" y="69" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="42" y="69" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="61" y="69" width="18" height="12" fill="#eeeeee" opacity="0.6"/>
+    <rect x="80" y="69" width="18" height="12" fill="#ef9a9a" opacity="0.7"/>
+    <rect x="99" y="69" width="18" height="12" fill="#e53935" opacity="0.85"/>
+    <text x="60" y="95"  text-anchor="middle" font-size="12" fill="#880e4f">带状矩阵 (bw w)</text>
+    <text x="60" y="108" text-anchor="middle" font-size="11" fill="#555">局部行为 PDE</text>
+  </g>
+
+  <g transform="translate(200,345)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="20" text-anchor="middle" font-size="12" fill="#333">图着色探测</text>
+    <text x="100" y="36" text-anchor="middle" font-size="11" fill="#555">需 2w+1 次查询</text>
+    <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd"/>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">最少查询 = 图着色数</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">局部非零结构</text>
+  </g>
+
+  <g transform="translate(420,345)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" fill="#333">局部衰减 Green 函数</text>
+    <text x="100" y="40" text-anchor="middle" font-size="11" fill="#555">|G(x,y)| ≤ C|x−y|^{2−d}</text>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">仅近邻有显著影响</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">截断半径 r 邻域</text>
+  </g>
+
+  <g transform="translate(640,340)">
+    <rect width="220" height="90" rx="6" fill="#fce4ec" stroke="#f06292" stroke-width="2"/>
+    <text x="110" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#880e4f">GNO</text>
+    <line x1="10" y1="30" x2="210" y2="30" stroke="#f48fb1"/>
+    <text x="110" y="46" text-anchor="middle" font-size="11" fill="#333">仅在半径 r 邻域聚合</text>
+    <text x="110" y="62" text-anchor="middle" font-size="11" fill="#333">等价截断带状部分</text>
+    <text x="110" y="78" text-anchor="middle" font-size="11" fill="#333">局部性强则高效</text>
+  </g>
+
+  <line x1="152" y1="385" x2="198" y2="385" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="402" y1="385" x2="418" y2="385" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="622" y1="385" x2="638" y2="385" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ════════ Row 4: HODLR → MGNO ════════ -->
+  <g transform="translate(30,475)">
+    <rect width="120" height="80" rx="4" fill="#ede7f6" stroke="#b39ddb" stroke-width="1.5"/>
+    <rect x="4"  y="4"  width="54" height="34" fill="#9575cd" opacity="0.35"/>
+    <rect x="62" y="4"  width="54" height="34" fill="#7e57c2" opacity="0.2"/>
+    <rect x="4"  y="42" width="54" height="34" fill="#7e57c2" opacity="0.2"/>
+    <rect x="62" y="42" width="54" height="34" fill="#9575cd" opacity="0.35"/>
+    <rect x="4"  y="4"  width="24" height="14" fill="#7e57c2" opacity="0.5"/>
+    <rect x="34" y="20" width="24" height="14" fill="#7e57c2" opacity="0.5"/>
+    <rect x="62" y="42" width="24" height="14" fill="#7e57c2" opacity="0.5"/>
+    <rect x="92" y="56" width="24" height="14" fill="#7e57c2" opacity="0.5"/>
+    <text x="60" y="95"  text-anchor="middle" font-size="12" fill="#4527a0">分层低秩 (HODLR)</text>
+    <text x="60" y="108" text-anchor="middle" font-size="11" fill="#555">椭圆/抛物型 PDE</text>
+  </g>
+
+  <g transform="translate(200,475)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="20" text-anchor="middle" font-size="12" fill="#333">图着色并行恢复</text>
+    <text x="100" y="36" text-anchor="middle" font-size="11" fill="#555">&lt; 10k⌈log₂N⌉ 次查询</text>
+    <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd"/>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">非对角块均为秩-k</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">递归分层结构</text>
+  </g>
+
+  <g transform="translate(420,475)">
+    <rect width="200" height="80" rx="4" fill="#f3f3f3" stroke="#bbb" stroke-width="1"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" fill="#333">分离子域低秩结构</text>
+    <text x="100" y="40" text-anchor="middle" font-size="11" fill="#555">G = K₁ + ⋯ + K_L</text>
+    <text x="100" y="58" text-anchor="middle" font-size="11" fill="#555">逐层捕获短程→长程</text>
+    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">多尺度交互</text>
+  </g>
+
+  <g transform="translate(640,470)">
+    <rect width="220" height="90" rx="6" fill="#ede7f6" stroke="#9575cd" stroke-width="2"/>
+    <text x="110" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#4527a0">MGNO</text>
+    <line x1="10" y1="30" x2="210" y2="30" stroke="#ce93d8"/>
+    <text x="110" y="46" text-anchor="middle" font-size="11" fill="#333">核分解 G = K₁+⋯+K_L</text>
+    <text x="110" y="62" text-anchor="middle" font-size="11" fill="#333">多层聚合短程到长程</text>
+    <text x="110" y="78" text-anchor="middle" font-size="11" fill="#333">表达力强，实现复杂</text>
+  </g>
+
+  <line x1="152" y1="515" x2="198" y2="515" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="402" y1="515" x2="418" y2="515" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="622" y1="515" x2="638" y2="515" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <text x="450" y="600" text-anchor="middle" font-size="12" fill="#888">矩阵结构 ↔ 算子归纳偏置 ↔ 网络架构选择</text>
+
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+  </defs>
+</svg>
