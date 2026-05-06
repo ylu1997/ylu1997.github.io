@@ -13,31 +13,24 @@
 
 ### 数学定义
 - 设 $\Omega \subset \mathbb{R}^d$，$\mathcal{U}$、$\mathcal{V}$ 为定义在 $\Omega$ 上的函数空间（如 $L^2(\Omega)$），算子 $A: \mathcal{U} \to \mathcal{V}$（可能非线性）满足 $A(f) = u$
-- 学习目标：从训练数据对 $(f_1,u_1),\dots,(f_M,u_M)$（其中 $f_i \in \mathcal{U}$，$u_i \in \mathcal{V}$）中学到近似 $\hat{A}$，使对未见的 $f' \in \mathcal{U}$ 也有 $\hat{A}(f') \approx A(f')$；连续形式下定义为在输入函数分布 $\mu$ 上的期望损失：
+- 学习目标：找到近似算子 $\hat{A}: \mathcal{U} \to \mathcal{V}$，使其在输入函数分布 $\mu$ 上的期望损失最小：
   $$\min_{\theta \in \mathbb{R}^N} \int_{\mathcal{U}} \mathcal{L}\bigl(\hat{A}(f;\theta),\, A(f)\bigr)\, d\mu(f)$$
-  其中 $\mathcal{L}: \mathcal{V} \times \mathcal{V} \to \mathbb{R}_{\geq 0}$ 为函数空间上的度量（如 $\|\cdot\|_{L^2(\Omega)}^2$）；以经验分布 $\mu = \frac{1}{M}\sum_{i=1}^M \delta_{f_i}$ 代替时退化为离散求和
+  其中 $\mathcal{L}: \mathcal{V} \times \mathcal{V} \to \mathbb{R}_{\geq 0}$ 为函数空间上的度量（如 $\|\cdot\|_{L^2(\Omega)}^2$）
 - 典型例子：Poisson 方程的解算子 $A(f)(x) = \int_\Omega G(x,y)f(y)\,dy$，$G$ 为 Green 函数
-- 离散化：计算机只能处理有限维数据；函数的离散化本质上依赖某种蕴含有限性的数学假设，主要有两种方式：
-  - **方式一（点采样）**：当 $f$ 满足特定连续性（如 $f \in L^2(\Omega)$ 或 Sobolev 空间 $H^s(\Omega)$）时，可在 $\Omega$ 上取传感器点 $D_m = \{x_1,\dots,x_m\} \subset \Omega$，将 $f$ 离散为观测向量 $f|_{D_m} = (f(x_1),\dots,f(x_m)) \in \mathbb{R}^m$；连续积分算子退化为有限维矩阵-向量乘积
-    - 每对训练数据在同一组传感器点上采样：$f_i|_{D_m}$，$u_i|_{D_m}$
-    - 传感器点数 $m$ 决定离散化精度；当 $m \to \infty$（网格细化）时，离散化趋近连续极限——这是"离散化不变性"的核心要求
-    - 借助紧嵌入定理、插值估计等工具可对离散化误差给出收敛性保证
-  - **方式二（代理模型参数化）**：用一套参数化代理模型逼近函数，以代理模型的参数向量作为网络输入；此时有限性来自模型的参数维度，而非物理空间的采样密度
-    - 例如有限元展开：$f(x) \approx \sum_{k=1}^K c_k \phi_k(x)$，以系数向量 $(c_1,\dots,c_K) \in \mathbb{R}^K$ 作为输入
-    - 例如隐式神经表示（INR）：用一个小型神经网络 $f_\phi(x) \approx f(x)$ 拟合单个函数实例，以网络权重 $\phi \in \mathbb{R}^K$ 作为该函数的有限维编码输入算子网络；此时函数空间的连续性假设转化为对 INR 网络结构和训练的正则化约束
 ### 离散化
-算子学习涉及三个层面的离散化：**输入函数**、**输出函数**与**算子本身**。
-
-- 函数的离散化：连续函数的离散化本质上依赖某种蕴含有限性的数学假设，主要有两种方式：
-  - **方式一（点采样）**：当 $f$ 满足特定连续性（如 $f \in L^2(\Omega)$ 或 Sobolev 空间 $H^s(\Omega)$）时，可在 $\Omega$ 上取传感器点 $D_m = \{x_1,\dots,x_m\} \subset \Omega$，将 $f$ 离散为观测向量 $f|_{D_m} = (f(x_1),\dots,f(x_m)) \in \mathbb{R}^m$
-    - 每对训练数据在同一组传感器点上采样：$f_i|_{D_m}$，$u_i|_{D_m}$
-    - 传感器点数 $m$ 决定离散化精度；当 $m \to \infty$（网格细化）时，离散化趋近连续极限——这是"离散化不变性"的核心要求，严格定义为：一个参数化算子类 $G(\cdot,\theta)$ 称为离散化不变的，若存在一族离散化映射 $\hat{G}_L$，使得对任意紧集 $K \subset \mathcal{U}$、任意参数 $\theta$：
-      $$\lim_{L\to\infty} \sup_{a\in K} \|\hat{G}_L(D_L, a|_{D_L}, \theta) - G(a,\theta)\|_U = 0$$
-    - 借助紧嵌入定理、插值估计等工具可对离散化误差给出收敛性保证
-  - **方式二（代理模型参数化）**：用一套参数化代理模型逼近函数，以代理模型的参数向量作为网络输入；此时有限性来自模型的参数维度，而非物理空间的采样密度
-    - 例如有限元展开：$f(x) \approx \sum_{k=1}^K c_k \phi_k(x)$，以系数向量 $(c_1,\dots,c_K) \in \mathbb{R}^K$ 作为输入
-    - 例如隐式神经表示（INR）：用一个小型神经网络 $f_\phi(x) \approx f(x)$ 拟合单个函数实例，以网络权重 $\phi \in \mathbb{R}^K$ 作为该函数的有限维编码；此时函数空间的连续性假设转化为对 INR 网络结构和训练的正则化约束
-
+算子学习涉及三个层面的离散化：**输入/输出函数**（含分布与实例两个层次）、**算子本身**。
+- 函数的离散化：连续函数（及其分布）的离散化本质上依赖某种蕴含有限性的数学假设，涉及两个层次：
+  - 分布层次：连续分布 $\mu$ 在 $\mathcal{U}$ 上无法直接处理，需从中取有限样本 $\{f_i\}_{i=1}^M \subset \mathcal{U}$（及对应输出 $\{u_i\}_{i=1}^M$，满足 $u_i = A(f_i)$），以经验分布 $\mu_M = \frac{1}{M}\sum_{i=1}^M \delta_{f_i}$ 代替，学习目标退化为：
+    $$\min_{\theta \in \mathbb{R}^N} \frac{1}{M}\sum_{i=1}^M \mathcal{L}\bigl(\hat{A}(f_i;\theta),\, u_i\bigr)$$
+  - 函数实例层次：每个连续函数 $f_i$ 本身仍需进一步离散为有限维向量才能输入网络，主要有两种方式：
+    - 方式一（点采样）：当 $f$ 满足特定连续性（如 $f \in L^2(\Omega)$ 或 Sobolev 空间 $H^s(\Omega)$）时，可在 $\Omega$ 上取传感器点 $D_m = \{x_1,\dots,x_m\} \subset \Omega$，将 $f$ 离散为观测向量 $f|_{D_m} = (f(x_1),\dots,f(x_m)) \in \mathbb{R}^m$
+      - 每对训练数据在同一组传感器点上采样：$f_i|_{D_m}$，$u_i|_{D_m}$
+      - 传感器点数 $m$ 决定离散化精度；当 $m \to \infty$（网格细化）时，离散化趋近连续极限——这是"离散化不变性"的核心要求，严格定义为：一个参数化算子类 $G(\cdot,\theta)$ 称为离散化不变的，若存在一族离散化映射 $\hat{G}_L$，使得对任意紧集 $K \subset \mathcal{U}$、任意参数 $\theta$：
+        $$\lim_{L\to\infty} \sup_{a\in K} \|\hat{G}_L(D_L, a|_{D_L}, \theta) - G(a,\theta)\|_U = 0$$
+      - 借助紧嵌入定理、插值估计等工具可对离散化误差给出收敛性保证
+    - 方式二（代理模型参数化）：用一套参数化代理模型逼近函数，以代理模型的参数向量作为网络输入；此时有限性来自模型的参数维度，而非物理空间的采样密度
+      - 例如有限元展开：$f(x) \approx \sum_{k=1}^K c_k \phi_k(x)$，以系数向量 $(c_1,\dots,c_K) \in \mathbb{R}^K$ 作为输入
+      - 例如隐式神经表示（INR）：用一个小型神经网络 $f_\phi(x) \approx f(x)$ 拟合单个函数实例，以网络权重 $\phi \in \mathbb{R}^K$ 作为该函数的有限维编码；此时函数空间的连续性假设转化为对 INR 网络结构和训练的正则化约束
 - 算子的离散化：连续算子 $A: \mathcal{U} \to \mathcal{V}$ 在有限维离散化后，退化为从离散输入到离散输出的有限维映射。设输入输出均在同一组网格点 $D_m = \{x_1,\dots,x_m\}$ 上采样，则：
   - **经典离散化**：连续积分算子 $A(f)(x) = \int_\Omega K(x,y)f(y)\,dy$ 经数值求积（如梯形公式，权重 $w_j$）退化为矩阵-向量乘积：
     $$A(f)(x_i) \approx \sum_{j=1}^m w_j K(x_i, x_j) f(x_j) = (\mathbf{K}\mathbf{f})_i, \quad \mathbf{K}_{ij} = w_j K(x_i,x_j)$$
