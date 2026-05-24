@@ -13,7 +13,17 @@
   "data": [
     {
       "category": "Math Notes",
-      "children": []
+      "children": [
+        {
+          "title": "Seshadri Constants and Infinitesimal Polygons The Kollár–Lazarsfeld Abelian Surface Example",
+          "date": "",
+          "desc": "",
+          "type": [
+            "pdf"
+          ],
+          "pdf": "website_file/blog/Math Notes/Seshadri Constants and Infinitesimal Polygons The Kollár–Lazarsfeld Abelian Surface Example.pdf"
+        }
+      ]
     },
     {
       "category": "UoL_PhD_APR",
@@ -42,22 +52,64 @@
       "category": "AI_Notes",
       "children": [
         {
-          "title": "神经算子(Neural Operator Learning)理解",
-          "date": "",
-          "desc": "神经算子学习笔记",
-          "type": [
-            "md"
-          ],
-          "file": "website_file/blog/AI_Notes/Math_to_Operator_learning.md"
+          "category": "Analysis & Insights",
+          "children": [
+            {
+              "title": "Kooperman算子理论学习笔记",
+              "date": "",
+              "desc": "",
+              "type": [
+                "md"
+              ],
+              "file": "website_file/blog/AI_Notes/Koopman_OpLearning_DL.md"
+            },
+            {
+              "title": "神经算子(Neural Operator Learning)理解",
+              "date": "",
+              "desc": "神经算子学习笔记",
+              "type": [
+                "md"
+              ],
+              "file": "website_file/blog/AI_Notes/Math_to_Operator_learning.md"
+            }
+          ]
         },
         {
-          "title": "Kooperman算子理论学习笔记",
-          "date": "",
-          "desc": "",
-          "type": [
-            "md"
-          ],
-          "file": "website_file/blog/AI_Notes/Koopman_OpLearning_DL.md"
+          "category": "Paper Notes",
+          "children": [
+            {
+              "category": "Neural Operators & Variable Geometry",
+              "children": [
+                {
+                  "title": "PGIDON_Reading_Notes",
+                  "date": "",
+                  "desc": "",
+                  "type": [
+                    "md"
+                  ],
+                  "file": "website_file/blog/AI_Notes/Paper Notes/Neural Operators & Variable Geometry/PGIDON_Reading_Notes.md"
+                },
+                {
+                  "title": "DIMON_Reading_Notes",
+                  "date": "",
+                  "desc": "",
+                  "type": [
+                    "md"
+                  ],
+                  "file": "website_file/blog/AI_Notes/Paper Notes/Neural Operators & Variable Geometry/DIMON_Reading_Notes.md"
+                },
+                {
+                  "title": "GINOT_Reading_Notes",
+                  "date": "",
+                  "desc": "",
+                  "type": [
+                    "md"
+                  ],
+                  "file": "website_file/blog/AI_Notes/Paper Notes/Neural Operators & Variable Geometry/GINOT_Reading_Notes.md"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

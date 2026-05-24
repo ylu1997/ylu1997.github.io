@@ -26,6 +26,9 @@
               "bold_authors": [
                 "Yi Lu"
               ],
+              "star_authors": [
+                "Yi Lu"
+              ],
               "venue": "Arxiv",
               "year": "2026",
               "desc": "Three generalizations of the Küronya-Lozovanu jet separation criterion: canonical-free version, multipoint extension, and their combination. Proofs via Trusiani's framework and Nadel vanishing; explicit computations for a double cover of a product of elliptic curves.",
@@ -52,35 +55,6 @@
           "category": "Deep Learning",
           "children": [
             {
-              "title": "Implicit Neural Representation with Dead-Free Linear Unit for Remote Sensing Images",
-              "authors": [
-                "Yi Lu",
-                "Chang Lu",
-                "Dongsheng Han",
-                "Donggeon Kim",
-                "Mingming Zhang",
-                "Rizwan Qureshi",
-                "Caiyan Qin"
-              ],
-              "bold_authors": [
-                "Yi Lu"
-              ],
-              "venue": "Sensors",
-              "year": "2026",
-              "desc": "This paper addresses the dead region problem of ReLU in MLP-based Implicit Neural Representations (INRs) for remote sensing images. The authors propose DeLU (Dead-Free Linear Unit), a novel activation function that eliminates inactive regions via a linearly transformed absolute value combined with adaptive linear scaling. Experiments on five remote sensing datasets (LandCover.ai, LoveDA, INRIA, UAVid, ISPRS Potsdam) demonstrate its effectiveness in enhancing INR expressiveness.",
-              "tags": [
-                "implicit neural representation",
-                "remote sensing",
-                "rectified linear unit"
-              ],
-              "links": [
-                {
-                  "label": "DOI",
-                  "url": "https://doi.org/10.3390/s26082370"
-                }
-              ]
-            },
-            {
               "title": "Unrestricted Error-Type Codebook Generation for Error Correction Code in DNA Storage Inspired by NLP",
               "authors": [
                 "Yi Lu",
@@ -90,6 +64,9 @@
                 "Guangxiang Si"
               ],
               "bold_authors": [
+                "Yi Lu"
+              ],
+              "star_authors": [
                 "Yi Lu"
               ],
               "venue": "arXiv preprint",
@@ -105,6 +82,38 @@
                 {
                   "label": "arXiv",
                   "url": "https://arxiv.org/abs/2401.15915"
+                }
+              ]
+            },
+            {
+              "title": "Implicit Neural Representation with Dead-Free Linear Unit for Remote Sensing Images",
+              "authors": [
+                "Yi Lu",
+                "Chang Lu",
+                "Dongsheng Han",
+                "Donggeon Kim",
+                "Mingming Zhang",
+                "Rizwan Qureshi",
+                "Caiyan Qin"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
+              "star_authors": [
+                "Yi Lu"
+              ],
+              "venue": "Sensors",
+              "year": "2026",
+              "desc": "This paper addresses the dead region problem of ReLU in MLP-based Implicit Neural Representations (INRs) for remote sensing images. The authors propose DeLU (Dead-Free Linear Unit), a novel activation function that eliminates inactive regions via a linearly transformed absolute value combined with adaptive linear scaling. Experiments on five remote sensing datasets (LandCover.ai, LoveDA, INRIA, UAVid, ISPRS Potsdam) demonstrate its effectiveness in enhancing INR expressiveness.",
+              "tags": [
+                "implicit neural representation",
+                "remote sensing",
+                "rectified linear unit"
+              ],
+              "links": [
+                {
+                  "label": "DOI",
+                  "url": "https://doi.org/10.3390/s26082370"
                 }
               ]
             }

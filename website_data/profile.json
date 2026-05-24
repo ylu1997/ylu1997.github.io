@@ -9,7 +9,7 @@
   },
   "name": "Yi Lu",
   "position": "PhD Student · CNU & UoL Joint Programme · Mathematics",
-  "bio": "<b>Background:</b> PhD student in Mathematics, CNU & UoL Joint Programme.<br><b>Research Interests:</b><br>&emsp;· Algebraic Geometry: Toric Varieties, Newton–Okounkov bodies, Jet Ampleness.<br>&emsp;· AI & Computing: PINNs, neural operators.<br><b>Personal Bests:</b><br>&emsp;· Powerlifting: Squat 230 kg · Bench 140 kg · Deadlift 270 kg.<br>&emsp;· Weightlifting: Snatch 90 kg · Clean &amp; Jerk 100 kg.",
+  "bio": "<b>Background:</b> PhD student in Mathematics, CNU & UoL Joint Programme.<br><b>Research Interests:</b><br>&emsp;· Algebraic Geometry: Toric Varieties, Newton–Okounkov bodies, Jet Ampleness.<br>&emsp;· AI & Computing: PINNs, neural operators, Latent Space of Deep Learning.<br><b>Personal Bests:</b><br>&emsp;· Powerlifting: Squat 230 kg · Bench 140 kg · Deadlift 270 kg.<br>&emsp;· Weightlifting: Snatch 90 kg · Clean &amp; Jerk 105 kg.",
   "cv_pdf": "website_file/CV/cv_output.pdf",
   "links": [
     {
@@ -31,7 +31,6 @@
   "experiences": [
     {
       "category": "Education",
-      "type": "education",
       "items": [
         {
           "degree": "PhD(ing) in Mathematics",
@@ -55,7 +54,6 @@
     },
     {
       "category": "Teaching & Work",
-      "type": "teaching", 
       "items": [
         {
           "role": "Teaching Assistant",
@@ -103,7 +101,6 @@
     },
     {
       "category": "Awards, Scholarships & Certificates",
-      "type": "awards",
       "items": [
         {
           "name": "China Scholarship Council (CSC) Scholarship",
@@ -151,7 +148,6 @@
     },
     {
       "category": "Academic Activities",
-      "type": "activities",
       "items": [
         {
           "talk": "K-jet Ampleness and Newton-Okounkov Bodies",
@@ -178,7 +174,6 @@
     },
     {
       "category": "Sports Competitions",
-      "type": "sports",
       "items": [
         {
           "title": "Liverpool Spring Open · EmpoweredFit Liverpool",

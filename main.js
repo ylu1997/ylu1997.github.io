@@ -177,8 +177,13 @@ async function renderPapers() {
   const list = await fetchJSON('papers.json');
   renderTree(document.getElementById('papers-list'), list.data, p => {
     const boldSet = new Set(p.bold_authors || []);
+    const starSet = new Set(p.star_authors || []);   // 第一作者集合
     const authorsHTML = (p.authors || [])
-      .map(a => boldSet.has(a) ? `<strong>${a}</strong>` : a)
+      .map(a => {
+        let s = boldSet.has(a) ? `<strong>${a}</strong>` : a;
+        if (starSet.has(a)) s += '<sup>*</sup>';
+        return s;
+      })
       .join(', ');
     return `
     <div class="card">
@@ -190,6 +195,7 @@ async function renderPapers() {
     </div>`;
   });
 }
+
 
 
 async function renderCode() {
