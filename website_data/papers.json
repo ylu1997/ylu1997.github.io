@@ -39,8 +39,8 @@
               ],
               "links": [
                 {
-                  "label": "arXiv",
-                  "url": "#"
+                  "text": "arXiv",
+                  "url": "https://arxiv.org/abs/2605.25413"
                 }
               ]
             }
@@ -121,7 +121,48 @@
         },
         {
           "category": "AI4Science",
-          "children": []
+          "children": [
+            {
+              "title": "Autoregression-Free Neural Operators for Time-Dependent PDEs",
+              "authors": [
+                "Jiaquan Zhang",
+                "Caiyan Qin",
+                "Haoyu Bian",
+                "Libin Cai",
+                "Yi Lu",
+                "Chaoning Zhang",
+                "Wei Dong",
+                "Yuanfang Guo",
+                "Yang Yang",
+                "Hen Tao Shen"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
+              "star_authors": [
+                "Jiaquan Zhang"
+              ],
+              "venue": "arXiv preprint",
+              "year": "2026",
+              "desc": "AFNO replaces autoregressive rollout in physical space with continuous latent dynamics via flow matching, reducing long-horizon error accumulation for time-dependent PDEs.",
+              "tags": [
+                "Neural Operator",
+                "PDE Solver",
+                "Flow Matching",
+                "Latent Dynamics",
+                "Long-Horizon Prediction",
+                "FNO",
+                "Autoregression-Free",
+                "Scientific ML"
+              ],
+              "links": [
+                {
+                  "text": "arXiv",
+                  "url": "https://arxiv.org/abs/2605.25413"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

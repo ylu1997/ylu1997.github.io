@@ -123,8 +123,9 @@ function tagsHTML(tags) {
 }
 
 function cardLinksHTML(links) {
-  return (links || []).map(l => `<a href="${l.url}">${l.label}</a>`).join('');
+  return (links || []).map(l => `<a href="${l.url}">${l.text || l.label || l.url}</a>`).join('');
 }
+
 
 // 递归渲染任意层级可折叠树；节点有 children 则为分组，否则为叶子
 function renderTree(el, nodes, itemHTML, depth = 0) {
