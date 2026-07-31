@@ -45,6 +45,15 @@
             "pdf"
           ],
           "pdf": "website_file/blog/UoL_PhD_APR/APR_UOL_2.pdf"
+        },
+        {
+          "title": "APR Third Year",
+          "date": "2026",
+          "desc": "",
+          "type": [
+            "pdf"
+          ],
+          "pdf": "website_file/blog/UoL_PhD_APR/seminar_third_year.pdf"
         }
       ]
     },
