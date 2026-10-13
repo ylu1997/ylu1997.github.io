@@ -132,7 +132,7 @@ h2 {
 .exp-item-title { font-weight: 500; }
 .exp-item-content { font-size: .92rem; color: var(--text); }
 .exp-item-sub   { font-size: .85rem; color: var(--muted); }
-.exp-item-desc  { font-size: .88rem; margin-top: .2rem; }
+.exp-item-desc  { font-size: .88rem; margin-top: .2rem;     white-space: pre-wrap;}
 .exp-item-key   { font-size: .75rem; color: var(--accent); }
 .exp-item-key::after { content: ': '; }
 
