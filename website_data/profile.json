@@ -103,6 +103,13 @@
       "category": "Awards, Scholarships & Certificates",
       "items": [
         {
+          "name": "Chinese Invention Patent",
+          "result": "Granted",
+          "issuer": "China National Intellectual Property Administration (CNIPA)",
+          "period": "August 2026",
+          "desc": "Title: A method and system for evaluating the consistency of multiple or repeated vascular segmentation results, enabling quantitative comparison and analysis. \nGrant Publication No. CN119107327B."
+        },
+        {
           "name": "China Scholarship Council (CSC) Scholarship",
           "result": "",
           "issuer": "China Scholarship Council",
