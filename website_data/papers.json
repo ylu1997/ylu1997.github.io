@@ -29,7 +29,7 @@
               "star_authors": [
                 "Yi Lu"
               ],
-              "venue": "Arxiv",
+              "venue": "arXiv",
               "year": "2026",
               "desc": "Three generalizations of the Küronya-Lozovanu jet separation criterion: canonical-free version, multipoint extension, and their combination. Proofs via Trusiani's framework and Nadel vanishing; explicit computations for a double cover of a product of elliptic curves.",
               "tags": [
@@ -41,6 +41,32 @@
                 {
                   "text": "arXiv",
                   "url": "https://arxiv.org/abs/2605.25185"
+                }
+              ]
+            },
+            {
+              "title": "Minkowski Decompositions for Generic Infinitesimal Newton-Okounkov Bodies of Arbitrary-Degree External Tensor Products on Products of Curves",
+              "authors": [
+                "Yi Lu"
+              ],
+              "bold_authors": [
+                "Yi Lu"
+              ],
+              "star_authors": [
+                "Yi Lu"
+              ],
+              "venue": "arXiv",
+              "year": "2026",
+              "desc": "This paper studies generic infinitesimal Newton–Okounkov bodies on products of curves. For line bundles formed as external tensor products, it extends the known equal-degree formula to arbitrary positive factor degrees by combining simpler cases. It also characterizes when these convex bodies are additive under tensor products. For products of at least two curves, it proves that the valuation semigroup of a very general infinitesimal flag is finitely generated exactly when all curve factors are rational. An explicit elliptic example shows that identical convex bodies can correspond to semigroups with different finite-generation behavior.",
+              "tags": [
+                "Newton-Okounkov bodies",
+                "Jet separation",
+                "Products of curves"
+              ],
+              "links": [
+                {
+                  "text": "arXiv",
+                  "url": "https://arxiv.org/abs/2609.17469"
                 }
               ]
             }
